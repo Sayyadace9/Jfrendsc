@@ -795,4 +795,718 @@ async function openFindFriends() {
 --------------------------------------------------- */
 
 async function loadChatFriends() {
-  if (!currentUser
+  if (!currentUser) return;
+
+  const { data: requests, error } = await db
+    .from("friend_requests")
+    .select("*")
+    .eq("status", "accepted")
+    .or(
+      `sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`
+    );
+
+  if (error) {
+    setStatus("Could not load friends: " + error.message);
+    return;
+  }
+
+  const ids = [...new Set((requests || []).map(request =>
+    request.sender_id === currentUser.id
+      ? request.receiver_id
+      : request.sender_id
+  ))].filter(id => id && id !== currentUser.id);
+
+  if (!ids.length) {
+    chatFriends = [];
+    return;
+  }
+
+  const { data: profiles, error: profileError } = await db
+    .from("profiles")
+    .select("*")
+    .in("id", ids);
+
+  if (profileError) {
+    setStatus("Could not load friend profiles: " + profileError.message);
+    return;
+  }
+
+  chatFriends = profiles || [];
+}
+
+async function loadFriendsList() {
+  await loadChatFriends();
+
+  const container = el("friendsList");
+
+  if (!chatFriends.length) {
+    container.innerHTML =
+      "<p>You have no friends yet. Find friends to get started.</p>";
+    return;
+  }
+
+  container.innerHTML = chatFriends.map(friend => `
+    <div class="person">
+      ${avatarHTML(friend)}
+      <div class="person-info">
+        <strong>${escapeHTML(displayName(friend))}</strong>
+        <span class="${knownOnlineUsers.has(friend.id) ? "online" : "offline"}">
+          ${knownOnlineUsers.has(friend.id) ? "● Online" : "○ Offline"}
+        </span>
+      </div>
+      <button class="primary"
+        onclick="openConversation('${friend.id}')">Chat</button>
+    </div>
+  `).join("");
+}
+
+async function searchFriends() {
+  if (!currentUser) return;
+
+  const query = el("friendSearch").value.trim();
+  const container = el("searchResults");
+
+  if (query.length < 2) {
+    container.innerHTML = "<p>Type at least two characters to search.</p>";
+    return;
+  }
+
+  container.innerHTML = "<p>Searching...</p>";
+
+  // Uses the search_friends RPC from your existing database.
+  const { data, error } = await db.rpc("search_friends", {
+    search_term: query
+  });
+
+  if (error) {
+    container.innerHTML =
+      "<p>Search failed: " + escapeHTML(error.message) +
+      ". Check your search_friends function and its parameter name.</p>";
+    return;
+  }
+
+  const results = (data || []).filter(
+    person => person.id !== currentUser.id
+  );
+
+  if (!results.length) {
+    container.innerHTML = "<p>No users found.</p>";
+    return;
+  }
+
+  const { data: requests } = await db
+    .from("friend_requests")
+    .select("*")
+    .or(
+      `sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`
+    );
+
+  container.innerHTML = results.map(person => {
+    const request = (requests || []).find(r =>
+      (r.sender_id === currentUser.id && r.receiver_id === person.id) ||
+      (r.receiver_id === currentUser.id && r.sender_id === person.id)
+    );
+
+    let action = `
+      <button class="primary"
+        onclick="sendFriendRequest('${person.id}')">Add Friend</button>`;
+
+    if (request?.status === "accepted") {
+      action = `<button class="secondary"
+        onclick="openConversation('${person.id}')">Chat</button>`;
+    } else if (request?.status === "pending") {
+      action = `<button class="secondary" disabled>Request Pending</button>`;
+    }
+
+    return `
+      <div class="person">
+        ${avatarHTML(person)}
+        <div class="person-info">
+          <strong>${escapeHTML(displayName(person))}</strong>
+        </div>
+        ${action}
+      </div>`;
+  }).join("");
+}
+
+async function sendFriendRequest(friendId) {
+  const { error } = await db.from("friend_requests").insert({
+    sender_id: currentUser.id,
+    receiver_id: friendId,
+    status: "pending"
+  });
+
+  if (error) {
+    alert("Could not send request: " + error.message);
+    return;
+  }
+
+  alert("Friend request sent.");
+  await searchFriends();
+}
+
+async function loadRequests() {
+  const { data, error } = await db
+    .from("friend_requests")
+    .select("*")
+    .or(
+      `sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`
+    );
+
+  if (error) {
+    el("incomingRequests").textContent = error.message;
+    return;
+  }
+
+  const requests = data || [];
+
+  const incoming = requests.filter(r =>
+    r.receiver_id === currentUser.id && r.status === "pending"
+  );
+
+  const outgoing = requests.filter(r =>
+    r.sender_id === currentUser.id && r.status === "pending"
+  );
+
+  const allIds = [...new Set(requests.map(r =>
+    r.sender_id === currentUser.id ? r.receiver_id : r.sender_id
+  ))];
+
+  let profiles = [];
+
+  if (allIds.length) {
+    const result = await db.from("profiles").select("*").in("id", allIds);
+    profiles = result.data || [];
+  }
+
+  const profileFor = id => profiles.find(p => p.id === id);
+
+  el("incomingRequests").innerHTML = incoming.length
+    ? incoming.map(r => {
+        const person = profileFor(r.sender_id);
+
+        return `
+          <div class="person">
+            ${avatarHTML(person)}
+            <div class="person-info">
+              <strong>${escapeHTML(displayName(person))}</strong>
+            </div>
+            <button class="primary"
+              onclick="acceptRequest('${r.id}')">Accept</button>
+            <button class="secondary"
+              onclick="declineRequest('${r.id}')">Decline</button>
+          </div>`;
+      }).join("")
+    : "<p>No incoming requests.</p>";
+
+  el("outgoingRequests").innerHTML = outgoing.length
+    ? outgoing.map(r => {
+        const person = profileFor(r.receiver_id);
+
+        return `
+          <div class="person">
+            ${avatarHTML(person)}
+            <div class="person-info">
+              <strong>${escapeHTML(displayName(person))}</strong>
+              <span class="offline">Waiting for response</span>
+            </div>
+          </div>`;
+      }).join("")
+    : "<p>No pending sent requests.</p>";
+}
+
+async function acceptRequest(requestId) {
+  const { error } = await db
+    .from("friend_requests")
+    .update({ status: "accepted" })
+    .eq("id", requestId);
+
+  if (error) {
+    alert("Could not accept request: " + error.message);
+    return;
+  }
+
+  await loadChatFriends();
+  await loadRequests();
+  await renderChatList();
+
+  alert("Friend request accepted. Your new friend is now available in Chat.");
+}
+
+async function declineRequest(requestId) {
+  const { error } = await db
+    .from("friend_requests")
+    .delete()
+    .eq("id", requestId);
+
+  if (error) {
+    alert("Could not decline request: " + error.message);
+    return;
+  }
+
+  await loadRequests();
+}
+
+/* ---------------------------------------------------
+   CHAT LIST WITH LAST-MESSAGE PREVIEWS
+--------------------------------------------------- */
+
+async function getLastMessage(friendId) {
+  const filter =
+    `and(sender_id.eq.${currentUser.id},receiver_id.eq.${friendId}),` +
+    `and(sender_id.eq.${friendId},receiver_id.eq.${currentUser.id})`;
+
+  let result = await db
+    .from("messages")
+    .select("*")
+    .or(filter)
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  if (result.error) {
+    return null;
+  }
+
+  return result.data?.[0] || null;
+}
+
+function messagePreview(message) {
+  if (!message) return "No messages yet. Tap to chat.";
+
+  let text = message.content || "";
+
+  if (message.media_path) {
+    if (/\.(mp4|mov|webm|m4v)$/i.test(message.media_path)) {
+      text = "🎥 Video";
+    } else if (!text) {
+      text = "📷 Photo";
+    }
+  }
+
+  if (!text) text = "📎 Attachment";
+
+  if (message.sender_id === currentUser.id) {
+    text = "You: " + text;
+  }
+
+  return text;
+}
+
+async function renderChatList() {
+  if (!currentUser) return;
+
+  const container = el("chatList");
+  const query = (el("chatSearch").value || "").toLowerCase();
+
+  if (!chatFriends.length) {
+    container.innerHTML = `
+      <p>You don't have any friends yet.</p>
+      <button class="primary" onclick="openFindFriends()">
+        Find Friends
+      </button>`;
+    return;
+  }
+
+  container.innerHTML = "<p>Loading chats...</p>";
+
+  const rows = await Promise.all(chatFriends.map(async friend => {
+    const last = await getLastMessage(friend.id);
+
+    return {
+      friend,
+      last,
+      time: last?.created_at || ""
+    };
+  }));
+
+  rows.sort((a, b) =>
+    new Date(b.time || 0) - new Date(a.time || 0)
+  );
+
+  const filtered = rows.filter(row =>
+    displayName(row.friend).toLowerCase().includes(query)
+  );
+
+  if (!filtered.length) {
+    container.innerHTML = "<p>No matching chats found.</p>";
+    return;
+  }
+
+  container.innerHTML = filtered.map(row => {
+    const friend = row.friend;
+    const last = row.last;
+    const online = knownOnlineUsers.has(friend.id);
+
+    return `
+      <div class="chat-row" onclick="openConversation('${friend.id}')">
+        ${avatarHTML(friend)}
+        <div class="chat-info">
+          <strong>${escapeHTML(displayName(friend))}</strong>
+          <div class="preview">${escapeHTML(messagePreview(last))}</div>
+          <div class="${online ? "online" : "offline"}">
+            ${online ? "● Online" : "○ Offline"}
+          </div>
+        </div>
+        <div class="time">${escapeHTML(formatTime(last?.created_at))}</div>
+      </div>`;
+  }).join("");
+}
+
+async function refreshChatList() {
+  setStatus("Refreshing chats...");
+  await loadChatFriends();
+  await renderChatList();
+  setStatus("Chats updated.");
+}
+
+/* ---------------------------------------------------
+   OPEN AND LOAD A CONVERSATION
+--------------------------------------------------- */
+
+async function openConversation(friendId) {
+  const friend = chatFriends.find(p => p.id === friendId);
+
+  if (!friend) {
+    await loadChatFriends();
+  }
+
+  activeFriend = chatFriends.find(p => p.id === friendId);
+
+  if (!activeFriend) {
+    alert("This person is not in your accepted friends list.");
+    return;
+  }
+
+  el("chatListView").classList.add("hidden");
+  el("conversationView").classList.remove("hidden");
+
+  el("conversationName").textContent = displayName(activeFriend);
+
+  updateConversationStatus();
+
+  await loadMessages();
+}
+
+function updateConversationStatus() {
+  if (!activeFriend) return;
+
+  el("conversationStatus").textContent =
+    knownOnlineUsers.has(activeFriend.id) ? "● Online" : "○ Offline";
+
+  el("conversationStatus").className =
+    knownOnlineUsers.has(activeFriend.id) ? "online" : "offline";
+}
+
+async function loadMessages() {
+  if (!activeFriend) return;
+
+  const filter =
+    `and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeFriend.id}),` +
+    `and(sender_id.eq.${activeFriend.id},receiver_id.eq.${currentUser.id})`;
+
+  const { data, error } = await db
+    .from("messages")
+    .select("*")
+    .or(filter)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    setStatus("Could not load messages: " + error.message);
+    return;
+  }
+
+  const box = el("messages");
+  box.innerHTML = "";
+
+  renderedMessages.clear();
+
+  for (const message of (data || [])) {
+    await renderMessage(message);
+  }
+
+  box.scrollTop = box.scrollHeight;
+}
+
+async function getMediaURL(path) {
+  if (!path) return null;
+
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+
+  const { data } = db.storage
+    .from("chat-media")
+    .getPublicUrl(path);
+
+  return data?.publicUrl || null;
+}
+
+async function renderMessage(message) {
+  const box = el("messages");
+
+  if (message.id && renderedMessages.has(message.id)) return;
+
+  if (message.id) renderedMessages.add(message.id);
+
+  const mine = message.sender_id === currentUser.id;
+  const item = document.createElement("div");
+
+  item.className = "message" + (mine ? " mine" : "");
+
+  let content = "";
+
+  if (message.media_path) {
+    const url = await getMediaURL(message.media_path);
+
+    if (url) {
+      if (/\.(mp4|mov|webm|m4v)$/i.test(message.media_path)) {
+        content += `
+          <video controls preload="metadata" src="${escapeHTML(url)}"></video>`;
+      } else {
+        content += `
+          <a href="${escapeHTML(url)}" target="_blank" rel="noopener">
+            <img src="${escapeHTML(url)}" alt="Shared image">
+          </a>`;
+      }
+
+      content += `
+        <a href="${escapeHTML(url)}" target="_blank"
+           rel="noopener" download>Download media</a>`;
+    }
+  }
+
+  if (message.content) {
+    content += `<div>${escapeHTML(message.content)}</div>`;
+  }
+
+  content += `<small>${escapeHTML(formatTime(message.created_at))}</small>`;
+
+  item.innerHTML = content;
+  box.appendChild(item);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendMessage() {
+  if (!activeFriend) {
+    alert("Open a conversation first.");
+    return;
+  }
+
+  const content = el("messageInput").value.trim();
+
+  if (!content) return;
+
+  el("messageInput").value = "";
+
+  const { error } = await db.from("messages").insert({
+    sender_id: currentUser.id,
+    receiver_id: activeFriend.id,
+    content
+  });
+
+  if (error) {
+    el("messageInput").value = content;
+    alert("Message failed: " + error.message);
+    return;
+  }
+
+  await loadMessages();
+  await renderChatList();
+}
+
+/* ---------------------------------------------------
+   PICTURE AND VIDEO SHARING
+--------------------------------------------------- */
+
+async function sendMedia() {
+  if (!activeFriend) {
+    alert("Open a conversation first.");
+    return;
+  }
+
+  const file = el("mediaInput").files[0];
+
+  if (!file) {
+    alert("Choose a picture or video first.");
+    return;
+  }
+
+  if (file.size > 50 * 1024 * 1024) {
+    alert("Please choose a file smaller than 50 MB.");
+    return;
+  }
+
+  setStatus("Uploading media...");
+
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const path =
+    currentUser.id + "/" + Date.now() + "_" + safeName;
+
+  const { error: uploadError } = await db.storage
+    .from("chat-media")
+    .upload(path, file, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type
+    });
+
+  if (uploadError) {
+    setStatus("Upload failed: " + uploadError.message);
+    return;
+  }
+
+  const { error: messageError } = await db.from("messages").insert({
+    sender_id: currentUser.id,
+    receiver_id: activeFriend.id,
+    content: "",
+    media_path: path
+  });
+
+  if (messageError) {
+    setStatus(
+      "File uploaded, but message could not be saved: " +
+      messageError.message
+    );
+    return;
+  }
+
+  el("mediaInput").value = "";
+  setStatus("Media sent.");
+
+  await loadMessages();
+  await renderChatList();
+}
+
+/* ---------------------------------------------------
+   REALTIME MESSAGES
+--------------------------------------------------- */
+
+function subscribeToMessages() {
+  if (messageChannel) {
+    db.removeChannel(messageChannel);
+  }
+
+  messageChannel = db
+    .channel("jfriends-messages-" + currentUser.id)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "messages"
+      },
+      async payload => {
+        const message = payload.new;
+
+        const relevant =
+          message.sender_id === currentUser.id ||
+          message.receiver_id === currentUser.id;
+
+        if (!relevant) return;
+
+        if (
+          activeFriend &&
+          (
+            (message.sender_id === activeFriend.id &&
+             message.receiver_id === currentUser.id) ||
+            (message.sender_id === currentUser.id &&
+             message.receiver_id === activeFriend.id)
+          )
+        ) {
+          await renderMessage(message);
+        }
+
+        await loadChatFriends();
+
+        if (!activeFriend) {
+          await renderChatList();
+        } else {
+          // Keep last-message previews fresh while a conversation is open.
+          await renderChatList();
+        }
+      }
+    )
+    .subscribe();
+}
+
+/* ---------------------------------------------------
+   ONLINE PRESENCE
+--------------------------------------------------- */
+
+async function startPresence() {
+  if (!currentUser) return;
+
+  if (presenceChannel) {
+    await db.removeChannel(presenceChannel);
+    presenceChannel = null;
+  }
+
+  presenceChannel = db.channel("jfriends-presence", {
+    config: {
+      presence: { key: currentUser.id }
+    }
+  });
+
+  presenceChannel
+    .on("presence", { event: "sync" }, () => {
+      const state = presenceChannel.presenceState();
+
+      knownOnlineUsers = new Set(Object.keys(state));
+
+      updateConversationStatus();
+
+      if (!el("friendsPanel").classList.contains("hidden")) {
+        loadFriendsList();
+      }
+
+      if (!activeFriend) {
+        renderChatList();
+      }
+    })
+    .subscribe(async status => {
+      if (status === "SUBSCRIBED") {
+        await presenceChannel.track({
+          user_id: currentUser.id,
+          online_at: new Date().toISOString()
+        });
+      }
+    });
+}
+
+async function stopPresence() {
+  if (presenceChannel) {
+    await db.removeChannel(presenceChannel);
+    presenceChannel = null;
+  }
+}
+
+async function loadPresence() {
+  // Presence shows online users connected to this same presence channel.
+  updateConversationStatus();
+}
+
+/* ---------------------------------------------------
+   RESTORE SESSION ON PAGE RELOAD
+--------------------------------------------------- */
+
+db.auth.getSession().then(async ({ data, error }) => {
+  if (error) {
+    showAuthStatus(error.message);
+    return;
+  }
+
+  if (data.session?.user) {
+    await startApp(data.session.user);
+  }
+});
+
+db.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_OUT") {
+    currentUser = null;
+    currentProfile = null;
+  }
+});
+</script>
+
+</body>
+</html>
