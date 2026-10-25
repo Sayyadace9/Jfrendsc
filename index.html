@@ -310,7 +310,6 @@ async function loadMessages() {
   renderMessages(result.data||[]);
 }
 $("loadChatButton").addEventListener("click",openConversation);
-$("refreshChatButton").addEventListener("click",async()=>{await loadChatFriends();if($("chatFriend").value){activeChatFriendId=$("chatFriend").value;await loadMessages();}else{$("chatMessages").textContent="Choose an accepted friend to refresh messages.";}});
 $("chatFriend").addEventListener("change",()=>{activeChatFriendId=$("chatFriend").value||null;if(activeChatFriendId)updateChatHeader(activeChatFriendId);else{$("chatFriendName").textContent="JFriendsChat";$("chatFriendAvatar").textContent="JF";$("chatFriendStatus").textContent="Choose a friend to start chatting";}$("chatMessages").textContent=activeChatFriendId?"Tap Open Conversation to load messages.":"Choose a friend.";});
 
 $("chatForm").addEventListener("submit",async event=>{
