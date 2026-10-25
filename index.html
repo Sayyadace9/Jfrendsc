@@ -8,8 +8,22 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#eaf1f7;color:#172b3a}
-header{background:#075e54;color:white;padding:18px;text-align:center}
-header h1{margin:0 0 5px}
+header{background:#075e54;color:white;padding:12px 16px;text-align:center;position:relative}
+.header-main{display:flex;align-items:center;justify-content:center;position:relative;min-height:42px}
+header h1{margin:0;font-size:23px}
+.header-account{position:absolute;right:0;top:50%;transform:translateY(-50%)}
+.header-account-button{width:42px;height:42px;border-radius:50%;padding:0;margin:0;background:#ffffff22;border:1px solid #ffffff66;color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;line-height:1}
+.header-account-menu{position:absolute;right:0;top:48px;z-index:1000;width:210px;background:#fff;color:#172b3a;border-radius:12px;box-shadow:0 6px 24px #0003;padding:8px;text-align:left}
+.header-account-menu button{display:block;width:100%;text-align:left;background:#fff;color:#172b3a;padding:12px;margin:0;border-radius:8px}
+.header-account-menu button:hover{background:#eef5f4}
+.header-account-menu .menu-logout{color:#b42318}
+.profile-popup{position:fixed;inset:0;background:#0007;z-index:1200;display:flex;align-items:center;justify-content:center;padding:20px}
+.profile-popup-card{width:100%;max-width:380px;background:#fff;border-radius:16px;padding:22px;box-shadow:0 8px 30px #0003}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:#d7e9e6;color:#075e54;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 12px}
+.profile-popup-card h2{text-align:center}
+.profile-detail{overflow-wrap:anywhere;padding:9px 0;border-bottom:1px solid #e5ebee}
+header>p{margin:6px 0 0;font-size:13px;opacity:.9}
+@media(max-width:380px){header h1{font-size:19px}.header-account-button{width:38px;height:38px}}
 .container{width:94%;max-width:560px;margin:18px auto}
 .card{background:white;padding:18px;border-radius:14px;margin-bottom:15px;box-shadow:0 3px 12px #0001}
 h2{color:#075e54;margin-top:0}
@@ -49,7 +63,27 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 </style>
 </head>
 <body>
-<header><h1>💬 JFriendsChat</h1><p>Connect with friends and relatives ❤️</p></header>
+<header>
+  <div class="header-main">
+    <h1>💬 JFriendsChat</h1>
+    <div class="header-account">
+      <button id="accountMenuButton" class="header-account-button" type="button" aria-label="Profile and account menu" title="Profile and account">👤</button>
+      <div id="accountMenu" class="header-account-menu hidden">
+        <button id="openProfileButton" type="button">👤 My Profile</button>
+        <button id="topLogoutButton" class="menu-logout" type="button">↪ Log Out</button>
+      </div>
+    </div>
+  </div>
+  <p>Connect with friends and relatives ❤️</p>
+</header>
+<div id="profilePopup" class="profile-popup hidden" role="dialog" aria-modal="true" aria-labelledby="profilePopupTitle">
+  <div class="profile-popup-card">
+    <div class="profile-avatar">👤</div>
+    <h2 id="profilePopupTitle">My Profile</h2>
+    <div id="profileDetails"></div>
+    <button id="closeProfileButton" class="full" type="button">Close</button>
+  </div>
+</div>
 <main class="container">
 <div id="message" class="hidden" role="status" aria-live="polite"></div>
 <section id="setupCard" class="card hidden"><h2>Setup Required</h2><p>Supabase could not load. Check your internet connection and reload the page.</p></section>
@@ -64,7 +98,7 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 <button id="switchButton" class="full secondary" type="button">Already have an account? Log in</button>
 </section>
 <section id="appSection" class="hidden">
-<section class="card"><h2>Welcome to JFriendsChat! 🎉</h2><p id="welcomeText"></p><button id="logoutButton" class="full danger" type="button">Log Out</button></section>
+<section class="card"><h2>Welcome to JFriendsChat! 🎉</h2><p id="welcomeText"></p></section>
 <nav>
 <button type="button" data-panel="searchPanel">🔎 Find Friends</button><button type="button" data-panel="requestsPanel">🤝 Requests</button><button type="button" data-panel="friendsPanel">👥 Friends</button><button type="button" data-panel="chatPanel">💬 Chat</button>
 </nav>
@@ -368,7 +402,34 @@ async function logout() {
   const {error}=await db.auth.signOut();if(error)return notify(error.message,true);
   currentUser=null;activeChatFriendId=null;onlineUserIds=new Set();$("appSection").classList.add("hidden");showAuth();notify("You have logged out.");
 }
-$("logoutButton").onclick=logout;
+$("logoutButton") && ($("logoutButton").onclick=logout);
+$("topLogoutButton").onclick=async()=>{ $("accountMenu").classList.add("hidden"); await logout(); };
+$("accountMenuButton").onclick=()=>{ if(!currentUser)return notify("Please sign in to open your profile."); $("accountMenu").classList.toggle("hidden"); };
+$("openProfileButton").onclick=async()=>{
+  $("accountMenu").classList.add("hidden");
+  if(!currentUser)return notify("Please sign in to open your profile.");
+  const meta=currentUser.user_metadata||{};
+  const displayName=meta.full_name||meta.name||meta.username||"Not set";
+  $("profileDetails").innerHTML="";
+  const details=[
+    ["Name",displayName],
+    ["Email",currentUser.email||"Not available"],
+    ["Username",meta.username||"Not set"]
+  ];
+  details.forEach(([label,value])=>{
+    const row=document.createElement("div");row.className="profile-detail";
+    const strong=document.createElement("strong");strong.textContent=label+": ";
+    const span=document.createElement("span");span.textContent=value;
+    row.append(strong,span);$("profileDetails").appendChild(row);
+  });
+  $("profilePopup").classList.remove("hidden");
+};
+$("closeProfileButton").onclick=()=>$("profilePopup").classList.add("hidden");
+$("profilePopup").addEventListener("click",event=>{if(event.target===$("profilePopup"))$("profilePopup").classList.add("hidden");});
+document.addEventListener("click",event=>{
+  if(!$("accountMenu").contains(event.target)&&event.target!==$("accountMenuButton"))$("accountMenu").classList.add("hidden");
+});
+
 $("searchForm").addEventListener("submit",async event=>{
   event.preventDefault();if(!currentUser)return;
   const term=$("searchTerm").value.trim();if(term.length<3)return notify("Enter at least 3 characters.",true);
