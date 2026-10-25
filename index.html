@@ -78,6 +78,8 @@ let db, isLogin = false, currentUser = null, currentAvatarPath = null;
 let avatarObjectUrl = null, activeChatFriendId = null, friendProfiles = [];
 let messageChannel = null;
 let shownAppUserId = null;
+let realtimeReady = false;
+let realtimeReloadTimer = null;
 
 function notify(text, error = false) {
   $("message").textContent = text;
@@ -99,28 +101,44 @@ function showPanel(id) {
   $(id).classList.remove("hidden");
 }
 
+/* Realtime: listen for new rows, then reload only the conversation currently open. */
 async function setupRealtimeMessages() {
   if (!db || !currentUser) return;
   if (messageChannel) {
-    await db.removeChannel(messageChannel);
+    try { await db.removeChannel(messageChannel); } catch (e) { console.warn("Could not remove old chat channel:", e); }
     messageChannel = null;
   }
+  realtimeReady = false;
   const subscribedUserId = currentUser.id;
-  messageChannel = db.channel("jfriendschat-messages-" + subscribedUserId)
-    .on("postgres_changes", {event:"INSERT", schema:"public", table:"messages"}, async payload => {
+  messageChannel = db.channel("jfriendschat-messages-" + subscribedUserId + "-" + Date.now())
+    .on("postgres_changes", {event:"INSERT", schema:"public", table:"messages"}, payload => {
       if (!currentUser || currentUser.id !== subscribedUserId) return;
       const msg = payload.new;
       if (!msg || !activeChatFriendId) return;
       const belongsToOpenChat =
         (msg.sender_id === currentUser.id && msg.receiver_id === activeChatFriendId) ||
         (msg.sender_id === activeChatFriendId && msg.receiver_id === currentUser.id);
-      if (belongsToOpenChat) await loadMessages();
+      if (belongsToOpenChat) {
+        // Debounce bursts of inserts so the chat does not reload several times at once.
+        clearTimeout(realtimeReloadTimer);
+        realtimeReloadTimer = setTimeout(() => loadMessages(), 150);
+      }
     })
-    .subscribe(status => console.log("JFriendsChat real-time status:", status));
+    .subscribe(status => {
+      console.log("JFriendsChat realtime status:", status);
+      if (status === "SUBSCRIBED") {
+        realtimeReady = true;
+        console.log("Realtime is connected.");
+      } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+        realtimeReady = false;
+        console.error("Realtime subscription failed. Check Supabase Realtime and table permissions.");
+      }
+    });
 }
 
 async function showApp(user) {
   if (!user) return;
+  const userChanged = !currentUser || currentUser.id !== user.id;
   currentUser = user;
   $("authSection").classList.add("hidden");
   $("appSection").classList.remove("hidden");
@@ -128,12 +146,11 @@ async function showApp(user) {
   showPanel("profilePanel");
   await loadProfile();
   await loadRequests();
-  if (shownAppUserId !== user.id) {
+  if (userChanged || shownAppUserId !== user.id || !messageChannel) {
     shownAppUserId = user.id;
     await setupRealtimeMessages();
   }
 }
-
 async function loadProfile() {
   if (!currentUser) return;
   const {data,error} = await db.from("profiles").select("username,full_name,avatar_path").eq("id",currentUser.id).maybeSingle();
@@ -161,8 +178,8 @@ async function loadRequests() {
   $("receivedRequests").textContent="Loading requests...";$("sentRequests").textContent="Loading requests...";
   const {data,error}=await db.from("friend_requests").select("id,sender_id,receiver_id,status,created_at").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`).order("created_at",{ascending:false});
   if (error) {$("receivedRequests").textContent="Could not load requests: "+error.message;$("sentRequests").textContent="";return;}
-  const incoming=data.filter(r=>r.receiver_id===currentUser.id&&r.status==="pending");
-  const outgoing=data.filter(r=>r.sender_id===currentUser.id);
+  const incoming=(data||[]).filter(r=>r.receiver_id===currentUser.id&&r.status==="pending");
+  const outgoing=(data||[]).filter(r=>r.sender_id===currentUser.id);
   $("receivedRequests").replaceChildren();$("sentRequests").replaceChildren();
   if (!incoming.length) $("receivedRequests").textContent="No pending requests.";
   if (!outgoing.length) $("sentRequests").textContent="No sent requests.";
@@ -247,18 +264,19 @@ async function openConversation() {
 }
 async function loadMessages() {
   if (!currentUser||!activeChatFriendId) return;
-  const {data,error}=await db.from("messages").select("id,sender_id,receiver_id,content,message_text,created_at")
-    .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatFriendId}),and(sender_id.eq.${activeChatFriendId},receiver_id.eq.${currentUser.id})`)
-    .order("created_at",{ascending:true}).limit(200);
-  if (error) {
-    // Some older database setups have only one of these text columns. Retry with the common content column.
-    const retry=await db.from("messages").select("id,sender_id,receiver_id,content,created_at")
-      .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatFriendId}),and(sender_id.eq.${activeChatFriendId},receiver_id.eq.${currentUser.id})`)
-      .order("created_at",{ascending:true}).limit(200);
-    if (retry.error) {$("chatMessages").textContent="Could not load messages: "+retry.error.message;notify("Chat error: "+retry.error.message,true);return;}
-    renderMessages(retry.data||[]);return;
+  const conversation = `and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatFriendId}),and(sender_id.eq.${activeChatFriendId},receiver_id.eq.${currentUser.id})`;
+  let result = await db.from("messages").select("id,sender_id,receiver_id,content,message_text,created_at")
+    .or(conversation).order("created_at",{ascending:true}).limit(200);
+  if (result.error) {
+    result = await db.from("messages").select("id,sender_id,receiver_id,content,created_at")
+      .or(conversation).order("created_at",{ascending:true}).limit(200);
   }
-  renderMessages(data||[]);
+  if (result.error) {
+    $("chatMessages").textContent="Could not load messages: "+result.error.message;
+    notify("Chat error: "+result.error.message,true);
+    return;
+  }
+  renderMessages(result.data||[]);
 }
 $("loadChatButton").addEventListener("click",openConversation);
 $("refreshChatButton").addEventListener("click",async()=>{await loadChatFriends();if($("chatFriend").value){activeChatFriendId=$("chatFriend").value;await loadMessages();}else{$("chatMessages").textContent="Choose an accepted friend to refresh messages.";}});
@@ -298,7 +316,7 @@ $("authForm").addEventListener("submit",async event=>{
 
 async function logout() {
   if (messageChannel) {await db.removeChannel(messageChannel);messageChannel=null;}
-  shownAppUserId=null;
+  clearTimeout(realtimeReloadTimer);realtimeReady=false;shownAppUserId=null;
   const {error}=await db.auth.signOut();
   if (error) return notify(error.message,true);
   currentUser=null;currentAvatarPath=null;activeChatFriendId=null;
@@ -375,6 +393,8 @@ async function startApp() {
     if(session){setTimeout(()=>showApp(session.user),0);}
     else if(event==="SIGNED_OUT"){
       currentUser=null;currentAvatarPath=null;activeChatFriendId=null;shownAppUserId=null;
+      if(messageChannel){db.removeChannel(messageChannel);messageChannel=null;}
+      clearTimeout(realtimeReloadTimer);realtimeReady=false;
       $("appSection").classList.add("hidden");showAuth();
     }
   });
