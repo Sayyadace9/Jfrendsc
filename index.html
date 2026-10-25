@@ -1,383 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JFriendsChat</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JFriendsChat</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #eaf1f7;
-      color: #172b3a;
-    }
-
-    header {
-      background: #075e54;
-      color: white;
-      text-align: center;
-      padding: 22px 10px;
-    }
-
-    header h1 {
-      margin: 0 0 8px;
-    }
-
-    header p {
-      margin: 0;
-    }
-
-    .container {
-      width: 92%;
-      max-width: 430px;
-      margin: 25px auto;
-    }
-
-    .card {
-      background: white;
-      padding: 22px;
-      border-radius: 14px;
-      box-shadow: 0 4px 15px #00000012;
-      margin-bottom: 18px;
-    }
-
-    h2 {
-      margin-top: 0;
-      color: #075e54;
-    }
-
-    input {
-      width: 100%;
-      padding: 13px;
-      margin: 8px 0;
-      border: 1px solid #ccd6dd;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 13px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #075e54;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-    }
-
-    .secondary {
-      background: #128c7e;
-    }
-
-    .logout {
-      background: #b42318;
-    }
-
-    #message {
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      overflow-wrap: anywhere;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .note {
-      color: #526575;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #526575;
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#eaf1f7;color:#172b3a}
+header{background:#075e54;color:white;padding:18px;text-align:center}
+header h1{margin:0 0 5px}
+.container{width:94%;max-width:520px;margin:18px auto}
+.card{background:white;padding:18px;border-radius:14px;margin-bottom:15px;box-shadow:0 3px 12px #0001}
+h2{color:#075e54;margin-top:0}
+input{width:100%;padding:13px;margin:7px 0;border:1px solid #ccd6dd;border-radius:8px;font-size:16px}
+button{padding:12px;border:0;border-radius:8px;background:#075e54;color:white;font-size:15px;cursor:pointer;margin-top:7px}
+button:disabled{opacity:.5}
+.full{width:100%}
+.secondary{background:#128c7e}
+.danger{background:#b42318}
+.hidden{display:none!important}
+.note{font-size:13px;color:#526575;line-height:1.5}
+#message{padding:12px;border-radius:8px;margin-bottom:12px;overflow-wrap:anywhere}
+.row{display:flex;gap:8px;align-items:center}
+.row input{flex:1;min-width:0}
+.row button{flex-shrink:0}
+.item{padding:12px 0;border-bottom:1px solid #e3e9ed}
+.item:last-child{border-bottom:0}
+.item button{margin-right:5px}
+footer{text-align:center;color:#526575;padding:18px}
+nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+nav button{flex:1;min-width:90px}
+#chatMessages{height:230px;overflow-y:auto;background:#f4f8f8;padding:10px;border-radius:8px}
+.bubble{padding:9px 12px;margin:7px 0;border-radius:10px;background:#d9fdd3;overflow-wrap:anywhere}
+.small{font-size:12px;color:#526575}
+</style>
 </head>
 
 <body>
-
 <header>
   <h1>💬 JFriendsChat</h1>
   <p>Connect with friends and relatives ❤️</p>
 </header>
 
 <main class="container">
-
   <div id="message" class="hidden" role="status" aria-live="polite"></div>
 
   <section id="setupCard" class="card hidden">
     <h2>Setup Required</h2>
-    <p>Your Supabase connection details have not been added correctly.</p>
-    <p>Open index.html and replace both configuration placeholders with your actual Project URL and Publishable Key.</p>
+    <p>Supabase could not be loaded. Check your project URL, publishable key, and internet connection.</p>
   </section>
 
   <section id="authSection" class="card hidden">
     <h2 id="formTitle">Create Account</h2>
-
     <form id="authForm">
-      <div id="nameField">
-        <input
-          id="fullName"
-          type="text"
-          placeholder="Your full name"
-          autocomplete="name"
-          maxlength="80"
-          required
-        >
-      </div>
-
-      <input
-        id="email"
-        type="email"
-        placeholder="Email address"
-        autocomplete="email"
-        required
-      >
-
-      <input
-        id="password"
-        type="password"
-        placeholder="Password (at least 8 characters)"
-        autocomplete="current-password"
-        minlength="8"
-        required
-      >
-
-      <button id="submitButton" type="submit">Create Account</button>
+      <input id="fullName" type="text" placeholder="Full name" maxlength="80" required>
+      <input id="email" type="email" placeholder="Email address" autocomplete="email" required>
+      <input id="password" type="password" placeholder="Password (at least 8 characters)" minlength="8" required>
+      <button id="submitButton" class="full" type="submit">Create Account</button>
     </form>
-
-    <button id="switchButton" class="secondary" type="button">
-      Already have an account? Log in
-    </button>
-
-    <p class="note">
-      Use your own email address. If email confirmation is enabled,
-      you must confirm your email before signing in.
-    </p>
+    <button id="switchButton" class="full secondary" type="button">Already have an account? Log in</button>
+    <p class="note">If email confirmation is enabled, confirm your email before logging in.</p>
   </section>
 
-  <section id="profileSection" class="card hidden">
-    <h2>Welcome! 🎉</h2>
-    <p id="welcomeText"></p>
-    <p>Your account is connected successfully.</p>
+  <section id="appSection" class="hidden">
+    <section class="card">
+      <h2>Welcome to JFriendsChat! 🎉</h2>
+      <p id="welcomeText"></p>
+      <button id="logoutButton" class="full danger" type="button">Log Out</button>
+    </section>
 
-    <button id="logoutButton" class="logout" type="button">
-      Log Out
-    </button>
+    <nav>
+      <button type="button" data-panel="searchPanel">🔎 Find Friends</button>
+      <button type="button" data-panel="requestsPanel">🤝 Requests</button>
+      <button type="button" data-panel="friendsPanel">👥 Friends</button>
+      <button type="button" data-panel="chatPanel">💬 Chat</button>
+    </nav>
+
+    <section id="searchPanel" class="card">
+      <h2>Find Friends</h2>
+      <p class="note">Search by username. Usernames are generated when accounts are created.</p>
+      <form id="searchForm" class="row">
+        <input id="searchTerm" type="text" placeholder="Enter username" maxlength="30" required>
+        <button type="submit">Search</button>
+      </form>
+      <div id="searchResults"></div>
+    </section>
+
+    <section id="requestsPanel" class="card hidden">
+      <h2>Friend Requests</h2>
+      <h3>Received</h3>
+      <div id="receivedRequests"></div>
+      <h3>Sent</h3>
+      <div id="sentRequests"></div>
+    </section>
+
+    <section id="friendsPanel" class="card hidden">
+      <h2>My Friends</h2>
+      <div id="friendsList"></div>
+      <p class="note">Accepted friends will appear here when the friend-request database permissions are configured.</p>
+    </section>
+
+    <section id="chatPanel" class="card hidden">
+      <h2>Private Chat</h2>
+      <p id="chatPartner">Choose a friend to begin.</p>
+      <div id="chatMessages"></div>
+      <form id="chatForm" class="row">
+        <input id="chatInput" type="text" placeholder="Type a message..." maxlength="2000" required>
+        <button type="submit">Send</button>
+      </form>
+      <p class="note">Messaging is not active yet. We will connect secure message storage next.</p>
+    </section>
   </section>
 
   <section class="card">
     <h2>About JFriendsChat</h2>
-    <p>
-      A place to bring friends and relatives closer together.
-    </p>
-    <p class="note">
-      Private conversations, friend requests, and real-time messaging
-      will be added in the next development steps.
-    </p>
+    <p>A place to bring friends and relatives closer together.</p>
+    <p class="note">Keep your password private. Never share secret database keys.</p>
   </section>
-
 </main>
 
-<footer>
-  JFriendsChat © 2026
-</footer>
+<footer>JFriendsChat © 2026</footer>
 
 <script>
-  // STEP 1: Replace these two placeholders with your own values.
-  const SUPABASE_URL = "https://msifvhqvxfjjwcazacxj.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__uU2wBTvE8tWoAFoRSWVEA_AgJvZOqg";
+const SUPABASE_URL = "https://msifvhqvxfjjwcazacxj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__uU2wBTvE8tWoAFoRSWVEA_AgJvZOqg";
 
-  const setupCard = document.getElementById("setupCard");
-  const authSection = document.getElementById("authSection");
-  const profileSection = document.getElementById("profileSection");
-  const messageBox = document.getElementById("message");
-  const formTitle = document.getElementById("formTitle");
-  const nameField = document.getElementById("nameField");
-  const submitButton = document.getElementById("submitButton");
-  const switchButton = document.getElementById("switchButton");
-  const authForm = document.getElementById("authForm");
+const $ = id => document.getElementById(id);
+let db = null;
+let isLogin = false;
+let currentUser = null;
+let selectedFriend = null;
 
-  let supabaseClient = null;
-  let isLogin = false;
+function notify(text, isError=false) {
+  $("message").textContent = text;
+  $("message").classList.remove("hidden");
+  $("message").style.background = isError ? "#ffe7e7" : "#dcfce7";
+  $("message").style.color = isError ? "#9b1c1c" : "#166534";
+}
 
-  function showMessage(text, isError = false) {
-    messageBox.textContent = text;
-    messageBox.classList.remove("hidden");
-    messageBox.style.background = isError ? "#ffe7e7" : "#dcfce7";
-    messageBox.style.color = isError ? "#9b1c1c" : "#166534";
+function clearNotice() {
+  $("message").classList.add("hidden");
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[char]));
+}
+
+function showAuth() {
+  $("authSection").classList.remove("hidden");
+  $("appSection").classList.add("hidden");
+}
+
+function showApp(user) {
+  currentUser = user;
+  $("authSection").classList.add("hidden");
+  $("appSection").classList.remove("hidden");
+  $("welcomeText").textContent = user.email || "Signed in";
+  loadRequests();
+}
+
+function updateAuthForm() {
+  $("formTitle").textContent = isLogin ? "Log In" : "Create Account";
+  $("submitButton").textContent = isLogin ? "Log In" : "Create Account";
+  $("fullName").classList.toggle("hidden", isLogin);
+  $("fullName").required = !isLogin;
+  $("switchButton").textContent = isLogin
+    ? "Need an account? Register"
+    : "Already have an account? Log in";
+}
+
+async function loadRequests() {
+  if (!currentUser) return;
+
+  const {data, error} = await db
+    .from("friend_requests")
+    .select("id,sender_id,receiver_id,status,created_at")
+    .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+    .order("created_at", {ascending:false});
+
+  if (error) {
+    $("receivedRequests").textContent = "Could not load requests: " + error.message;
+    $("sentRequests").textContent = "";
+    return;
   }
 
-  function showAuthForm() {
-    authSection.classList.remove("hidden");
-    profileSection.classList.add("hidden");
+  const incoming = data.filter(r => r.receiver_id === currentUser.id && r.status === "pending");
+  const outgoing = data.filter(r => r.sender_id === currentUser.id);
+
+  $("receivedRequests").innerHTML = incoming.length ? "" : "<p>No pending requests.</p>";
+  $("sentRequests").innerHTML = outgoing.length ? "" : "<p>No sent requests.</p>";
+
+  for (const request of incoming) {
+    const {data: profile} = await db.from("profiles")
+      .select("username,full_name").eq("id", request.sender_id).maybeSingle();
+
+    const item = document.createElement("div");
+    item.className = "item";
+    item.textContent = `${profile?.full_name || "User"} (@${profile?.username || "unknown"}) `;
+
+    const accept = document.createElement("button");
+    accept.textContent = "Accept";
+    accept.onclick = () => respondToRequest(request.id, true);
+
+    const reject = document.createElement("button");
+    reject.textContent = "Reject";
+    reject.className = "danger";
+    reject.onclick = () => respondToRequest(request.id, false);
+
+    item.append(accept, reject);
+    $("receivedRequests").appendChild(item);
   }
 
-  function updateForm() {
-    formTitle.textContent = isLogin ? "Log In" : "Create Account";
-    submitButton.textContent = isLogin ? "Log In" : "Create Account";
-    nameField.classList.toggle("hidden", isLogin);
-
-    document.getElementById("fullName").required = !isLogin;
-
-    switchButton.textContent = isLogin
-      ? "Need an account? Register"
-      : "Already have an account? Log in";
-
-    document.getElementById("password").autocomplete =
-      isLogin ? "current-password" : "new-password";
+  for (const request of outgoing) {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.textContent = `Request status: ${request.status}`;
+    $("sentRequests").appendChild(item);
   }
+}
 
-  function showSignedInUser(user) {
-    authSection.classList.add("hidden");
-    profileSection.classList.remove("hidden");
+async function respondToRequest(id, accept) {
+  const {error} = await db.from("friend_requests")
+    .update({status: accept ? "accepted" : "rejected"})
+    .eq("id", id);
 
-    document.getElementById("welcomeText").textContent =
-      "Signed in as " + user.email;
+  if (error) {
+    notify("Could not update request: " + error.message, true);
+    return;
   }
+  notify(accept ? "Friend request accepted!" : "Friend request rejected.");
+  loadRequests();
+}
 
-  async function refreshSession() {
-    const { data, error } = await supabaseClient.auth.getSession();
+$("switchButton").addEventListener("click", () => {
+  isLogin = !isLogin;
+  updateAuthForm();
+  clearNotice();
+});
 
-    if (error) {
-      showAuthForm();
-      showMessage(error.message, true);
-      return;
-    }
+$("authForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  $("submitButton").disabled = true;
+  clearNotice();
 
-    if (data.session) {
-      showSignedInUser(data.session.user);
+  const email = $("email").value.trim();
+  const password = $("password").value;
+  const fullName = $("fullName").value.trim();
+
+  try {
+    if (isLogin) {
+      const {data, error} = await db.auth.signInWithPassword({email, password});
+      if (error) throw error;
+      showApp(data.user);
+      notify("You have logged in successfully!");
     } else {
-      showAuthForm();
-    }
-  }
+      const {data, error} = await db.auth.signUp({
+        email, password,
+        options: {data: {full_name: fullName}}
+      });
+      if (error) throw error;
 
-  async function startApp() {
-    const configured =
-      SUPABASE_URL.startsWith("https://") &&
-      SUPABASE_URL.includes(".supabase.co") &&
-      SUPABASE_PUBLISHABLE_KEY !== "YOUR_PUBLISHABLE_KEY" &&
-      SUPABASE_PUBLISHABLE_KEY.length > 10;
-
-    if (!configured) {
-      setupCard.classList.remove("hidden");
-      return;
-    }
-
-    if (!window.supabase) {
-      setupCard.classList.remove("hidden");
-      showMessage("Could not load Supabase. Check your internet connection.", true);
-      return;
-    }
-
-    supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
-
-    authSection.classList.remove("hidden");
-    updateForm();
-
-    supabaseClient.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        showSignedInUser(session.user);
-      } else if (event === "SIGNED_OUT") {
-        profileSection.classList.add("hidden");
-        authSection.classList.remove("hidden");
-      }
-    });
-
-    await refreshSession();
-  }
-
-  switchButton.addEventListener("click", () => {
-    isLogin = !isLogin;
-    updateForm();
-    messageBox.classList.add("hidden");
-  });
-
-  authForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    if (!supabaseClient) return;
-
-    submitButton.disabled = true;
-    submitButton.textContent = "Please wait...";
-
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const fullName = document.getElementById("fullName").value.trim();
-
-    try {
-      if (isLogin) {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) throw error;
-
-        showSignedInUser(data.user);
-        showMessage("You have logged in successfully!");
+      if (data.session) {
+        showApp(data.user);
+        notify("Account created successfully!");
       } else {
-        const { data, error } = await supabaseClient.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: fullName
-            }
-          }
-        });
-
-        if (error) throw error;
-
-        if (data.session) {
-          showSignedInUser(data.user);
-          showMessage("Your account has been created successfully!");
-        } else {
-          showMessage(
-            "Registration received! Check your email for a confirmation link before logging in."
-          );
-        }
+        notify("Registration received! Check your email to confirm your account.");
       }
-    } catch (error) {
-      showMessage(error.message || "Something went wrong. Please try again.", true);
-    } finally {
-      submitButton.disabled = false;
-      updateForm();
     }
+  } catch (error) {
+    notify(error.message || "Something went wrong.", true);
+  } finally {
+    $("submitButton").disabled = false;
+    updateAuthForm();
+  }
+});
+
+$("logoutButton").addEventListener("click", async () => {
+  const {error} = await db.auth.signOut();
+  if (error) notify(error.message, true);
+  else {
+    currentUser = null;
+    showAuth();
+    notify("You have logged out.");
+  }
+});
+
+$("searchForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  const term = $("searchTerm").value.trim();
+  if (term.length < 3) {
+    notify("Enter at least 3 characters for the username.", true);
+    return;
+  }
+
+  $("searchResults").textContent = "Searching...";
+  const {data, error} = await db.rpc("search_friends", {search_term: term});
+
+  if (error) {
+    $("searchResults").textContent = "";
+    notify("Search failed: " + error.message, true);
+    return;
+  }
+
+  $("searchResults").innerHTML = "";
+  const results = (data || []).filter(profile => profile.user_id !== currentUser.id);
+
+  if (!results.length) {
+    $("searchResults").textContent = "No users found. Try another username.";
+    return;
+  }
+
+  for (const profile of results) {
+    const item = document.createElement("div");
+    item.className = "item";
+    const label = document.createElement("div");
+    label.innerHTML = `<strong>${escapeHTML(profile.full_name)}</strong><br><span class="small">@${escapeHTML(profile.username)}</span>`;
+
+    const button = document.createElement("button");
+    button.textContent = "Send Friend Request";
+    button.onclick = async () => {
+      button.disabled = true;
+      const {error: requestError} = await db.from("friend_requests").insert({
+        sender_id: currentUser.id,
+        receiver_id: profile.user_id
+      });
+      if (requestError) {
+        notify("Could not send request: " + requestError.message, true);
+        button.disabled = false;
+      } else {
+        button.textContent = "Request Sent";
+        notify("Friend request sent!");
+        loadRequests();
+      }
+    };
+
+    item.append(label, button);
+    $("searchResults").appendChild(item);
+  }
+});
+
+document.querySelectorAll("nav button").forEach(button => {
+  button.addEventListener("click", () => {
+    ["searchPanel","requestsPanel","friendsPanel","chatPanel"].forEach(id => $(id).classList.add("hidden"));
+    $(button.dataset.panel).classList.remove("hidden");
+    if (button.dataset.panel === "requestsPanel") loadRequests();
+  });
+});
+
+$("chatForm").addEventListener("submit", event => {
+  event.preventDefault();
+  notify("Private messaging is not connected yet. We will add secure message storage next.", true);
+});
+
+async function startApp() {
+  if (!window.supabase || !SUPABASE_URL.startsWith("https://") ||
+      SUPABASE_PUBLISHABLE_KEY.length < 10) {
+    $("setupCard").classList.remove("hidden");
+    return;
+  }
+
+  db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  $("authSection").classList.remove("hidden");
+  updateAuthForm();
+
+  db.auth.onAuthStateChange((event, session) => {
+    if (session) showApp(session.user);
+    else if (event === "SIGNED_OUT") showAuth();
   });
 
-  document.getElementById("logoutButton").addEventListener("click", async () => {
-    const { error } = await supabaseClient.auth.signOut();
+  const {data, error} = await db.auth.getSession();
+  if (error) notify(error.message, true);
+  else if (data.session) showApp(data.session.user);
+}
 
-    if (error) {
-      showMessage(error.message, true);
-    } else {
-      showMessage("You have logged out successfully.");
-    }
-  });
-
-  startApp();
+startApp();
 </script>
-
 </body>
 </html>
