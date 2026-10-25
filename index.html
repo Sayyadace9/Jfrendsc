@@ -43,6 +43,8 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 .wa-send-button{width:48px;height:48px;flex-shrink:0;border-radius:50%;padding:0;margin:0;font-size:20px}
 .media-preview{display:block;max-width:100%;max-height:300px;border-radius:9px;margin:3px 0 6px}
 .chat-note{padding:0 15px 15px;margin:0;background:#fff}
+
+.media-download-button{display:inline-block;margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:#087f5b;color:#fff;font-weight:600;cursor:pointer}.media-download-button:disabled{opacity:.65;cursor:wait}
 </style>
 </head>
 <body>
@@ -238,6 +240,9 @@ async function renderMessages(messages) {
       if(!error&&data?.signedUrl){
         if(type==="image"){const img=document.createElement("img");img.className="media-preview";img.alt="Shared picture";img.loading="lazy";img.src=data.signedUrl;img.addEventListener("click",()=>window.open(data.signedUrl,"_blank","noopener"));bubble.appendChild(img);}
         else{const video=document.createElement("video");video.className="media-preview";video.controls=true;video.playsInline=true;video.preload="metadata";video.src=data.signedUrl;bubble.appendChild(video);}
+        const downloadButton=document.createElement("button");downloadButton.type="button";downloadButton.className="media-download-button";downloadButton.textContent="⬇ Download "+(type==="image"?"picture":"video");
+        downloadButton.addEventListener("click",async()=>{downloadButton.disabled=true;downloadButton.textContent="Preparing download…";try{const response=await fetch(data.signedUrl);if(!response.ok)throw new Error("Download failed");const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const link=document.createElement("a");const ext=type==="image"?(blob.type.includes("png")?"png":blob.type.includes("webp")?"webp":"jpg"):(blob.type.includes("webm")?"webm":"mp4");link.href=objectUrl;link.download="jfriendschat-"+type+"-"+m.id+"."+ext;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),60000);downloadButton.textContent="⬇ Download "+(type==="image"?"picture":"video");}catch(e){notify("Could not download media. Please try again.",true);downloadButton.textContent="⬇ Download "+(type==="image"?"picture":"video");}finally{downloadButton.disabled=false;}});
+        bubble.appendChild(downloadButton);
       }else{const warning=document.createElement("div");warning.textContent="Media unavailable. Check chat-media Storage permissions.";bubble.appendChild(warning);}
     }else{const t=document.createElement("div");t.textContent=raw;bubble.appendChild(t);}
     const time=document.createElement("div");time.className="chat-time";const date=new Date(m.created_at);time.textContent=Number.isNaN(date.getTime())?"":date.toLocaleString();bubble.append(time);box.appendChild(bubble);
