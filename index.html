@@ -25,7 +25,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min-width:90px}
 .avatar{width:110px;height:110px;border-radius:50%;object-fit:cover;background:#e2e8f0;border:3px solid #128c7e;display:block;margin:10px auto}
 .avatar-placeholder{width:110px;height:110px;border-radius:50%;background:#d7e9e6;display:flex;align-items:center;justify-content:center;font-size:42px;margin:10px auto}
-.small{font-size:12px;color:#526575}.friend-name{font-weight:bold;font-size:17px}.status{font-size:13px;color:#128c7e}
+.small{font-size:12px;color:#526575}.friend-name{font-weight:bold;font-size:17px}.status{font-size:13px;color:#128c7e}.presence-status{font-size:13px;margin-top:4px}.presence-status.online{color:#128c7e}.presence-status.offline{color:#75818a}
 #chatPanel{padding:0;overflow:hidden}
 .chat-title-area{padding:16px 18px 10px}
 .chat-friend-picker{padding:0 18px 12px}
@@ -99,6 +99,8 @@ const $ = id => document.getElementById(id);
 let db, isLogin = false, currentUser = null, currentAvatarPath = null;
 let avatarObjectUrl = null, activeChatFriendId = null, friendProfiles = [];
 let messageChannel = null;
+let presenceChannel = null;
+let onlineUserIds = new Set();
 let shownAppUserId = null;
 let realtimeReady = false;
 let realtimeReloadTimer = null;
@@ -158,6 +160,64 @@ async function setupRealtimeMessages() {
     });
 }
 
+function refreshPresenceDisplays() {
+  document.querySelectorAll(".presence-status[data-user-id]").forEach(el => {
+    const isOnline = onlineUserIds.has(el.dataset.userId);
+    el.textContent = isOnline ? "● Online" : "○ Offline";
+    el.classList.toggle("online", isOnline);
+    el.classList.toggle("offline", !isOnline);
+  });
+  if (activeChatFriendId) updateChatHeader(activeChatFriendId);
+}
+
+async function setupPresence() {
+  if (!db || !currentUser) return;
+  if (presenceChannel) {
+    try { await db.removeChannel(presenceChannel); } catch (e) { console.warn("Could not remove old presence channel:", e); }
+    presenceChannel = null;
+  }
+  onlineUserIds = new Set();
+  const userId = currentUser.id;
+  presenceChannel = db.channel("jfriendschat-online-users", {
+    config: { presence: { key: userId } }
+  });
+  presenceChannel
+    .on("presence", { event: "sync" }, () => {
+      const state = presenceChannel.presenceState();
+      const nextOnline = new Set();
+      Object.values(state).forEach(entries => {
+        (entries || []).forEach(entry => {
+          if (entry && entry.user_id) nextOnline.add(entry.user_id);
+        });
+      });
+      onlineUserIds = nextOnline;
+      refreshPresenceDisplays();
+    })
+    .subscribe(async status => {
+      console.log("JFriendsChat presence status:", status);
+      if (status === "SUBSCRIBED" && currentUser && currentUser.id === userId) {
+        const { data: profile } = await db.from("profiles")
+          .select("full_name,username").eq("id", userId).maybeSingle();
+        await presenceChannel.track({
+          user_id: userId,
+          full_name: profile?.full_name || currentUser.user_metadata?.full_name || "JFriendsChat User",
+          username: profile?.username || "",
+          online_at: new Date().toISOString()
+        });
+      }
+    });
+}
+
+async function stopPresence() {
+  if (presenceChannel && db) {
+    try { await presenceChannel.untrack(); } catch (e) {}
+    try { await db.removeChannel(presenceChannel); } catch (e) {}
+  }
+  presenceChannel = null;
+  onlineUserIds = new Set();
+  refreshPresenceDisplays();
+}
+
 async function showApp(user) {
   if (!user) return;
   const userChanged = !currentUser || currentUser.id !== user.id;
@@ -170,6 +230,7 @@ async function showApp(user) {
   if (userChanged || shownAppUserId !== user.id || !messageChannel) {
     shownAppUserId = user.id;
     await setupRealtimeMessages();
+    await setupPresence();
   }
 }
 async function loadProfile() {
@@ -242,7 +303,9 @@ async function loadFriends() {
       const item=document.createElement("div");item.className="item";
       const name=document.createElement("div");name.className="friend-name";name.textContent=profile.full_name||"JFriendsChat User";
       const username=document.createElement("div");username.className="small";username.textContent="@"+(profile.username||"unknown");
-      const status=document.createElement("div");status.className="status";status.textContent="✓ Friend";
+      const status=document.createElement("div");status.className="presence-status";status.dataset.userId=profile.id;
+      const isOnline=onlineUserIds.has(profile.id);status.textContent=isOnline?"● Online":"○ Offline";
+      status.classList.add(isOnline?"online":"offline");
       const chatButton=document.createElement("button");chatButton.textContent="Chat";
       chatButton.onclick=async()=>{showPanel("chatPanel");await loadChatFriends();$("chatFriend").value=profile.id;await openConversation();};
       item.append(name,username,status,chatButton);list.appendChild(item);
@@ -274,7 +337,9 @@ function updateChatHeader(friendId) {
   const name = profile?.full_name || "JFriendsChat Friend";
   $("chatFriendName").textContent = name;
   $("chatFriendAvatar").textContent = name.trim().split(/\s+/).slice(0,2).map(part => part[0] || "").join("").toUpperCase() || "JF";
-  $("chatFriendStatus").textContent = profile?.username ? "@" + profile.username : "Friend";
+  const isOnline = onlineUserIds.has(friendId);
+  $("chatFriendStatus").textContent = isOnline ? "● Online" : "○ Offline";
+  $("chatFriendStatus").style.color = isOnline ? "#b8ffd4" : "#e4e9e9";
 }
 function renderMessages(messages) {
   const box=$("chatMessages");box.replaceChildren();
@@ -394,6 +459,8 @@ async function startApp() {
     else if(event==="SIGNED_OUT"){
       currentUser=null;currentAvatarPath=null;activeChatFriendId=null;shownAppUserId=null;
       if(messageChannel){db.removeChannel(messageChannel);messageChannel=null;}
+      if(presenceChannel){presenceChannel.untrack();db.removeChannel(presenceChannel);presenceChannel=null;}
+      onlineUserIds=new Set();
       clearTimeout(realtimeReloadTimer);realtimeReady=false;
       $("appSection").classList.add("hidden");showAuth();
     }
