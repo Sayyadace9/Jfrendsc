@@ -45,6 +45,7 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 .chat-note{padding:0 15px 15px;margin:0;background:#fff}
 
 .media-download-button{display:inline-block;margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:#087f5b;color:#fff;font-weight:600;cursor:pointer}.media-download-button:disabled{opacity:.65;cursor:wait}
+.message-action-button{display:inline-flex;align-items:center;justify-content:center;width:34px;height:32px;padding:0;margin:7px 5px 0 0;border-radius:7px;background:#e7f0f2;color:#075e54;font-size:20px}.message-actions{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -227,6 +228,53 @@ function updateChatHeader(friendId) {
   $("chatFriendName").textContent=name;$("chatFriendAvatar").textContent=name.trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"JF";
   const online=onlineUserIds.has(friendId);$("chatFriendStatus").textContent=online?"● Online":"○ Offline";$("chatFriendStatus").style.color=online?"#b8ffd4":"#e4e9e9";
 }
+async function forwardChatMessage(message, raw, mediaPath, mediaType) {
+  if (!currentUser) return;
+  const availableFriends = friendProfiles.filter(friend => friend.id !== currentUser.id);
+  if (!availableFriends.length) { notify("No friends available to forward to.", true); return; }
+  const choices = availableFriends.map((friend, index) =>
+    `${index + 1}. ${friend.full_name || "Friend"} (@${friend.username || "unknown"})`
+  ).join("\n");
+  const answer = window.prompt("Forward to which friend? Enter the number:\n" + choices);
+  if (answer === null) return;
+  const index = Number.parseInt(answer.trim(), 10) - 1;
+  if (!Number.isInteger(index) || index < 0 || index >= availableFriends.length) {
+    notify("Please enter a valid friend number.", true); return;
+  }
+  const recipient = availableFriends[index];
+  try {
+    let contentToSend = raw;
+    let newMediaPath = null;
+    if (mediaPath && mediaType) {
+      const { data: fileData, error: downloadError } = await db.storage.from("chat-media").download(mediaPath);
+      if (downloadError || !fileData) throw new Error("Could not access the original media.");
+      const originalName = mediaPath.split("/").pop() || `media.${mediaType === "image" ? "jpg" : "mp4"}`;
+      const newName = `${Date.now()}_forwarded_${originalName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+      newMediaPath = `${currentUser.id}/${recipient.id}/${newName}`;
+      const { error: uploadError } = await db.storage.from("chat-media").upload(newMediaPath, fileData, {
+        upsert: false,
+        contentType: fileData.type || (mediaType === "image" ? "image/jpeg" : "video/mp4")
+      });
+      if (uploadError) throw uploadError;
+      contentToSend = `[[MEDIA|${mediaType}|${newMediaPath}]]`;
+    }
+    const row = {
+      sender_id: currentUser.id,
+      receiver_id: recipient.id,
+      content: contentToSend
+    };
+    if (newMediaPath) row.media_path = newMediaPath;
+    const { error: insertError } = await db.from("messages").insert(row);
+    if (insertError) {
+      if (newMediaPath) await db.storage.from("chat-media").remove([newMediaPath]);
+      throw insertError;
+    }
+    notify(`Forwarded to ${recipient.full_name || "your friend"}.`);
+  } catch (error) {
+    console.error("Forward message failed:", error);
+    notify("Could not forward this message. Check your permissions and try again.", true);
+  }
+}
 async function renderMessages(messages) {
   const box=$("chatMessages");box.replaceChildren();
   if(!messages.length){box.textContent="No messages yet. Say hello! 👋";return;}
@@ -240,11 +288,14 @@ async function renderMessages(messages) {
       if(!error&&data?.signedUrl){
         if(type==="image"){const img=document.createElement("img");img.className="media-preview";img.alt="Shared picture";img.loading="lazy";img.src=data.signedUrl;img.addEventListener("click",()=>window.open(data.signedUrl,"_blank","noopener"));bubble.appendChild(img);}
         else{const video=document.createElement("video");video.className="media-preview";video.controls=true;video.playsInline=true;video.preload="metadata";video.src=data.signedUrl;bubble.appendChild(video);}
-        const downloadButton=document.createElement("button");downloadButton.type="button";downloadButton.className="media-download-button";downloadButton.textContent="⬇ Download "+(type==="image"?"picture":"video");
-        downloadButton.addEventListener("click",async()=>{downloadButton.disabled=true;downloadButton.textContent="Preparing download…";try{const response=await fetch(data.signedUrl);if(!response.ok)throw new Error("Download failed");const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const link=document.createElement("a");const ext=type==="image"?(blob.type.includes("png")?"png":blob.type.includes("webp")?"webp":"jpg"):(blob.type.includes("webm")?"webm":"mp4");link.href=objectUrl;link.download="jfriendschat-"+type+"-"+m.id+"."+ext;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),60000);downloadButton.textContent="⬇ Download "+(type==="image"?"picture":"video");}catch(e){notify("Could not download media. Please try again.",true);downloadButton.textContent="⬇ Download "+(type==="image"?"picture":"video");}finally{downloadButton.disabled=false;}});
+        const downloadButton=document.createElement("button");downloadButton.type="button";downloadButton.className="media-download-button";downloadButton.textContent="⬇";downloadButton.setAttribute("aria-label", "Download "+(type==="image"?"picture":"video"));downloadButton.title="Download "+(type==="image"?"picture":"video");
+        downloadButton.addEventListener("click",async()=>{downloadButton.disabled=true;downloadButton.textContent="…";try{const response=await fetch(data.signedUrl);if(!response.ok)throw new Error("Download failed");const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const link=document.createElement("a");const ext=type==="image"?(blob.type.includes("png")?"png":blob.type.includes("webp")?"webp":"jpg"):(blob.type.includes("webm")?"webm":"mp4");link.href=objectUrl;link.download="jfriendschat-"+type+"-"+m.id+"."+ext;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),60000);downloadButton.textContent="⬇";downloadButton.setAttribute("aria-label", "Download "+(type==="image"?"picture":"video"));downloadButton.title="Download "+(type==="image"?"picture":"video");}catch(e){notify("Could not download media. Please try again.",true);downloadButton.textContent="⬇";downloadButton.setAttribute("aria-label", "Download "+(type==="image"?"picture":"video"));downloadButton.title="Download "+(type==="image"?"picture":"video");}finally{downloadButton.disabled=false;}});
         bubble.appendChild(downloadButton);
       }else{const warning=document.createElement("div");warning.textContent="Media unavailable. Check chat-media Storage permissions.";bubble.appendChild(warning);}
     }else{const t=document.createElement("div");t.textContent=raw;bubble.appendChild(t);}
+    const actions=document.createElement("div");actions.className="message-actions";
+    const forwardButton=document.createElement("button");forwardButton.type="button";forwardButton.className="message-action-button";forwardButton.textContent="↪";forwardButton.title="Forward message";forwardButton.setAttribute("aria-label","Forward message");
+    forwardButton.addEventListener("click",()=>forwardChatMessage(m,raw,path,type));actions.appendChild(forwardButton);bubble.appendChild(actions);
     const time=document.createElement("div");time.className="chat-time";const date=new Date(m.created_at);time.textContent=Number.isNaN(date.getTime())?"":date.toLocaleString();bubble.append(time);box.appendChild(bubble);
   }
   box.scrollTop=box.scrollHeight;
