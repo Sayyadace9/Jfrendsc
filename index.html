@@ -51,7 +51,7 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 <main class="container">
 <div id="message" class="hidden" role="status" aria-live="polite"></div>
 <section id="setupCard" class="card hidden"><h2>Setup Required</h2><p>Supabase could not load. Check your internet connection and reload the page.</p></section>
-<section id="authSection" class="card hidden">
+<section id="authSection" class="card">
 <h2 id="formTitle">Create Account</h2>
 <form id="authForm">
 <input id="fullName" type="text" placeholder="Full name" maxlength="80" required>
@@ -273,7 +273,7 @@ function updateChatHeader(friendId) {
   const profile = friendProfiles.find(p => p.id === friendId);
   const name = profile?.full_name || "JFriendsChat Friend";
   $("chatFriendName").textContent = name;
-  $("chatFriendAvatar").textContent = name.trim().split(/\\s+/).slice(0,2).map(part => part[0] || "").join("").toUpperCase() || "JF";
+  $("chatFriendAvatar").textContent = name.trim().split(/\s+/).slice(0,2).map(part => part[0] || "").join("").toUpperCase() || "JF";
   $("chatFriendStatus").textContent = profile?.username ? "@" + profile.username : "Friend";
 }
 function renderMessages(messages) {
