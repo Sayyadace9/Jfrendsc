@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>JFriendsChat</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -28,9 +27,6 @@ button:disabled{opacity:.5}
 .row input{flex:1;min-width:0}
 .row button{flex-shrink:0}
 .item{padding:12px 0;border-bottom:1px solid #e3e9ed}
-.item:last-child{border-bottom:0}
-.item button{margin-right:5px}
-footer{text-align:center;color:#526575;padding:18px}
 nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
 nav button{flex:1;min-width:90px}
 .avatar{width:110px;height:110px;border-radius:50%;object-fit:cover;background:#e2e8f0;border:3px solid #128c7e;display:block;margin:10px auto}
@@ -41,151 +37,124 @@ nav button{flex:1;min-width:90px}
 
 <body>
 <header>
-  <h1>💬 JFriendsChat</h1>
-  <p>Connect with friends and relatives ❤️</p>
+<h1>💬 JFriendsChat</h1>
+<p>Connect with friends and relatives ❤️</p>
 </header>
 
 <main class="container">
-  <div id="message" class="hidden" role="status" aria-live="polite"></div>
+<div id="message" class="hidden" role="status"></div>
 
-  <section id="setupCard" class="card hidden">
-    <h2>Setup Required</h2>
-    <p>Supabase could not be loaded. Check your internet connection and project settings.</p>
-  </section>
+<section id="setupCard" class="card hidden">
+<h2>Setup Required</h2>
+<p>Supabase could not load. Check your internet connection.</p>
+</section>
 
-  <section id="authSection" class="card hidden">
-    <h2 id="formTitle">Create Account</h2>
-    <form id="authForm">
-      <input id="fullName" type="text" placeholder="Full name" maxlength="80" required>
-      <input id="email" type="email" placeholder="Email address" autocomplete="email" required>
-      <input id="password" type="password" placeholder="Password (at least 8 characters)" minlength="8" required>
-      <button id="submitButton" class="full" type="submit">Create Account</button>
-    </form>
-    <button id="switchButton" class="full secondary" type="button">Already have an account? Log in</button>
-    <p class="note">If email confirmation is enabled, confirm your email before logging in.</p>
-  </section>
+<section id="authSection" class="card hidden">
+<h2 id="formTitle">Create Account</h2>
+<form id="authForm">
+<input id="fullName" type="text" placeholder="Full name" maxlength="80" required>
+<input id="email" type="email" placeholder="Email address" required>
+<input id="password" type="password" placeholder="Password (at least 8 characters)" minlength="8" required>
+<button id="submitButton" class="full" type="submit">Create Account</button>
+</form>
+<button id="switchButton" class="full secondary" type="button">Already have an account? Log in</button>
+</section>
 
-  <section id="appSection" class="hidden">
-    <section class="card">
-      <h2>Welcome to JFriendsChat! 🎉</h2>
-      <p id="welcomeText"></p>
-      <button id="logoutButton" class="full danger" type="button">Log Out</button>
-    </section>
+<section id="appSection" class="hidden">
+<section class="card">
+<h2>Welcome to JFriendsChat! 🎉</h2>
+<p id="welcomeText"></p>
+<button id="logoutButton" class="full danger" type="button">Log Out</button>
+</section>
 
-    <nav>
-      <button type="button" data-panel="profilePanel">👤 Profile</button>
-      <button type="button" data-panel="searchPanel">🔎 Find Friends</button>
-      <button type="button" data-panel="requestsPanel">🤝 Requests</button>
-      <button type="button" data-panel="friendsPanel">👥 Friends</button>
-      <button type="button" data-panel="chatPanel">💬 Chat</button>
-    </nav>
+<nav>
+<button type="button" data-panel="profilePanel">👤 My Profile</button>
+<button type="button" data-panel="searchPanel">🔎 Find Friends</button>
+<button type="button" data-panel="requestsPanel">🤝 Requests</button>
+<button type="button" data-panel="friendsPanel">👥 Friends</button>
+<button type="button" data-panel="chatPanel">💬 Chat</button>
+</nav>
 
-    <section id="profilePanel" class="card">
-      <h2>My Profile</h2>
+<section id="profilePanel" class="card">
+<h2>👤 Edit My Profile</h2>
+<div id="avatarDisplay">
+<div class="avatar-placeholder">👤</div>
+</div>
+<p class="note" style="text-align:center">Your profile picture</p>
 
-      <div id="avatarDisplay">
-        <div class="avatar-placeholder">👤</div>
-      </div>
+<form id="profileForm">
+<label for="profilePhoto">Choose a profile picture</label>
+<input id="profilePhoto" type="file" accept="image/jpeg,image/png,image/webp">
 
-      <p class="note" style="text-align:center">Your profile picture</p>
+<label for="profileFullName">Full name</label>
+<input id="profileFullName" type="text" maxlength="80" required>
 
-      <form id="profileForm">
-        <label for="profilePhoto">Choose a profile picture</label>
-        <input id="profilePhoto" type="file" accept="image/jpeg,image/png,image/webp">
+<label for="profileUsername">Username</label>
+<input id="profileUsername" type="text" disabled>
 
-        <label for="profileFullName">Full name</label>
-        <input id="profileFullName" type="text" maxlength="80" required>
+<button id="saveProfileButton" class="full" type="submit">Save Profile</button>
+</form>
+<p class="note">Pictures must be JPG, PNG, or WebP and no larger than 2 MB.</p>
+</section>
 
-        <label for="profileUsername">Username</label>
-        <input id="profileUsername" type="text" disabled>
+<section id="searchPanel" class="card hidden">
+<h2>Find Friends</h2>
+<form id="searchForm" class="row">
+<input id="searchTerm" type="text" placeholder="Enter username" maxlength="30" required>
+<button type="submit">Search</button>
+</form>
+<div id="searchResults"></div>
+</section>
 
-        <button id="saveProfileButton" class="full" type="submit">Save Profile</button>
-      </form>
+<section id="requestsPanel" class="card hidden">
+<h2>Friend Requests</h2>
+<h3>Received</h3>
+<div id="receivedRequests"></div>
+<h3>Sent</h3>
+<div id="sentRequests"></div>
+</section>
 
-      <p class="note">Use a JPG, PNG, or WebP image up to 2 MB. Your username cannot be changed here.</p>
-    </section>
+<section id="friendsPanel" class="card hidden">
+<h2>My Friends</h2>
+<p>Accepted friends will be connected here in a later update.</p>
+</section>
 
-    <section id="searchPanel" class="card hidden">
-      <h2>Find Friends</h2>
-      <p class="note">Search by username.</p>
-      <form id="searchForm" class="row">
-        <input id="searchTerm" type="text" placeholder="Enter username" maxlength="30" required>
-        <button type="submit">Search</button>
-      </form>
-      <div id="searchResults"></div>
-    </section>
+<section id="chatPanel" class="card hidden">
+<h2>Private Chat</h2>
+<p>Private messaging has not been connected yet.</p>
+</section>
+</section>
 
-    <section id="requestsPanel" class="card hidden">
-      <h2>Friend Requests</h2>
-      <h3>Received</h3>
-      <div id="receivedRequests"></div>
-      <h3>Sent</h3>
-      <div id="sentRequests"></div>
-    </section>
-
-    <section id="friendsPanel" class="card hidden">
-      <h2>My Friends</h2>
-      <div id="friendsList"></div>
-      <p class="note">We will connect the friends list to accepted requests in a later update.</p>
-    </section>
-
-    <section id="chatPanel" class="card hidden">
-      <h2>Private Chat</h2>
-      <p>Real private messaging will be connected in the next stage.</p>
-    </section>
-  </section>
-
-  <section class="card">
-    <h2>About JFriendsChat</h2>
-    <p>A place to bring friends and relatives closer together.</p>
-    <p class="note">Keep your password private. Never share secret database keys.</p>
-  </section>
+<section class="card">
+<h2>About JFriendsChat</h2>
+<p>A place to bring friends and relatives closer together.</p>
+</section>
 </main>
 
-<footer>JFriendsChat © 2026</footer>
+<footer style="text-align:center;padding:18px">JFriendsChat © 2026</footer>
 
 <script>
 const SUPABASE_URL = "https://msifvhqvxfjjwcazacxj.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__uU2wBTvE8tWoAFoRSWVEA_AgJvZOqg";
 
 const $ = id => document.getElementById(id);
-let db = null;
-let isLogin = false;
-let currentUser = null;
-let currentAvatarPath = null;
+let db, isLogin = false, currentUser = null, currentAvatarPath = null;
 let avatarObjectUrl = null;
 
-function notify(text, isError=false) {
+function notify(text, error=false) {
   $("message").textContent = text;
   $("message").classList.remove("hidden");
-  $("message").style.background = isError ? "#ffe7e7" : "#dcfce7";
-  $("message").style.color = isError ? "#9b1c1c" : "#166534";
-  $("message").scrollIntoView({behavior:"smooth",block:"nearest"});
+  $("message").style.background = error ? "#ffe7e7" : "#dcfce7";
+  $("message").style.color = error ? "#9b1c1c" : "#166534";
 }
 
 function clearNotice() {
   $("message").classList.add("hidden");
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-  }[char]));
-}
-
 function showAuth() {
   $("authSection").classList.remove("hidden");
   $("appSection").classList.add("hidden");
-}
-
-async function showApp(user) {
-  if (!user) return;
-  currentUser = user;
-  $("authSection").classList.add("hidden");
-  $("appSection").classList.remove("hidden");
-  $("welcomeText").textContent = user.email || "Signed in";
-  await loadProfile();
-  await loadRequests();
 }
 
 function updateAuthForm() {
@@ -196,6 +165,23 @@ function updateAuthForm() {
   $("switchButton").textContent = isLogin
     ? "Need an account? Register"
     : "Already have an account? Log in";
+}
+
+async function showApp(user) {
+  if (!user) return;
+  currentUser = user;
+  $("authSection").classList.add("hidden");
+  $("appSection").classList.remove("hidden");
+  $("welcomeText").textContent = user.email || "Signed in";
+  showPanel("profilePanel");
+  await loadProfile();
+  await loadRequests();
+}
+
+function showPanel(id) {
+  ["profilePanel","searchPanel","requestsPanel","friendsPanel","chatPanel"]
+    .forEach(panel => $(panel).classList.add("hidden"));
+  $(id).classList.remove("hidden");
 }
 
 async function loadProfile() {
@@ -212,7 +198,7 @@ async function loadProfile() {
   }
 
   if (!data) {
-    notify("Your profile was not found. Please contact the app administrator.", true);
+    notify("Profile not found. Check that your Supabase profile was created.", true);
     return;
   }
 
@@ -233,21 +219,20 @@ async function displayAvatar(path) {
     return;
   }
 
-  const {data, error} = await db.storage.from("avatars")
-    .createSignedUrl(path, 3600);
+  const {data, error} = await db.storage.from("avatars").createSignedUrl(path, 3600);
 
   if (error || !data?.signedUrl) {
     const placeholder = document.createElement("div");
     placeholder.className = "avatar-placeholder";
     placeholder.textContent = "👤";
     $("avatarDisplay").appendChild(placeholder);
-    notify("Could not display profile picture. Check storage permissions.", true);
+    notify("Could not display picture: " + (error?.message || "Unknown error"), true);
     return;
   }
 
   const img = document.createElement("img");
   img.className = "avatar";
-  img.alt = "Your profile picture";
+  img.alt = "Profile picture";
   img.src = data.signedUrl;
   $("avatarDisplay").appendChild(img);
 }
@@ -268,7 +253,6 @@ async function loadRequests() {
 
   const incoming = data.filter(r => r.receiver_id === currentUser.id && r.status === "pending");
   const outgoing = data.filter(r => r.sender_id === currentUser.id);
-
   $("receivedRequests").replaceChildren();
   $("sentRequests").replaceChildren();
 
@@ -277,24 +261,20 @@ async function loadRequests() {
 
   for (const request of incoming) {
     const {data: profile} = await db.from("profiles")
-      .select("username,full_name")
-      .eq("id", request.sender_id)
-      .maybeSingle();
+      .select("username,full_name").eq("id", request.sender_id).maybeSingle();
 
     const item = document.createElement("div");
     item.className = "item";
-    item.append(document.createTextNode(
-      `${profile?.full_name || "User"} (@${profile?.username || "unknown"}) `
-    ));
+    item.textContent = `${profile?.full_name || "User"} (@${profile?.username || "unknown"}) `;
 
     const accept = document.createElement("button");
     accept.textContent = "Accept";
-    accept.onclick = () => respondToRequest(request.id, true);
+    accept.onclick = () => respondToRequest(request.id, "accepted");
 
     const reject = document.createElement("button");
     reject.textContent = "Reject";
     reject.className = "danger";
-    reject.onclick = () => respondToRequest(request.id, false);
+    reject.onclick = () => respondToRequest(request.id, "rejected");
 
     item.append(accept, reject);
     $("receivedRequests").appendChild(item);
@@ -303,59 +283,51 @@ async function loadRequests() {
   for (const request of outgoing) {
     const item = document.createElement("div");
     item.className = "item";
-    item.textContent = `Request status: ${request.status}`;
+    item.textContent = "Request status: " + request.status;
     $("sentRequests").appendChild(item);
   }
 }
 
-async function respondToRequest(id, accept) {
+async function respondToRequest(id, status) {
   const {error} = await db.from("friend_requests")
-    .update({status: accept ? "accepted" : "rejected"})
-    .eq("id", id);
-
-  if (error) {
-    notify("Could not update request: " + error.message, true);
-    return;
-  }
-
-  notify(accept ? "Friend request accepted!" : "Friend request rejected.");
+    .update({status}).eq("id", id);
+  if (error) return notify("Could not update request: " + error.message, true);
+  notify("Friend request " + status + "!");
   await loadRequests();
 }
 
-$("switchButton").addEventListener("click", () => {
+$("switchButton").onclick = () => {
   isLogin = !isLogin;
   updateAuthForm();
   clearNotice();
-});
+};
 
 $("authForm").addEventListener("submit", async event => {
   event.preventDefault();
   $("submitButton").disabled = true;
   clearNotice();
 
-  const email = $("email").value.trim();
-  const password = $("password").value;
-  const fullName = $("fullName").value.trim();
-
   try {
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    const fullName = $("fullName").value.trim();
+
     if (isLogin) {
-      const {data, error} = await db.auth.signInWithPassword({email, password});
+      const {data, error} = await db.auth.signInWithPassword({email,password});
       if (error) throw error;
       await showApp(data.user);
-      notify("You have logged in successfully!");
+      notify("Logged in successfully!");
     } else {
       const {data, error} = await db.auth.signUp({
-        email, password,
-        options: {data: {full_name: fullName}}
+        email,password,options:{data:{full_name:fullName}}
       });
-
       if (error) throw error;
 
       if (data.session) {
         await showApp(data.user);
-        notify("Account created successfully!");
+        notify("Account created!");
       } else {
-        notify("Registration received! Check your email to confirm your account.");
+        notify("Check your email to confirm your account.");
       }
     }
   } catch (error) {
@@ -366,49 +338,35 @@ $("authForm").addEventListener("submit", async event => {
   }
 });
 
-$("logoutButton").addEventListener("click", async () => {
+$("logoutButton").onclick = async () => {
   const {error} = await db.auth.signOut();
-  if (error) {
-    notify(error.message, true);
-  } else {
-    currentUser = null;
-    currentAvatarPath = null;
-    showAuth();
-    notify("You have logged out.");
-  }
-});
+  if (error) return notify(error.message, true);
+  currentUser = null;
+  currentAvatarPath = null;
+  showAuth();
+  notify("You have logged out.");
+};
 
 $("profilePhoto").addEventListener("change", () => {
   const file = $("profilePhoto").files[0];
-
   if (avatarObjectUrl) URL.revokeObjectURL(avatarObjectUrl);
   avatarObjectUrl = null;
+  if (!file) return displayAvatar(currentAvatarPath);
 
-  if (!file) {
-    displayAvatar(currentAvatarPath);
-    return;
-  }
-
-  const allowed = ["image/jpeg", "image/png", "image/webp"];
-
-  if (!allowed.includes(file.type)) {
+  if (!["image/jpeg","image/png","image/webp"].includes(file.type)) {
     $("profilePhoto").value = "";
-    notify("Choose a JPG, PNG, or WebP image.", true);
-    return;
+    return notify("Choose a JPG, PNG, or WebP picture.", true);
   }
-
   if (file.size > 2 * 1024 * 1024) {
     $("profilePhoto").value = "";
-    notify("Your picture must be 2 MB or smaller.", true);
-    return;
+    return notify("Picture must be 2 MB or smaller.", true);
   }
 
   avatarObjectUrl = URL.createObjectURL(file);
   $("avatarDisplay").replaceChildren();
-
   const img = document.createElement("img");
   img.className = "avatar";
-  img.alt = "Profile picture preview";
+  img.alt = "Picture preview";
   img.src = avatarObjectUrl;
   $("avatarDisplay").appendChild(img);
 });
@@ -424,55 +382,34 @@ $("profileForm").addEventListener("submit", async event => {
 
   try {
     const fullName = $("profileFullName").value.trim();
-
     if (!fullName || fullName.length > 80) {
-      throw new Error("Enter a full name between 1 and 80 characters.");
+      throw new Error("Enter your full name.");
     }
 
     let avatarPath = currentAvatarPath;
     const file = $("profilePhoto").files[0];
 
     if (file) {
-      const extensionMap = {
-        "image/jpeg": "jpg",
-        "image/png": "png",
-        "image/webp": "webp"
-      };
-      const extension = extensionMap[file.type];
+      const extension = {"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[file.type];
+      if (!extension) throw new Error("Unsupported picture format.");
+      if (file.size > 2 * 1024 * 1024) throw new Error("Picture must be 2 MB or smaller.");
 
-      if (!extension) throw new Error("Unsupported image format.");
-      if (file.size > 2 * 1024 * 1024) throw new Error("Image must be 2 MB or smaller.");
-
-      // Each user can upload only within their own account-ID folder.
-      // A fixed filename allows a user to replace their current avatar.
       avatarPath = `${currentUser.id}/avatar.${extension}`;
-
-      const {error: uploadError} = await db.storage
-        .from("avatars")
-        .upload(avatarPath, file, {
-          upsert: true,
-          contentType: file.type,
-          cacheControl: "3600"
-        });
-
-      if (uploadError) throw uploadError;
+      const {error} = await db.storage.from("avatars").upload(avatarPath, file, {
+        upsert:true, contentType:file.type, cacheControl:"3600"
+      });
+      if (error) throw error;
     }
 
-    const {error: updateError} = await db.from("profiles")
-      .update({
-        full_name: fullName,
-        avatar_path: avatarPath
-      })
-      .eq("id", currentUser.id);
-
-    if (updateError) throw updateError;
+    const {error} = await db.from("profiles")
+      .update({full_name:fullName,avatar_path:avatarPath})
+      .eq("id",currentUser.id);
+    if (error) throw error;
 
     currentAvatarPath = avatarPath;
     $("profilePhoto").value = "";
-
     if (avatarObjectUrl) URL.revokeObjectURL(avatarObjectUrl);
     avatarObjectUrl = null;
-
     await displayAvatar(currentAvatarPath);
     notify("Profile saved successfully! 🎉");
   } catch (error) {
@@ -483,58 +420,47 @@ $("profileForm").addEventListener("submit", async event => {
   }
 });
 
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
 $("searchForm").addEventListener("submit", async event => {
   event.preventDefault();
   if (!currentUser) return;
 
   const term = $("searchTerm").value.trim();
-
-  if (term.length < 3) {
-    notify("Enter at least 3 characters for the username.", true);
-    return;
-  }
-
+  if (term.length < 3) return notify("Enter at least 3 characters.", true);
   $("searchResults").textContent = "Searching...";
 
-  const {data, error} = await db.rpc("search_friends", {
-    search_term: term
-  });
-
+  const {data,error} = await db.rpc("search_friends",{search_term:term});
   if (error) {
     $("searchResults").textContent = "";
-    notify("Search failed: " + error.message, true);
-    return;
+    return notify("Search failed: " + error.message, true);
   }
 
   $("searchResults").replaceChildren();
   const results = (data || []).filter(p => p.user_id !== currentUser.id);
-
   if (!results.length) {
-    $("searchResults").textContent = "No users found. Try another username.";
+    $("searchResults").textContent = "No users found.";
     return;
   }
 
   for (const profile of results) {
     const item = document.createElement("div");
     item.className = "item";
-
     const label = document.createElement("div");
-    label.innerHTML = `<strong>${escapeHTML(profile.full_name)}</strong><br>
-      <span class="small">@${escapeHTML(profile.username)}</span>`;
-
+    label.innerHTML = `<strong>${escapeHTML(profile.full_name)}</strong><br><span class="small">@${escapeHTML(profile.username)}</span>`;
     const button = document.createElement("button");
     button.textContent = "Send Friend Request";
-
     button.onclick = async () => {
       button.disabled = true;
-
-      const {error: requestError} = await db.from("friend_requests").insert({
-        sender_id: currentUser.id,
-        receiver_id: profile.user_id
+      const {error} = await db.from("friend_requests").insert({
+        sender_id:currentUser.id,receiver_id:profile.user_id
       });
-
-      if (requestError) {
-        notify("Could not send request: " + requestError.message, true);
+      if (error) {
+        notify("Could not send request: " + error.message, true);
         button.disabled = false;
       } else {
         button.textContent = "Request Sent";
@@ -542,58 +468,41 @@ $("searchForm").addEventListener("submit", async event => {
         await loadRequests();
       }
     };
-
-    item.append(label, button);
+    item.append(label,button);
     $("searchResults").appendChild(item);
   }
 });
 
 document.querySelectorAll("nav button").forEach(button => {
-  button.addEventListener("click", () => {
-    ["profilePanel","searchPanel","requestsPanel","friendsPanel","chatPanel"]
-      .forEach(id => $(id).classList.add("hidden"));
-
-    $(button.dataset.panel).classList.remove("hidden");
-
-    if (button.dataset.panel === "requestsPanel") loadRequests();
-    if (button.dataset.panel === "profilePanel") loadProfile();
-  });
+  button.onclick = async () => {
+    showPanel(button.dataset.panel);
+    if (button.dataset.panel === "profilePanel") await loadProfile();
+    if (button.dataset.panel === "requestsPanel") await loadRequests();
+  };
 });
 
 async function startApp() {
-  if (!window.supabase ||
-      !SUPABASE_URL.startsWith("https://") ||
-      SUPABASE_PUBLISHABLE_KEY.length < 10) {
+  if (!window.supabase) {
     $("setupCard").classList.remove("hidden");
     return;
   }
 
-  db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
-
+  db = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
   $("authSection").classList.remove("hidden");
   updateAuthForm();
 
-  db.auth.onAuthStateChange((event, session) => {
-    if (session) {
-      // Avoid awaiting database operations inside this callback.
-      setTimeout(() => showApp(session.user), 0);
-    } else if (event === "SIGNED_OUT") {
+  db.auth.onAuthStateChange((event,session) => {
+    if (session) setTimeout(() => showApp(session.user),0);
+    else if (event === "SIGNED_OUT") {
       currentUser = null;
       $("appSection").classList.add("hidden");
       showAuth();
     }
   });
 
-  const {data, error} = await db.auth.getSession();
-
-  if (error) {
-    notify(error.message, true);
-  } else if (data.session) {
-    await showApp(data.session.user);
-  }
+  const {data,error} = await db.auth.getSession();
+  if (error) notify(error.message,true);
+  else if (data.session) await showApp(data.session.user);
 }
 
 startApp();
