@@ -1,307 +1,382 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FriendsChat</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JFriendsChat</title>
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #eaf0f4;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-.app {
-  max-width: 480px;
-  height: 100dvh;
-  margin: auto;
-  background: white;
-  display: flex;
-  flex-direction: column;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #eaf1f7;
+      color: #172b3a;
+    }
 
-.header {
-  background: #087f5b;
-  color: white;
-  padding: 17px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+    header {
+      background: #075e54;
+      color: white;
+      text-align: center;
+      padding: 22px 10px;
+    }
 
-.header h2 {
-  margin: 0;
-  font-size: 22px;
-}
+    header h1 {
+      margin: 0 0 8px;
+    }
 
-.status {
-  font-size: 12px;
-  margin-top: 4px;
-}
+    header p {
+      margin: 0;
+    }
 
-.friends {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-}
+    .container {
+      width: 92%;
+      max-width: 430px;
+      margin: 25px auto;
+    }
 
-.friend {
-  min-width: 65px;
-  text-align: center;
-  font-size: 12px;
-  cursor: pointer;
-}
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 4px 15px #00000012;
+      margin-bottom: 18px;
+    }
 
-.avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #ccefe3;
-  color: #087f5b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 5px;
-  font-size: 19px;
-  font-weight: bold;
-}
+    h2 {
+      margin-top: 0;
+      color: #075e54;
+    }
 
-.chat-header {
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #eee;
-}
+    input {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #ccd6dd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
 
-.chat-header .avatar {
-  margin: 0;
-  width: 42px;
-  height: 42px;
-}
+    button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #075e54;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-.chat-header h3 {
-  margin: 0 0 4px;
-}
+    button:disabled {
+      opacity: 0.6;
+    }
 
-.chat-header small {
-  color: #087f5b;
-}
+    .secondary {
+      background: #128c7e;
+    }
 
-.messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 15px;
-  background: #f5f7f8;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+    .logout {
+      background: #b42318;
+    }
 
-.bubble {
-  max-width: 82%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-size: 15px;
-  overflow-wrap: anywhere;
-}
+    #message {
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+    }
 
-.received {
-  align-self: flex-start;
-  background: white;
-  border: 1px solid #e4e4e4;
-}
+    .hidden {
+      display: none;
+    }
 
-.sent {
-  align-self: flex-end;
-  background: #d5f7e5;
-}
+    .note {
+      color: #526575;
+      font-size: 13px;
+      line-height: 1.5;
+    }
 
-.time {
-  display: block;
-  text-align: right;
-  font-size: 10px;
-  color: #777;
-  margin-top: 5px;
-}
-
-.composer {
-  display: flex;
-  gap: 8px;
-  padding: 10px;
-  border-top: 1px solid #ddd;
-  background: white;
-}
-
-.composer input {
-  flex: 1;
-  min-width: 0;
-  border: 1px solid #ccc;
-  border-radius: 22px;
-  padding: 12px 14px;
-  font-size: 15px;
-  outline: none;
-}
-
-.composer button {
-  border: none;
-  border-radius: 50%;
-  width: 46px;
-  height: 46px;
-  background: #087f5b;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.footer {
-  text-align: center;
-  padding: 7px;
-  font-size: 11px;
-  color: #777;
-  background: white;
-}
-</style>
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #526575;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="app">
+<header>
+  <h1>💬 JFriendsChat</h1>
+  <p>Connect with friends and relatives ❤️</p>
+</header>
 
-  <header class="header">
-    <div>
-      <h2>FriendsChat 💬</h2>
-      <div class="status">Connect with your friends</div>
-    </div>
-    <span>⋮</span>
-  </header>
+<main class="container">
 
-  <section class="friends">
-    <div class="friend" onclick="selectFriend('Me')">
-      <div class="avatar">M</div>
-      Me
-    </div>
+  <div id="message" class="hidden" role="status" aria-live="polite"></div>
 
-    <div class="friend" onclick="selectFriend('Ali')">
-      <div class="avatar">A</div>
-      Ali
-    </div>
-
-    <div class="friend" onclick="selectFriend('Amina')">
-      <div class="avatar">A</div>
-      Amina
-    </div>
-
-    <div class="friend" onclick="selectFriend('Musa')">
-      <div class="avatar">M</div>
-      Musa
-    </div>
-
-    <div class="friend" onclick="selectFriend('Fatima')">
-      <div class="avatar">F</div>
-      Fatima
-    </div>
+  <section id="setupCard" class="card hidden">
+    <h2>Setup Required</h2>
+    <p>Your Supabase connection details have not been added correctly.</p>
+    <p>Open index.html and replace both configuration placeholders with your actual Project URL and Publishable Key.</p>
   </section>
 
-  <section class="chat-header">
-    <div class="avatar" id="friendAvatar">A</div>
-    <div>
-      <h3 id="friendName">Ali</h3>
-      <small>Demo conversation</small>
-    </div>
+  <section id="authSection" class="card hidden">
+    <h2 id="formTitle">Create Account</h2>
+
+    <form id="authForm">
+      <div id="nameField">
+        <input
+          id="fullName"
+          type="text"
+          placeholder="Your full name"
+          autocomplete="name"
+          maxlength="80"
+          required
+        >
+      </div>
+
+      <input
+        id="email"
+        type="email"
+        placeholder="Email address"
+        autocomplete="email"
+        required
+      >
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Password (at least 8 characters)"
+        autocomplete="current-password"
+        minlength="8"
+        required
+      >
+
+      <button id="submitButton" type="submit">Create Account</button>
+    </form>
+
+    <button id="switchButton" class="secondary" type="button">
+      Already have an account? Log in
+    </button>
+
+    <p class="note">
+      Use your own email address. If email confirmation is enabled,
+      you must confirm your email before signing in.
+    </p>
   </section>
 
-  <main class="messages" id="messages">
-    <div class="bubble received">
-      Hello! 👋
-      <span class="time">10:00</span>
-    </div>
+  <section id="profileSection" class="card hidden">
+    <h2>Welcome! 🎉</h2>
+    <p id="welcomeText"></p>
+    <p>Your account is connected successfully.</p>
 
-    <div class="bubble received">
-      Welcome to FriendsChat!
-      <span class="time">10:01</span>
-    </div>
-  </main>
+    <button id="logoutButton" class="logout" type="button">
+      Log Out
+    </button>
+  </section>
 
-  <form class="composer" id="chatForm">
-    <input
-      id="messageInput"
-      type="text"
-      placeholder="Type a message..."
-      autocomplete="off"
-      aria-label="Type a message"
-    >
-    <button type="submit" aria-label="Send message">➤</button>
-  </form>
+  <section class="card">
+    <h2>About JFriendsChat</h2>
+    <p>
+      A place to bring friends and relatives closer together.
+    </p>
+    <p class="note">
+      Private conversations, friend requests, and real-time messaging
+      will be added in the next development steps.
+    </p>
+  </section>
 
-  <div class="footer">
-    FriendsChat • Chat interface demo
-  </div>
+</main>
 
-</div>
+<footer>
+  JFriendsChat © 2026
+</footer>
 
 <script>
-const messages = document.getElementById("messages");
-const input = document.getElementById("messageInput");
-const form = document.getElementById("chatForm");
-const friendName = document.getElementById("friendName");
-const friendAvatar = document.getElementById("friendAvatar");
+  // STEP 1: Replace these two placeholders with your own values.
+  const SUPABASE_URL = "YOUR_PROJECT_URL";
+  const SUPABASE_PUBLISHABLE_KEY = "YOUR_PUBLISHABLE_KEY";
 
-function currentTime() {
-  return new Date().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit"
+  const setupCard = document.getElementById("setupCard");
+  const authSection = document.getElementById("authSection");
+  const profileSection = document.getElementById("profileSection");
+  const messageBox = document.getElementById("message");
+  const formTitle = document.getElementById("formTitle");
+  const nameField = document.getElementById("nameField");
+  const submitButton = document.getElementById("submitButton");
+  const switchButton = document.getElementById("switchButton");
+  const authForm = document.getElementById("authForm");
+
+  let supabaseClient = null;
+  let isLogin = false;
+
+  function showMessage(text, isError = false) {
+    messageBox.textContent = text;
+    messageBox.classList.remove("hidden");
+    messageBox.style.background = isError ? "#ffe7e7" : "#dcfce7";
+    messageBox.style.color = isError ? "#9b1c1c" : "#166534";
+  }
+
+  function showAuthForm() {
+    authSection.classList.remove("hidden");
+    profileSection.classList.add("hidden");
+  }
+
+  function updateForm() {
+    formTitle.textContent = isLogin ? "Log In" : "Create Account";
+    submitButton.textContent = isLogin ? "Log In" : "Create Account";
+    nameField.classList.toggle("hidden", isLogin);
+
+    document.getElementById("fullName").required = !isLogin;
+
+    switchButton.textContent = isLogin
+      ? "Need an account? Register"
+      : "Already have an account? Log in";
+
+    document.getElementById("password").autocomplete =
+      isLogin ? "current-password" : "new-password";
+  }
+
+  function showSignedInUser(user) {
+    authSection.classList.add("hidden");
+    profileSection.classList.remove("hidden");
+
+    document.getElementById("welcomeText").textContent =
+      "Signed in as " + user.email;
+  }
+
+  async function refreshSession() {
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error) {
+      showAuthForm();
+      showMessage(error.message, true);
+      return;
+    }
+
+    if (data.session) {
+      showSignedInUser(data.session.user);
+    } else {
+      showAuthForm();
+    }
+  }
+
+  async function startApp() {
+    const configured =
+      SUPABASE_URL.startsWith("https://") &&
+      SUPABASE_URL.includes(".supabase.co") &&
+      SUPABASE_PUBLISHABLE_KEY !== "YOUR_PUBLISHABLE_KEY" &&
+      SUPABASE_PUBLISHABLE_KEY.length > 10;
+
+    if (!configured) {
+      setupCard.classList.remove("hidden");
+      return;
+    }
+
+    if (!window.supabase) {
+      setupCard.classList.remove("hidden");
+      showMessage("Could not load Supabase. Check your internet connection.", true);
+      return;
+    }
+
+    supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    authSection.classList.remove("hidden");
+    updateForm();
+
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        showSignedInUser(session.user);
+      } else if (event === "SIGNED_OUT") {
+        profileSection.classList.add("hidden");
+        authSection.classList.remove("hidden");
+      }
+    });
+
+    await refreshSession();
+  }
+
+  switchButton.addEventListener("click", () => {
+    isLogin = !isLogin;
+    updateForm();
+    messageBox.classList.add("hidden");
   });
-}
 
-function addMessage(text, type) {
-  const bubble = document.createElement("div");
-  bubble.className = "bubble " + type;
+  authForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-  const messageText = document.createElement("div");
-  messageText.textContent = text;
+    if (!supabaseClient) return;
 
-  const time = document.createElement("span");
-  time.className = "time";
-  time.textContent = currentTime();
+    submitButton.disabled = true;
+    submitButton.textContent = "Please wait...";
 
-  bubble.appendChild(messageText);
-  bubble.appendChild(time);
-  messages.appendChild(bubble);
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const fullName = document.getElementById("fullName").value.trim();
 
-  messages.scrollTop = messages.scrollHeight;
-}
+    try {
+      if (isLogin) {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
 
-form.addEventListener("submit", function(event) {
-  event.preventDefault();
+        if (error) throw error;
 
-  const text = input.value.trim();
+        showSignedInUser(data.user);
+        showMessage("You have logged in successfully!");
+      } else {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: fullName
+            }
+          }
+        });
 
-  if (!text) return;
+        if (error) throw error;
 
-  addMessage(text, "sent");
-  input.value = "";
-  input.focus();
-});
+        if (data.session) {
+          showSignedInUser(data.user);
+          showMessage("Your account has been created successfully!");
+        } else {
+          showMessage(
+            "Registration received! Check your email for a confirmation link before logging in."
+          );
+        }
+      }
+    } catch (error) {
+      showMessage(error.message || "Something went wrong. Please try again.", true);
+    } finally {
+      submitButton.disabled = false;
+      updateForm();
+    }
+  });
 
-function selectFriend(name) {
-  friendName.textContent = name;
-  friendAvatar.textContent = name.charAt(0).toUpperCase();
+  document.getElementById("logoutButton").addEventListener("click", async () => {
+    const { error } = await supabaseClient.auth.signOut();
 
-  messages.replaceChildren();
+    if (error) {
+      showMessage(error.message, true);
+    } else {
+      showMessage("You have logged out successfully.");
+    }
+  });
 
-  const notice = document.createElement("div");
-  notice.className = "bubble received";
-  notice.textContent = "You are viewing the demo chat with " + name + ".";
-  messages.appendChild(notice);
-}
+  startApp();
 </script>
 
 </body>
