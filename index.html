@@ -26,10 +26,24 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 .avatar{width:110px;height:110px;border-radius:50%;object-fit:cover;background:#e2e8f0;border:3px solid #128c7e;display:block;margin:10px auto}
 .avatar-placeholder{width:110px;height:110px;border-radius:50%;background:#d7e9e6;display:flex;align-items:center;justify-content:center;font-size:42px;margin:10px auto}
 .small{font-size:12px;color:#526575}.friend-name{font-weight:bold;font-size:17px}.status{font-size:13px;color:#128c7e}
-#chatMessages{height:330px;overflow-y:auto;border:1px solid #dce5e9;border-radius:10px;padding:10px;margin-top:12px;background:#f8fbfc}
-.chat-bubble{padding:10px 12px;border-radius:12px;margin:8px 0;max-width:88%;overflow-wrap:anywhere;white-space:pre-wrap}
-.mine{background:#d9fdd3;margin-left:auto}.theirs{background:#fff;border:1px solid #e1e8ec;margin-right:auto}
-.chat-time{font-size:11px;color:#61717b;margin-top:5px}
+#chatPanel{padding:0;overflow:hidden}
+.chat-title-area{padding:16px 18px 10px}
+.chat-friend-picker{padding:0 18px 12px}
+.wa-chat-header{display:flex;align-items:center;gap:11px;background:#075e54;color:#fff;padding:12px 15px}
+.wa-avatar{width:44px;height:44px;border-radius:50%;background:#d7e9e6;color:#075e54;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:19px;flex-shrink:0}
+.wa-friend-info{flex:1;min-width:0}
+.wa-friend-name{font-size:17px;font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wa-friend-status{font-size:12px;opacity:.85;margin-top:3px}
+.wa-head-action{background:transparent;color:white;font-size:22px;padding:6px;margin:0;min-width:35px}
+#chatMessages{height:390px;overflow-y:auto;border:0;border-radius:0;padding:12px;background-color:#efe8dc;background-image:radial-gradient(circle at 20% 20%,#ffffff55 2px,transparent 3px),radial-gradient(circle at 70% 65%,#d7cbb855 2px,transparent 3px);background-size:48px 48px,65px 65px;margin:0}
+.chat-bubble{padding:10px 12px;border-radius:12px;margin:8px 0;max-width:86%;overflow-wrap:anywhere;white-space:pre-wrap;box-shadow:0 1px 1px #0001;font-size:16px}
+.mine{background:#d9fdd3;margin-left:auto;border-top-right-radius:4px}.theirs{background:#fff;border:1px solid #e1e8ec;margin-right:auto;border-top-left-radius:4px}
+.chat-time{font-size:11px;color:#61717b;margin-top:5px;text-align:right}
+.wa-composer{display:flex;align-items:flex-end;gap:7px;padding:10px;background:#f7f7f7}
+.wa-composer textarea{flex:1;min-width:0;resize:vertical;max-height:120px;margin:0;border:1px solid #d8dfe3;border-radius:22px;background:#fff;padding:13px 15px}
+.wa-tool-button{width:42px;height:44px;flex-shrink:0;border-radius:50%;padding:0;margin:0;background:#fff;color:#526575;font-size:20px}
+.wa-send-button{width:48px;height:48px;flex-shrink:0;border-radius:50%;padding:0;margin:0;font-size:20px}
+.chat-note{padding:0 15px 15px;margin:0;background:#fff}
 </style>
 </head>
 <body>
@@ -56,10 +70,23 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 <section id="requestsPanel" class="card hidden"><h2>🤝 Friend Requests</h2><h3>Received</h3><div id="receivedRequests"></div><h3>Sent</h3><div id="sentRequests"></div></section>
 <section id="friendsPanel" class="card hidden"><h2>👥 My Friends</h2><p class="note">Your accepted friends will appear here.</p><button id="refreshFriendsButton" class="secondary" type="button">Refresh Friends</button><div id="friendsList" aria-live="polite">Open this section to load your friends.</div></section>
 <section id="chatPanel" class="card hidden">
-<h2>💬 Private Chat</h2><label for="chatFriend">Choose an accepted friend</label><select id="chatFriend"><option value="">Loading friends...</option></select>
-<button id="loadChatButton" class="full secondary" type="button">Open Conversation</button><div id="chatMessages" aria-live="polite">Choose a friend and tap Open Conversation.</div>
-<form id="chatForm"><textarea id="chatInput" maxlength="2000" placeholder="Type your message..." rows="3" required></textarea><button id="sendMessageButton" class="full" type="submit">Send Message</button></form>
-<p class="note">Only accepted friends can exchange messages. Messages can contain up to 2,000 characters.</p>
+<div class="chat-title-area"><h2 style="margin-bottom:0">💬 Chats</h2></div>
+<div class="chat-friend-picker"><label for="chatFriend">Choose an accepted friend</label><select id="chatFriend"><option value="">Loading friends...</option></select><button id="loadChatButton" class="full secondary" type="button">Open Conversation</button></div>
+<div class="wa-chat-header">
+  <div class="wa-avatar" id="chatFriendAvatar">JF</div>
+  <div class="wa-friend-info"><div class="wa-friend-name" id="chatFriendName">JFriendsChat</div><div class="wa-friend-status" id="chatFriendStatus">Choose a friend to start chatting</div></div>
+  <button class="wa-head-action" type="button" aria-label="Video call" title="Video call">▣</button>
+  <button class="wa-head-action" type="button" aria-label="Voice call" title="Voice call">☎</button>
+  <button class="wa-head-action" type="button" aria-label="More options" title="More options">⋮</button>
+</div>
+<div id="chatMessages" aria-live="polite">Choose a friend and tap Open Conversation.</div>
+<form id="chatForm" class="wa-composer">
+  <button class="wa-tool-button" type="button" aria-label="Emoji" title="Emoji">☺</button>
+  <textarea id="chatInput" maxlength="2000" placeholder="Message" rows="1" required></textarea>
+  <button class="wa-tool-button" type="button" aria-label="Attach file" title="Picture sharing will be added later">＋</button>
+  <button id="sendMessageButton" class="wa-send-button" type="submit" aria-label="Send message" title="Send message">➤</button>
+</form>
+<p class="note chat-note">Only accepted friends can exchange messages. Messages can contain up to 2,000 characters.</p>
 </section>
 </section>
 <section class="card"><h2>About JFriendsChat</h2><p>A place to bring friends and relatives closer together.</p></section>
@@ -236,8 +263,18 @@ async function loadChatFriends() {
     friendProfiles=profiles||[];select.replaceChildren();
     const first=document.createElement("option");first.value="";first.textContent="Choose a friend";select.appendChild(first);
     for (const profile of friendProfiles) {const option=document.createElement("option");option.value=profile.id;option.textContent=`${profile.full_name||"User"} (@${profile.username||"unknown"})`;select.appendChild(option);}
-    if (activeChatFriendId&&ids.includes(activeChatFriendId)) select.value=activeChatFriendId;
+    if (activeChatFriendId&&ids.includes(activeChatFriendId)) {
+      select.value=activeChatFriendId;
+      updateChatHeader(activeChatFriendId);
+    }
   } catch(error) {select.replaceChildren();const option=document.createElement("option");option.value="";option.textContent="Could not load friends";select.appendChild(option);notify("Could not load chat friends: "+error.message,true);}
+}
+function updateChatHeader(friendId) {
+  const profile = friendProfiles.find(p => p.id === friendId);
+  const name = profile?.full_name || "JFriendsChat Friend";
+  $("chatFriendName").textContent = name;
+  $("chatFriendAvatar").textContent = name.trim().split(/\\s+/).slice(0,2).map(part => part[0] || "").join("").toUpperCase() || "JF";
+  $("chatFriendStatus").textContent = profile?.username ? "@" + profile.username : "Friend";
 }
 function renderMessages(messages) {
   const box=$("chatMessages");box.replaceChildren();
@@ -254,7 +291,7 @@ async function openConversation() {
   if (!currentUser) return;
   const friendId=$("chatFriend").value;
   if (!friendId) {activeChatFriendId=null;$("chatMessages").textContent="Please choose an accepted friend.";return;}
-  activeChatFriendId=friendId;$("chatMessages").textContent="Loading messages...";await loadMessages();
+  activeChatFriendId=friendId;updateChatHeader(friendId);$("chatMessages").textContent="Loading messages...";await loadMessages();
 }
 async function loadMessages() {
   if (!currentUser||!activeChatFriendId) return;
@@ -274,7 +311,7 @@ async function loadMessages() {
 }
 $("loadChatButton").addEventListener("click",openConversation);
 $("refreshChatButton").addEventListener("click",async()=>{await loadChatFriends();if($("chatFriend").value){activeChatFriendId=$("chatFriend").value;await loadMessages();}else{$("chatMessages").textContent="Choose an accepted friend to refresh messages.";}});
-$("chatFriend").addEventListener("change",()=>{activeChatFriendId=$("chatFriend").value||null;$("chatMessages").textContent=activeChatFriendId?"Tap Open Conversation to load messages.":"Choose an accepted friend.";});
+$("chatFriend").addEventListener("change",()=>{activeChatFriendId=$("chatFriend").value||null;if(activeChatFriendId)updateChatHeader(activeChatFriendId);else{$("chatFriendName").textContent="JFriendsChat";$("chatFriendAvatar").textContent="JF";$("chatFriendStatus").textContent="Choose a friend to start chatting";}$("chatMessages").textContent=activeChatFriendId?"Tap Open Conversation to load messages.":"Choose a friend.";});
 
 $("chatForm").addEventListener("submit",async event=>{
   event.preventDefault();
