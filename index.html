@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>JFriendsChat</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#eaf1f7;color:#172b3a}
@@ -12,7 +13,7 @@ header{background:#075e54;color:white;padding:12px 16px;text-align:center;positi
 .header-main{display:flex;align-items:center;justify-content:center;position:relative;min-height:42px}
 header h1{margin:0;font-size:23px}
 .header-account{position:absolute;right:0;top:50%;transform:translateY(-50%)}
-.header-account-button{width:42px;height:42px;border-radius:50%;padding:0;margin:0;background:#ffffff22;border:1px solid #ffffff66;color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;line-height:1}
+.header-account-button{width:42px;height:42px;border-radius:50%;padding:0;margin:0;background:#ffffff22;border:1px solid #ffffff66;color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center}
 .header-account-menu{position:absolute;right:0;top:48px;z-index:1000;width:210px;background:#fff;color:#172b3a;border-radius:12px;box-shadow:0 6px 24px #0003;padding:8px;text-align:left}
 .header-account-menu button{display:block;width:100%;text-align:left;background:#fff;color:#172b3a;padding:12px;margin:0;border-radius:8px}
 .header-account-menu button:hover{background:#eef5f4}
@@ -30,17 +31,37 @@ h2{color:#075e54;margin-top:0}
 input,select,textarea{width:100%;padding:13px;margin:7px 0;border:1px solid #ccd6dd;border-radius:8px;font-size:16px}
 button{padding:12px;border:0;border-radius:8px;background:#075e54;color:white;font-size:15px;cursor:pointer;margin-top:7px}
 button:disabled{opacity:.5;cursor:not-allowed}
-.full{width:100%}.secondary{background:#128c7e}.danger{background:#b42318}
+.full{width:100%}
+.secondary{background:#128c7e}
+.danger{background:#b42318}
 .hidden{display:none!important}
 .note{font-size:13px;color:#526575;line-height:1.5}
 #message{padding:12px;border-radius:8px;margin-bottom:12px;overflow-wrap:anywhere}
-.row{display:flex;gap:8px;align-items:center}.row input{flex:1;min-width:0}.row button{flex-shrink:0}
+.row{display:flex;gap:8px;align-items:center}
+.row input{flex:1;min-width:0}
+.row button{flex-shrink:0}
 .item{padding:12px 0;border-bottom:1px solid #e3e9ed;overflow-wrap:anywhere}
-nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min-width:90px}
-.small{font-size:12px;color:#526575}.friend-name{font-weight:bold;font-size:17px}.presence-status{font-size:13px;margin-top:4px}.presence-status.online{color:#128c7e}.presence-status.offline{color:#75818a}
+nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+nav button{flex:1;min-width:90px}
+.small{font-size:12px;color:#526575}
+.friend-name{font-weight:bold;font-size:17px}
+.presence-status{font-size:13px;margin-top:4px}
+.presence-status.online{color:#128c7e}
+.presence-status.offline{color:#75818a}
 #chatPanel{padding:0;overflow:hidden}
 .chat-title-area{padding:16px 18px 10px}
-.chat-friend-picker{padding:0 18px 12px}
+.chat-list-search{padding:0 14px 10px}
+.chat-list-search input{border-radius:24px;background:#f1f4f5}
+.chat-list{padding:0 14px 12px}
+.chat-list-item{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #e5ebee;cursor:pointer}
+.chat-list-item:hover{background:#f4f8f7}
+.chat-list-avatar{width:50px;height:50px;border-radius:50%;background:#d7e9e6;color:#075e54;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;flex-shrink:0}
+.chat-list-info{flex:1;min-width:0}
+.chat-list-name{font-weight:bold;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-list-preview{font-size:13px;color:#64727b;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-list-status{font-size:12px;margin-top:4px}
+.chat-list-arrow{font-size:20px;color:#128c7e;padding:5px}
+#chatFriend,#loadChatButton{display:none!important}
 .wa-chat-header{display:flex;align-items:center;gap:11px;background:#075e54;color:#fff;padding:12px 15px}
 .wa-avatar{width:44px;height:44px;border-radius:50%;background:#d7e9e6;color:#075e54;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:19px;flex-shrink:0}
 .wa-friend-info{flex:1;min-width:0}
@@ -49,7 +70,8 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 .wa-head-action{background:transparent;color:white;font-size:22px;padding:6px;margin:0;min-width:35px}
 #chatMessages{height:390px;overflow-y:auto;border:0;border-radius:0;padding:12px;background-color:#efe8dc;background-image:radial-gradient(circle at 20% 20%,#ffffff55 2px,transparent 3px),radial-gradient(circle at 70% 65%,#d7cbb855 2px,transparent 3px);background-size:48px 48px,65px 65px;margin:0}
 .chat-bubble{padding:10px 12px;border-radius:12px;margin:8px 0;max-width:86%;overflow-wrap:anywhere;white-space:pre-wrap;box-shadow:0 1px 1px #0001;font-size:16px}
-.mine{background:#d9fdd3;margin-left:auto;border-top-right-radius:4px}.theirs{background:#fff;border:1px solid #e1e8ec;margin-right:auto;border-top-left-radius:4px}
+.mine{background:#d9fdd3;margin-left:auto;border-top-right-radius:4px}
+.theirs{background:#fff;border:1px solid #e1e8ec;margin-right:auto;border-top-left-radius:4px}
 .chat-time{font-size:11px;color:#61717b;margin-top:5px;text-align:right}
 .wa-composer{display:flex;align-items:flex-end;gap:7px;padding:10px;background:#f7f7f7}
 .wa-composer textarea{flex:1;min-width:0;resize:vertical;max-height:120px;margin:0;border:1px solid #d8dfe3;border-radius:22px;background:#fff;padding:13px 15px}
@@ -57,17 +79,18 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 .wa-send-button{width:48px;height:48px;flex-shrink:0;border-radius:50%;padding:0;margin:0;font-size:20px}
 .media-preview{display:block;max-width:100%;max-height:300px;border-radius:9px;margin:3px 0 6px}
 .chat-note{padding:0 15px 15px;margin:0;background:#fff}
-
-.media-download-button{display:inline-block;margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:#087f5b;color:#fff;font-weight:600;cursor:pointer}.media-download-button:disabled{opacity:.65;cursor:wait}
-.message-action-button{display:inline-flex;align-items:center;justify-content:center;width:34px;height:32px;padding:0;margin:7px 5px 0 0;border-radius:7px;background:#e7f0f2;color:#075e54;font-size:20px}.message-actions{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.media-download-button{display:inline-block;margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:#087f5b;color:#fff;font-weight:600;cursor:pointer}
+.message-action-button{display:inline-flex;align-items:center;justify-content:center;width:34px;height:32px;padding:0;margin:7px 5px 0 0;border-radius:7px;background:#e7f0f2;color:#075e54;font-size:20px}
+.message-actions{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 </style>
 </head>
+
 <body>
 <header>
   <div class="header-main">
     <h1>💬 JFriendsChat</h1>
     <div class="header-account">
-      <button id="accountMenuButton" class="header-account-button" type="button" aria-label="Profile and account menu" title="Profile and account">👤</button>
+      <button id="accountMenuButton" class="header-account-button" type="button">👤</button>
       <div id="accountMenu" class="header-account-menu hidden">
         <button id="openProfileButton" type="button">👤 My Profile</button>
         <button id="topLogoutButton" class="menu-logout" type="button">↪ Log Out</button>
@@ -76,58 +99,134 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
   </div>
   <p>Connect with friends and relatives ❤️</p>
 </header>
-<div id="profilePopup" class="profile-popup hidden" role="dialog" aria-modal="true" aria-labelledby="profilePopupTitle">
+
+<div id="profilePopup" class="profile-popup hidden" role="dialog" aria-modal="true">
   <div class="profile-popup-card">
     <div class="profile-avatar">👤</div>
-    <h2 id="profilePopupTitle">My Profile</h2>
+    <h2>My Profile</h2>
     <div id="profileDetails"></div>
     <button id="closeProfileButton" class="full" type="button">Close</button>
   </div>
 </div>
+
 <main class="container">
 <div id="message" class="hidden" role="status" aria-live="polite"></div>
-<section id="setupCard" class="card hidden"><h2>Setup Required</h2><p>Supabase could not load. Check your internet connection and reload the page.</p></section>
+
+<section id="setupCard" class="card hidden">
+  <h2>Setup Required</h2>
+  <p>Supabase could not load. Check your internet connection and reload the page.</p>
+</section>
+
 <section id="authSection" class="card">
-<h2 id="formTitle">Create Account</h2>
-<form id="authForm">
-<input id="fullName" type="text" placeholder="Full name" maxlength="80" required>
-<input id="email" type="email" placeholder="Email address" required>
-<input id="password" type="password" placeholder="Password (at least 8 characters)" minlength="8" required>
-<button id="submitButton" class="full" type="submit">Create Account</button>
-</form>
-<button id="switchButton" class="full secondary" type="button">Already have an account? Log in</button>
+  <h2 id="formTitle">Create Account</h2>
+  <form id="authForm">
+    <input id="fullName" type="text" placeholder="Full name" maxlength="80" required>
+    <input id="email" type="email" placeholder="Email address" required>
+    <input id="password" type="password" placeholder="Password (at least 8 characters)" minlength="8" required>
+    <button id="submitButton" class="full" type="submit">Create Account</button>
+  </form>
+  <button id="switchButton" class="full secondary" type="button">Already have an account? Log in</button>
 </section>
+
 <section id="appSection" class="hidden">
-<section class="card"><h2>Welcome to JFriendsChat! 🎉</h2><p id="welcomeText"></p></section>
-<nav>
-<button type="button" data-panel="searchPanel">🔎 Find Friends</button><button type="button" data-panel="requestsPanel">🤝 Requests</button><button type="button" data-panel="friendsPanel">👥 Friends</button><button type="button" data-panel="chatPanel">💬 Chat</button>
-</nav>
-<section id="searchPanel" class="card hidden"><h2>🔎 Find Friends</h2><form id="searchForm" class="row"><input id="searchTerm" type="text" placeholder="Enter username" maxlength="30" required><button type="submit">Search</button></form><div id="searchResults"></div></section>
-<section id="requestsPanel" class="card hidden"><h2>🤝 Friend Requests</h2><h3>Received</h3><div id="receivedRequests"></div><h3>Sent</h3><div id="sentRequests"></div></section>
-<section id="friendsPanel" class="card hidden"><h2>👥 My Friends</h2><p class="note">Your accepted friends will appear here.</p><button id="refreshFriendsButton" class="secondary" type="button">Refresh Friends</button><div id="friendsList" aria-live="polite">Open this section to load your friends.</div></section>
-<section id="chatPanel" class="card hidden">
-<div class="chat-title-area"><h2 style="margin-bottom:0">💬 Chats</h2></div>
-<div class="chat-friend-picker"><label for="chatFriend">Choose an accepted friend</label><select id="chatFriend"><option value="">Loading friends...</option></select><button id="loadChatButton" class="full secondary" type="button">Open Conversation</button></div>
-<div class="wa-chat-header">
-  <div class="wa-avatar" id="chatFriendAvatar">JF</div>
-  <div class="wa-friend-info"><div class="wa-friend-name" id="chatFriendName">JFriendsChat</div><div class="wa-friend-status" id="chatFriendStatus">Choose a friend to start chatting</div></div>
-</div>
-<div id="chatMessages" aria-live="polite">Choose a friend and tap Open Conversation.</div>
-<form id="chatForm" class="wa-composer">
-  <textarea id="chatInput" maxlength="2000" placeholder="Message" rows="1"></textarea>
-  <input id="mediaInput" type="file" accept="image/*,video/mp4,video/webm,video/quicktime" hidden>
-  <button id="attachMediaButton" class="wa-tool-button" type="button" aria-label="Attach picture or video" title="Send picture or video">＋</button>
-  <button id="sendMessageButton" class="wa-send-button" type="submit" aria-label="Send message" title="Send message">➤</button>
-</form>
-<p class="note chat-note">Only accepted friends can exchange messages. Images and videos must be 20 MB or smaller.</p>
+  <section class="card">
+    <h2>Welcome to JFriendsChat! 🎉</h2>
+    <p id="welcomeText"></p>
+  </section>
+
+  <nav>
+    <button type="button" data-panel="searchPanel">🔎 Find Friends</button>
+    <button type="button" data-panel="requestsPanel">🤝 Requests</button>
+    <button type="button" data-panel="friendsPanel">👥 Friends</button>
+    <button type="button" data-panel="chatPanel">💬 Chat</button>
+  </nav>
+
+  <section id="searchPanel" class="card hidden">
+    <h2>🔎 Find Friends</h2>
+    <form id="searchForm" class="row">
+      <input id="searchTerm" type="text" placeholder="Enter username" maxlength="30" required>
+      <button type="submit">Search</button>
+    </form>
+    <div id="searchResults"></div>
+  </section>
+
+  <section id="requestsPanel" class="card hidden">
+    <h2>🤝 Friend Requests</h2>
+    <h3>Received</h3>
+    <div id="receivedRequests"></div>
+    <h3>Sent</h3>
+    <div id="sentRequests"></div>
+  </section>
+
+  <section id="friendsPanel" class="card hidden">
+    <h2>👥 My Friends</h2>
+    <p class="note">Your accepted friends will appear here.</p>
+    <button id="refreshFriendsButton" class="secondary" type="button">Refresh Friends</button>
+    <div id="friendsList" aria-live="polite">Open this section to load your friends.</div>
+  </section>
+
+  <section id="chatPanel" class="card hidden">
+
+    <!-- WhatsApp-style friend list -->
+    <div id="chatListView">
+      <div class="chat-title-area">
+        <h2 style="margin-bottom:0">💬 Chats</h2>
+        <p class="note">Tap a friend to open your conversation.</p>
+      </div>
+      <div class="chat-list-search">
+        <input id="chatSearchInput" type="search" placeholder="🔎 Search friends..." autocomplete="off">
+      </div>
+      <div id="chatList" class="chat-list" aria-live="polite">
+        Loading your friends...
+      </div>
+      <div style="padding:0 18px 15px">
+        <button id="refreshChatListButton" class="full secondary" type="button">↻ Refresh Chats</button>
+      </div>
+    </div>
+
+    <!-- Conversation view -->
+    <div id="chatConversationView" class="hidden">
+      <div class="wa-chat-header">
+        <button id="backToChatListButton" class="wa-head-action" type="button" aria-label="Back to chats">←</button>
+        <div class="wa-avatar" id="chatFriendAvatar">JF</div>
+        <div class="wa-friend-info">
+          <div class="wa-friend-name" id="chatFriendName">JFriendsChat</div>
+          <div class="wa-friend-status" id="chatFriendStatus">Choose a friend to start chatting</div>
+        </div>
+      </div>
+
+      <div id="chatMessages" aria-live="polite">Choose a friend to start chatting.</div>
+
+      <form id="chatForm" class="wa-composer">
+        <textarea id="chatInput" maxlength="2000" placeholder="Message" rows="1"></textarea>
+        <input id="mediaInput" type="file" accept="image/*,video/mp4,video/webm,video/quicktime" hidden>
+        <button id="attachMediaButton" class="wa-tool-button" type="button" aria-label="Attach picture or video" title="Send picture or video">＋</button>
+        <button id="sendMessageButton" class="wa-send-button" type="submit" aria-label="Send message" title="Send message">➤</button>
+      </form>
+      <p class="note chat-note">Only accepted friends can exchange messages. Images and videos must be 20 MB or smaller.</p>
+    </div>
+
+    <!-- Hidden selector retained for existing messaging functions -->
+    <select id="chatFriend" class="hidden" aria-hidden="true">
+      <option value="">Choose a friend</option>
+    </select>
+    <button id="loadChatButton" type="button">Open Conversation</button>
+
+  </section>
 </section>
+
+<section class="card">
+  <h2>About JFriendsChat</h2>
+  <p>A place to bring friends and relatives closer together.</p>
 </section>
-<section class="card"><h2>About JFriendsChat</h2><p>A place to bring friends and relatives closer together.</p></section>
 </main>
+
 <footer style="text-align:center;padding:18px">JFriendsChat © 2026</footer>
+
 <script>
 const SUPABASE_URL = "https://msifvhqvxfjjwcazacxj.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__uU2wBTvE8tWoAFoRSWVEA_AgJvZOqg";
+
 const $ = id => document.getElementById(id);
 let db, isLogin = false, currentUser = null;
 let activeChatFriendId = null, friendProfiles = [];
@@ -140,8 +239,13 @@ function notify(text, error = false) {
   $("message").style.background = error ? "#ffe7e7" : "#dcfce7";
   $("message").style.color = error ? "#9b1c1c" : "#166534";
 }
-function clearNotice() {$("message").classList.add("hidden");}
-function showAuth() {$("authSection").classList.remove("hidden");$("appSection").classList.add("hidden");}
+function clearNotice() {
+  $("message").classList.add("hidden");
+}
+function showAuth() {
+  $("authSection").classList.remove("hidden");
+  $("appSection").classList.add("hidden");
+}
 function updateAuthForm() {
   $("formTitle").textContent = isLogin ? "Log In" : "Create Account";
   $("submitButton").textContent = isLogin ? "Log In" : "Create Account";
@@ -153,321 +257,941 @@ function showPanel(id) {
   ["searchPanel","requestsPanel","friendsPanel","chatPanel"].forEach(panel => $(panel).classList.add("hidden"));
   $(id).classList.remove("hidden");
 }
+function showChatList() {
+  $("chatListView").classList.remove("hidden");
+  $("chatConversationView").classList.add("hidden");
+}
+function showChatConversation() {
+  $("chatListView").classList.add("hidden");
+  $("chatConversationView").classList.remove("hidden");
+}
+function getInitials(name) {
+  return String(name || "JF").trim().split(/\s+/).slice(0,2).map(part => part[0] || "").join("").toUpperCase() || "JF";
+}
+
 async function setupRealtimeMessages() {
   if (!db || !currentUser) return;
-  if (messageChannel) {try {await db.removeChannel(messageChannel);} catch(e){} messageChannel=null;}
-  const subscribedUserId=currentUser.id;
-  messageChannel=db.channel("jfriendschat-messages-"+subscribedUserId)
-    .on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},payload=>{
-      if(!currentUser||currentUser.id!==subscribedUserId||!activeChatFriendId)return;
-      const m=payload.new;
-      if((m.sender_id===currentUser.id&&m.receiver_id===activeChatFriendId)||(m.sender_id===activeChatFriendId&&m.receiver_id===currentUser.id)){
-        clearTimeout(realtimeReloadTimer);realtimeReloadTimer=setTimeout(loadMessages,200);
-      }
-    }).subscribe(status=>console.log("JFriendsChat realtime:",status));
-}
-function refreshPresenceDisplays() {
-  document.querySelectorAll(".presence-status[data-user-id]").forEach(el=>{
-    const online=onlineUserIds.has(el.dataset.userId);
-    el.textContent=online?"● Online":"○ Offline";
-    el.classList.toggle("online",online);el.classList.toggle("offline",!online);
-  });
-  if(activeChatFriendId)updateChatHeader(activeChatFriendId);
-}
-async function setupPresence() {
-  if(!db||!currentUser)return;
-  if(presenceChannel){try{await db.removeChannel(presenceChannel);}catch(e){}presenceChannel=null;}
-  onlineUserIds=new Set();const userId=currentUser.id;
-  presenceChannel=db.channel("jfriendschat-online-users",{config:{presence:{key:userId}}});
-  presenceChannel.on("presence",{event:"sync"},()=>{
-    const state=presenceChannel.presenceState(),next=new Set();
-    Object.values(state).forEach(entries=>(entries||[]).forEach(entry=>{if(entry?.user_id)next.add(entry.user_id);}));
-    onlineUserIds=next;refreshPresenceDisplays();
-  }).subscribe(async status=>{
-    if(status==="SUBSCRIBED"&&currentUser?.id===userId){
-      const {data:profile}=await db.from("profiles").select("full_name,username").eq("id",userId).maybeSingle();
-      await presenceChannel.track({user_id:userId,full_name:profile?.full_name||currentUser.user_metadata?.full_name||"JFriendsChat User",username:profile?.username||"",online_at:new Date().toISOString()});
-    }
-  });
-}
-async function showApp(user) {
-  if(!user)return;
-  const changed=!currentUser||currentUser.id!==user.id;currentUser=user;
-  $("authSection").classList.add("hidden");$("appSection").classList.remove("hidden");
-  $("welcomeText").textContent=user.email||"Signed in";showPanel("searchPanel");
-  await loadRequests();
-  if(changed||shownAppUserId!==user.id||!messageChannel){shownAppUserId=user.id;await setupRealtimeMessages();await setupPresence();}
-}
-async function loadRequests() {
-  if(!currentUser)return;
-  $("receivedRequests").textContent="Loading requests...";$("sentRequests").textContent="Loading requests...";
-  const {data,error}=await db.from("friend_requests").select("id,sender_id,receiver_id,status,created_at").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`).order("created_at",{ascending:false});
-  if(error){$("receivedRequests").textContent="Could not load requests: "+error.message;$("sentRequests").textContent="";return;}
-  const incoming=(data||[]).filter(r=>r.receiver_id===currentUser.id&&r.status==="pending"),outgoing=(data||[]).filter(r=>r.sender_id===currentUser.id);
-  $("receivedRequests").replaceChildren();$("sentRequests").replaceChildren();
-  if(!incoming.length)$("receivedRequests").textContent="No pending requests.";
-  if(!outgoing.length)$("sentRequests").textContent="No sent requests.";
-  for(const request of incoming){
-    const {data:profile}=await db.from("profiles").select("username,full_name").eq("id",request.sender_id).maybeSingle();
-    const item=document.createElement("div");item.className="item";const label=document.createElement("div");label.textContent=`${profile?.full_name||"User"} (@${profile?.username||"unknown"})`;
-    const accept=document.createElement("button");accept.textContent="Accept";accept.onclick=()=>respondToRequest(request.id,"accepted");
-    const reject=document.createElement("button");reject.textContent="Reject";reject.className="danger";reject.onclick=()=>respondToRequest(request.id,"rejected");
-    item.append(label,accept,reject);$("receivedRequests").appendChild(item);
+  if (messageChannel) {
+    try { await db.removeChannel(messageChannel); } catch(e) {}
+    messageChannel = null;
   }
-  for(const request of outgoing){const item=document.createElement("div");item.className="item";item.textContent="Request status: "+request.status;$("sentRequests").appendChild(item);}
+  const subscribedUserId = currentUser.id;
+  messageChannel = db.channel("jfriendschat-messages-" + subscribedUserId)
+    .on("postgres_changes", {event:"INSERT",schema:"public",table:"messages"}, payload => {
+      if (!currentUser || currentUser.id !== subscribedUserId) return;
+      const m = payload.new;
+      if (activeChatFriendId &&
+          ((m.sender_id === currentUser.id && m.receiver_id === activeChatFriendId) ||
+           (m.sender_id === activeChatFriendId && m.receiver_id === currentUser.id))) {
+        clearTimeout(realtimeReloadTimer);
+        realtimeReloadTimer = setTimeout(loadMessages, 200);
+      }
+      if (!$("chatPanel").classList.contains("hidden")) {
+        clearTimeout(realtimeReloadTimer);
+        realtimeReloadTimer = setTimeout(() => {
+          if ($("chatListView").classList.contains("hidden")) {
+            if (activeChatFriendId) loadMessages();
+          } else {
+            renderChatList();
+          }
+        }, 300);
+      }
+    }).subscribe(status => console.log("JFriendsChat realtime:", status));
 }
-async function respondToRequest(id,status) {
-  if(!currentUser)return;
-  const {data,error}=await db.from("friend_requests").update({status}).eq("id",id).eq("receiver_id",currentUser.id).eq("status","pending").select("id");
-  if(error){notify("Could not update request: "+error.message,true);return;}
-  if(!data?.length){notify("Request was not updated. Check database permissions.",true);await loadRequests();return;}
-  notify(status==="accepted"?"Friend request accepted!":"Friend request rejected!");await loadRequests();
-  if(status==="accepted"){await loadFriends();await loadChatFriends();}
+
+function refreshPresenceDisplays() {
+  document.querySelectorAll(".presence-status[data-user-id]").forEach(el => {
+    const online = onlineUserIds.has(el.dataset.userId);
+    el.textContent = online ? "● Online" : "○ Offline";
+    el.classList.toggle("online", online);
+    el.classList.toggle("offline", !online);
+  });
+  if (activeChatFriendId) updateChatHeader(activeChatFriendId);
+  document.querySelectorAll(".chat-list-status[data-user-id]").forEach(el => {
+    const online = onlineUserIds.has(el.dataset.userId);
+    el.textContent = online ? "● Online" : "○ Offline";
+    el.style.color = online ? "#128c7e" : "#75818a";
+  });
 }
-async function getAcceptedFriendIds() {
-  if(!currentUser)return [];
-  const {data,error}=await db.from("friend_requests").select("sender_id,receiver_id").eq("status","accepted").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
-  if(error)throw error;
-  return [...new Set((data||[]).map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id))].filter(id=>id&&id!==currentUser.id);
-}
-async function loadFriends() {
-  if(!currentUser)return;const list=$("friendsList");list.textContent="Loading your friends...";
-  try{
-    const ids=await getAcceptedFriendIds();if(!ids.length){list.textContent="You have no accepted friends yet. Search for users and send friend requests!";return;}
-    const {data:profiles,error}=await db.from("profiles").select("id,username,full_name").in("id",ids);if(error)throw error;
-    list.replaceChildren();
-    for(const profile of profiles||[]){
-      const item=document.createElement("div");item.className="item";const name=document.createElement("div");name.className="friend-name";name.textContent=profile.full_name||"JFriendsChat User";
-      const username=document.createElement("div");username.className="small";username.textContent="@"+(profile.username||"unknown");
-      const status=document.createElement("div");status.className="presence-status";status.dataset.userId=profile.id;const online=onlineUserIds.has(profile.id);status.textContent=online?"● Online":"○ Offline";status.classList.add(online?"online":"offline");
-      const chatButton=document.createElement("button");chatButton.textContent="Chat";chatButton.onclick=async()=>{showPanel("chatPanel");await loadChatFriends();$("chatFriend").value=profile.id;await openConversation();};
-      item.append(name,username,status,chatButton);list.appendChild(item);
+
+async function setupPresence() {
+  if (!db || !currentUser) return;
+  if (presenceChannel) {
+    try { await db.removeChannel(presenceChannel); } catch(e) {}
+    presenceChannel = null;
+  }
+  onlineUserIds = new Set();
+  const userId = currentUser.id;
+  presenceChannel = db.channel("jfriendschat-online-users", {config:{presence:{key:userId}}});
+  presenceChannel.on("presence", {event:"sync"}, () => {
+    const state = presenceChannel.presenceState(), next = new Set();
+    Object.values(state).forEach(entries => (entries || []).forEach(entry => {
+      if (entry?.user_id) next.add(entry.user_id);
+    }));
+    onlineUserIds = next;
+    refreshPresenceDisplays();
+  }).subscribe(async status => {
+    if (status === "SUBSCRIBED" && currentUser?.id === userId) {
+      const {data:profile} = await db.from("profiles").select("full_name,username").eq("id",userId).maybeSingle();
+      await presenceChannel.track({
+        user_id:userId,
+        full_name:profile?.full_name || currentUser.user_metadata?.full_name || "JFriendsChat User",
+        username:profile?.username || "",
+        online_at:new Date().toISOString()
+      });
     }
-  }catch(error){list.textContent="Could not load friends: "+error.message;}
+  });
+}
+
+async function showApp(user) {
+  if (!user) return;
+  const changed = !currentUser || currentUser.id !== user.id;
+  currentUser = user;
+  $("authSection").classList.add("hidden");
+  $("appSection").classList.remove("hidden");
+  $("welcomeText").textContent = user.email || "Signed in";
+  showPanel("searchPanel");
+  await loadRequests();
+  if (changed || shownAppUserId !== user.id || !messageChannel) {
+    shownAppUserId = user.id;
+    await setupRealtimeMessages();
+    await setupPresence();
+  }
+}
+
+async function loadRequests() {
+  if (!currentUser) return;
+  $("receivedRequests").textContent = "Loading requests...";
+  $("sentRequests").textContent = "Loading requests...";
+  const {data,error} = await db.from("friend_requests")
+    .select("id,sender_id,receiver_id,status,created_at")
+    .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+    .order("created_at",{ascending:false});
+  if (error) {
+    $("receivedRequests").textContent = "Could not load requests: " + error.message;
+    $("sentRequests").textContent = "";
+    return;
+  }
+  const incoming = (data || []).filter(r => r.receiver_id === currentUser.id && r.status === "pending");
+  const outgoing = (data || []).filter(r => r.sender_id === currentUser.id);
+  $("receivedRequests").replaceChildren();
+  $("sentRequests").replaceChildren();
+  if (!incoming.length) $("receivedRequests").textContent = "No pending requests.";
+  if (!outgoing.length) $("sentRequests").textContent = "No sent requests.";
+
+  for (const request of incoming) {
+    const {data:profile} = await db.from("profiles").select("username,full_name").eq("id",request.sender_id).maybeSingle();
+    const item = document.createElement("div");
+    item.className = "item";
+    const label = document.createElement("div");
+    label.textContent = `${profile?.full_name || "User"} (@${profile?.username || "unknown"})`;
+    const accept = document.createElement("button");
+    accept.textContent = "Accept";
+    accept.onclick = () => respondToRequest(request.id,"accepted");
+    const reject = document.createElement("button");
+    reject.textContent = "Reject";
+    reject.className = "danger";
+    reject.onclick = () => respondToRequest(request.id,"rejected");
+    item.append(label,accept,reject);
+    $("receivedRequests").appendChild(item);
+  }
+  for (const request of outgoing) {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.textContent = "Request status: " + request.status;
+    $("sentRequests").appendChild(item);
+  }
+}
+
+async function respondToRequest(id,status) {
+  if (!currentUser) return;
+  const {data,error} = await db.from("friend_requests")
+    .update({status}).eq("id",id).eq("receiver_id",currentUser.id).eq("status","pending").select("id");
+  if (error) {
+    notify("Could not update request: " + error.message,true);
+    return;
+  }
+  if (!data?.length) {
+    notify("Request was not updated. Check database permissions.",true);
+    await loadRequests();
+    return;
+  }
+  notify(status === "accepted" ? "Friend request accepted!" : "Friend request rejected!");
+  await loadRequests();
+  if (status === "accepted") {
+    await loadFriends();
+    await loadChatFriends();
+    await renderChatList();
+  }
+}
+
+async function getAcceptedFriendIds() {
+  if (!currentUser) return [];
+  const {data,error} = await db.from("friend_requests")
+    .select("sender_id,receiver_id")
+    .eq("status","accepted")
+    .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
+  if (error) throw error;
+  return [...new Set((data || []).map(r =>
+    r.sender_id === currentUser.id ? r.receiver_id : r.sender_id
+  ))].filter(id => id && id !== currentUser.id);
+}
+
+async function loadFriends() {
+  if (!currentUser) return;
+  const list = $("friendsList");
+  list.textContent = "Loading your friends...";
+  try {
+    const ids = await getAcceptedFriendIds();
+    if (!ids.length) {
+      list.textContent = "You have no accepted friends yet. Search for users and send friend requests!";
+      return;
+    }
+    const {data:profiles,error} = await db.from("profiles")
+      .select("id,username,full_name").in("id",ids);
+    if (error) throw error;
+    list.replaceChildren();
+
+    for (const profile of profiles || []) {
+      const item = document.createElement("div");
+      item.className = "item";
+      const name = document.createElement("div");
+      name.className = "friend-name";
+      name.textContent = profile.full_name || "JFriendsChat User";
+      const username = document.createElement("div");
+      username.className = "small";
+      username.textContent = "@" + (profile.username || "unknown");
+      const status = document.createElement("div");
+      status.className = "presence-status";
+      status.dataset.userId = profile.id;
+      const online = onlineUserIds.has(profile.id);
+      status.textContent = online ? "● Online" : "○ Offline";
+      status.classList.add(online ? "online" : "offline");
+      const chatButton = document.createElement("button");
+      chatButton.textContent = "Chat";
+      chatButton.onclick = async () => {
+        await openFriendConversation(profile.id);
+      };
+      item.append(name,username,status,chatButton);
+      list.appendChild(item);
+    }
+  } catch (error) {
+    list.textContent = "Could not load friends: " + error.message;
+  }
 }
 $("refreshFriendsButton").addEventListener("click",loadFriends);
+
 async function loadChatFriends() {
-  if(!currentUser)return;const select=$("chatFriend");select.replaceChildren();const initial=document.createElement("option");initial.value="";initial.textContent="Loading friends...";select.appendChild(initial);
-  try{
-    const ids=await getAcceptedFriendIds();
-    if(!ids.length){select.replaceChildren();const o=document.createElement("option");o.value="";o.textContent="No accepted friends yet";select.appendChild(o);$("chatMessages").textContent="Accept a friend request before starting a chat.";return;}
-    const {data:profiles,error}=await db.from("profiles").select("id,username,full_name").in("id",ids);if(error)throw error;
-    friendProfiles=profiles||[];select.replaceChildren();const first=document.createElement("option");first.value="";first.textContent="Choose a friend";select.appendChild(first);
-    for(const p of friendProfiles){const o=document.createElement("option");o.value=p.id;o.textContent=`${p.full_name||"User"} (@${p.username||"unknown"})`;select.appendChild(o);}
-    if(activeChatFriendId&&ids.includes(activeChatFriendId)){select.value=activeChatFriendId;updateChatHeader(activeChatFriendId);}
-  }catch(error){select.replaceChildren();const o=document.createElement("option");o.value="";o.textContent="Could not load friends";select.appendChild(o);notify("Could not load chat friends: "+error.message,true);}
+  if (!currentUser) return;
+  const select = $("chatFriend");
+  select.replaceChildren();
+  const initial = document.createElement("option");
+  initial.value = "";
+  initial.textContent = "Loading friends...";
+  select.appendChild(initial);
+
+  try {
+    const ids = await getAcceptedFriendIds();
+    if (!ids.length) {
+      friendProfiles = [];
+      select.replaceChildren();
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "No accepted friends yet";
+      select.appendChild(option);
+      return;
+    }
+    const {data:profiles,error} = await db.from("profiles")
+      .select("id,username,full_name").in("id",ids);
+    if (error) throw error;
+
+    friendProfiles = profiles || [];
+    select.replaceChildren();
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Choose a friend";
+    select.appendChild(placeholder);
+
+    friendProfiles.forEach(profile => {
+      const option = document.createElement("option");
+      option.value = profile.id;
+      option.textContent = `${profile.full_name || "User"} (@${profile.username || "unknown"})`;
+      select.appendChild(option);
+    });
+
+    if (activeChatFriendId && ids.includes(activeChatFriendId)) {
+      select.value = activeChatFriendId;
+      updateChatHeader(activeChatFriendId);
+    }
+  } catch (error) {
+    select.replaceChildren();
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Could not load friends";
+    select.appendChild(option);
+    notify("Could not load chat friends: " + error.message,true);
+  }
 }
+
+/* Draw the clickable WhatsApp-style chat list */
+async function renderChatList() {
+  if (!currentUser) return;
+  const list = $("chatList");
+  list.textContent = "Loading your friends...";
+
+  try {
+    await loadChatFriends();
+    const filter = $("chatSearchInput").value.trim().toLowerCase();
+    const matches = friendProfiles.filter(friend => {
+      const name = (friend.full_name || "").toLowerCase();
+      const username = (friend.username || "").toLowerCase();
+      return name.includes(filter) || username.includes(filter);
+    });
+
+    list.replaceChildren();
+
+    if (!friendProfiles.length) {
+      list.textContent = "No accepted friends yet. Accept a friend request to start chatting.";
+      return;
+    }
+    if (!matches.length) {
+      list.textContent = "No friends match your search.";
+      return;
+    }
+
+    matches.forEach(friend => {
+      const item = document.createElement("div");
+      item.className = "chat-list-item";
+      item.tabIndex = 0;
+      item.setAttribute("role","button");
+      item.setAttribute("aria-label","Open chat with " + (friend.full_name || "friend"));
+
+      const avatar = document.createElement("div");
+      avatar.className = "chat-list-avatar";
+      avatar.textContent = getInitials(friend.full_name || friend.username);
+
+      const info = document.createElement("div");
+      info.className = "chat-list-info";
+
+      const name = document.createElement("div");
+      name.className = "chat-list-name";
+      name.textContent = friend.full_name || "JFriendsChat User";
+
+      const preview = document.createElement("div");
+      preview.className = "chat-list-preview";
+      preview.textContent = "Tap to open conversation";
+
+      const status = document.createElement("div");
+      status.className = "chat-list-status";
+      status.dataset.userId = friend.id;
+      const online = onlineUserIds.has(friend.id);
+      status.textContent = online ? "● Online" : "○ Offline";
+      status.style.color = online ? "#128c7e" : "#75818a";
+
+      info.append(name,preview,status);
+
+      const arrow = document.createElement("div");
+      arrow.className = "chat-list-arrow";
+      arrow.textContent = "›";
+
+      item.append(avatar,info,arrow);
+      item.addEventListener("click",() => openFriendConversation(friend.id));
+      item.addEventListener("keydown",event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openFriendConversation(friend.id);
+        }
+      });
+      list.appendChild(item);
+    });
+  } catch (error) {
+    list.textContent = "Could not load your chats: " + error.message;
+  }
+}
+
+async function openFriendConversation(friendId) {
+  if (!currentUser) return;
+  if (!friendProfiles.some(friend => friend.id === friendId)) {
+    await loadChatFriends();
+  }
+
+  const friend = friendProfiles.find(profile => profile.id === friendId);
+  if (!friend) {
+    notify("This friend could not be found. Refresh your chat list.",true);
+    return;
+  }
+
+  $("chatFriend").value = friendId;
+  activeChatFriendId = friendId;
+  showPanel("chatPanel");
+  showChatConversation();
+  updateChatHeader(friendId);
+  $("chatMessages").textContent = "Loading messages...";
+  await loadMessages();
+  $("chatInput").focus();
+}
+
 function updateChatHeader(friendId) {
-  const p=friendProfiles.find(x=>x.id===friendId),name=p?.full_name||"JFriendsChat Friend";
-  $("chatFriendName").textContent=name;$("chatFriendAvatar").textContent=name.trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"JF";
-  const online=onlineUserIds.has(friendId);$("chatFriendStatus").textContent=online?"● Online":"○ Offline";$("chatFriendStatus").style.color=online?"#b8ffd4":"#e4e9e9";
+  const profile = friendProfiles.find(friend => friend.id === friendId);
+  const name = profile?.full_name || "JFriendsChat Friend";
+  $("chatFriendName").textContent = name;
+  $("chatFriendAvatar").textContent = getInitials(name);
+  const online = onlineUserIds.has(friendId);
+  $("chatFriendStatus").textContent = online ? "● Online" : "○ Offline";
+  $("chatFriendStatus").style.color = online ? "#b8ffd4" : "#e4e9e9";
 }
-async function forwardChatMessage(message, raw, mediaPath, mediaType) {
+
+async function forwardChatMessage(message,raw,mediaPath,mediaType) {
   if (!currentUser) return;
   const availableFriends = friendProfiles.filter(friend => friend.id !== currentUser.id);
-  if (!availableFriends.length) { notify("No friends available to forward to.", true); return; }
-  const choices = availableFriends.map((friend, index) =>
+  if (!availableFriends.length) {
+    notify("No friends available to forward to.",true);
+    return;
+  }
+
+  const choices = availableFriends.map((friend,index) =>
     `${index + 1}. ${friend.full_name || "Friend"} (@${friend.username || "unknown"})`
   ).join("\n");
   const answer = window.prompt("Forward to which friend? Enter the number:\n" + choices);
   if (answer === null) return;
-  const index = Number.parseInt(answer.trim(), 10) - 1;
+  const index = Number.parseInt(answer.trim(),10) - 1;
+
   if (!Number.isInteger(index) || index < 0 || index >= availableFriends.length) {
-    notify("Please enter a valid friend number.", true); return;
+    notify("Please enter a valid friend number.",true);
+    return;
   }
+
   const recipient = availableFriends[index];
+
   try {
     let contentToSend = raw;
     let newMediaPath = null;
+
     if (mediaPath && mediaType) {
-      const { data: fileData, error: downloadError } = await db.storage.from("chat-media").download(mediaPath);
+      const {data:fileData,error:downloadError} = await db.storage.from("chat-media").download(mediaPath);
       if (downloadError || !fileData) throw new Error("Could not access the original media.");
+
       const originalName = mediaPath.split("/").pop() || `media.${mediaType === "image" ? "jpg" : "mp4"}`;
-      const newName = `${Date.now()}_forwarded_${originalName.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+      const newName = `${Date.now()}_forwarded_${originalName.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
       newMediaPath = `${currentUser.id}/${recipient.id}/${newName}`;
-      const { error: uploadError } = await db.storage.from("chat-media").upload(newMediaPath, fileData, {
-        upsert: false,
-        contentType: fileData.type || (mediaType === "image" ? "image/jpeg" : "video/mp4")
+
+      const {error:uploadError} = await db.storage.from("chat-media").upload(newMediaPath,fileData,{
+        upsert:false,
+        contentType:fileData.type || (mediaType === "image" ? "image/jpeg" : "video/mp4")
       });
       if (uploadError) throw uploadError;
       contentToSend = `[[MEDIA|${mediaType}|${newMediaPath}]]`;
     }
-    const row = {
-      sender_id: currentUser.id,
-      receiver_id: recipient.id,
-      content: contentToSend
-    };
+
+    const row = {sender_id:currentUser.id,receiver_id:recipient.id,content:contentToSend};
     if (newMediaPath) row.media_path = newMediaPath;
-    const { error: insertError } = await db.from("messages").insert(row);
+
+    const {error:insertError} = await db.from("messages").insert(row);
     if (insertError) {
       if (newMediaPath) await db.storage.from("chat-media").remove([newMediaPath]);
       throw insertError;
     }
     notify(`Forwarded to ${recipient.full_name || "your friend"}.`);
   } catch (error) {
-    console.error("Forward message failed:", error);
-    notify("Could not forward this message. Check your permissions and try again.", true);
+    console.error("Forward message failed:",error);
+    notify("Could not forward this message. Check your permissions and try again.",true);
   }
 }
+
 async function renderMessages(messages) {
-  const box=$("chatMessages");box.replaceChildren();
-  if(!messages.length){box.textContent="No messages yet. Say hello! 👋";return;}
-  for(const m of messages){
-    const bubble=document.createElement("div");bubble.className="chat-bubble "+(m.sender_id===currentUser.id?"mine":"theirs");
-    const raw=String(m.content??m.message??m.message_text??"");
-    const match=raw.match(/^\[\[MEDIA\|(image|video)\|([^\]]+)\]\]$/);
-    const path=m.media_path||(match?match[2]:null),type=match?match[1]:null;
-    if(path&&type){
-      const {data,error}=await db.storage.from("chat-media").createSignedUrl(path,3600);
-      if(!error&&data?.signedUrl){
-        if(type==="image"){const img=document.createElement("img");img.className="media-preview";img.alt="Shared picture";img.loading="lazy";img.src=data.signedUrl;img.addEventListener("click",()=>window.open(data.signedUrl,"_blank","noopener"));bubble.appendChild(img);}
-        else{const video=document.createElement("video");video.className="media-preview";video.controls=true;video.playsInline=true;video.preload="metadata";video.src=data.signedUrl;bubble.appendChild(video);}
-        const downloadButton=document.createElement("button");downloadButton.type="button";downloadButton.className="media-download-button";downloadButton.textContent="⬇";downloadButton.setAttribute("aria-label", "Download "+(type==="image"?"picture":"video"));downloadButton.title="Download "+(type==="image"?"picture":"video");
-        downloadButton.addEventListener("click",async()=>{downloadButton.disabled=true;downloadButton.textContent="…";try{const response=await fetch(data.signedUrl);if(!response.ok)throw new Error("Download failed");const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const link=document.createElement("a");const ext=type==="image"?(blob.type.includes("png")?"png":blob.type.includes("webp")?"webp":"jpg"):(blob.type.includes("webm")?"webm":"mp4");link.href=objectUrl;link.download="jfriendschat-"+type+"-"+m.id+"."+ext;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),60000);downloadButton.textContent="⬇";downloadButton.setAttribute("aria-label", "Download "+(type==="image"?"picture":"video"));downloadButton.title="Download "+(type==="image"?"picture":"video");}catch(e){notify("Could not download media. Please try again.",true);downloadButton.textContent="⬇";downloadButton.setAttribute("aria-label", "Download "+(type==="image"?"picture":"video"));downloadButton.title="Download "+(type==="image"?"picture":"video");}finally{downloadButton.disabled=false;}});
-        bubble.appendChild(downloadButton);
-      }else{const warning=document.createElement("div");warning.textContent="Media unavailable. Check chat-media Storage permissions.";bubble.appendChild(warning);}
-    }else{const t=document.createElement("div");t.textContent=raw;bubble.appendChild(t);}
-    const actions=document.createElement("div");actions.className="message-actions";
-    const forwardButton=document.createElement("button");forwardButton.type="button";forwardButton.className="message-action-button";forwardButton.textContent="↪";forwardButton.title="Forward message";forwardButton.setAttribute("aria-label","Forward message");
-    forwardButton.addEventListener("click",()=>forwardChatMessage(m,raw,path,type));actions.appendChild(forwardButton);bubble.appendChild(actions);
-    const time=document.createElement("div");time.className="chat-time";const date=new Date(m.created_at);time.textContent=Number.isNaN(date.getTime())?"":date.toLocaleString();bubble.append(time);box.appendChild(bubble);
+  const box = $("chatMessages");
+  box.replaceChildren();
+
+  if (!messages.length) {
+    box.textContent = "No messages yet. Say hello! 👋";
+    return;
   }
-  box.scrollTop=box.scrollHeight;
+
+  for (const message of messages) {
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble " + (message.sender_id === currentUser.id ? "mine" : "theirs");
+    const raw = String(message.content ?? message.message ?? message.message_text ?? "");
+    const match = raw.match(/^\[\[MEDIA\|(image|video)\|([^\]]+)\]\]$/);
+    const path = message.media_path || (match ? match[2] : null);
+    const type = match ? match[1] : null;
+
+    if (path && type) {
+      const {data,error} = await db.storage.from("chat-media").createSignedUrl(path,3600);
+
+      if (!error && data?.signedUrl) {
+        if (type === "image") {
+          const img = document.createElement("img");
+          img.className = "media-preview";
+          img.alt = "Shared picture";
+          img.loading = "lazy";
+          img.src = data.signedUrl;
+          img.addEventListener("click",() => window.open(data.signedUrl,"_blank","noopener"));
+          bubble.appendChild(img);
+        } else {
+          const video = document.createElement("video");
+          video.className = "media-preview";
+          video.controls = true;
+          video.playsInline = true;
+          video.preload = "metadata";
+          video.src = data.signedUrl;
+          bubble.appendChild(video);
+        }
+
+        const downloadButton = document.createElement("button");
+        downloadButton.type = "button";
+        downloadButton.className = "media-download-button";
+        downloadButton.textContent = "⬇";
+        downloadButton.title = "Download " + (type === "image" ? "picture" : "video");
+
+        downloadButton.addEventListener("click",async () => {
+          downloadButton.disabled = true;
+          downloadButton.textContent = "…";
+          try {
+            const response = await fetch(data.signedUrl);
+            if (!response.ok) throw new Error("Download failed");
+            const blob = await response.blob();
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            const ext = type === "image"
+              ? (blob.type.includes("png") ? "png" : blob.type.includes("webp") ? "webp" : "jpg")
+              : (blob.type.includes("webm") ? "webm" : "mp4");
+            link.href = objectUrl;
+            link.download = "jfriendschat-" + type + "-" + message.id + "." + ext;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(objectUrl),60000);
+            downloadButton.textContent = "⬇";
+          } catch (error) {
+            notify("Could not download media. Please try again.",true);
+            downloadButton.textContent = "⬇";
+          } finally {
+            downloadButton.disabled = false;
+          }
+        });
+        bubble.appendChild(downloadButton);
+      } else {
+        const warning = document.createElement("div");
+        warning.textContent = "Media unavailable. Check chat-media Storage permissions.";
+        bubble.appendChild(warning);
+      }
+    } else {
+      const text = document.createElement("div");
+      text.textContent = raw;
+      bubble.appendChild(text);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "message-actions";
+    const forwardButton = document.createElement("button");
+    forwardButton.type = "button";
+    forwardButton.className = "message-action-button";
+    forwardButton.textContent = "↪";
+    forwardButton.title = "Forward message";
+    forwardButton.setAttribute("aria-label","Forward message");
+    forwardButton.addEventListener("click",() => forwardChatMessage(message,raw,path,type));
+    actions.appendChild(forwardButton);
+    bubble.appendChild(actions);
+
+    const time = document.createElement("div");
+    time.className = "chat-time";
+    const date = new Date(message.created_at);
+    time.textContent = Number.isNaN(date.getTime()) ? "" : date.toLocaleString();
+    bubble.appendChild(time);
+    box.appendChild(bubble);
+  }
+
+  box.scrollTop = box.scrollHeight;
 }
+
 async function openConversation() {
-  if(!currentUser)return;const id=$("chatFriend").value;
-  if(!id){activeChatFriendId=null;$("chatMessages").textContent="Please choose an accepted friend.";return;}
-  activeChatFriendId=id;updateChatHeader(id);$("chatMessages").textContent="Loading messages...";await loadMessages();
+  if (!currentUser) return;
+  const friendId = $("chatFriend").value;
+  if (!friendId) {
+    notify("Please choose an accepted friend.",true);
+    return;
+  }
+  await openFriendConversation(friendId);
 }
+
 async function loadMessages() {
-  if(!currentUser||!activeChatFriendId)return;
-  const conv=`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatFriendId}),and(sender_id.eq.${activeChatFriendId},receiver_id.eq.${currentUser.id})`;
-  let result=await db.from("messages").select("id,sender_id,receiver_id,content,message,created_at,media_path").or(conv).order("created_at",{ascending:true}).limit(200);
-  if(result.error)result=await db.from("messages").select("id,sender_id,receiver_id,content,created_at").or(conv).order("created_at",{ascending:true}).limit(200);
-  if(result.error){$("chatMessages").textContent="Could not load messages: "+result.error.message;notify("Chat error: "+result.error.message,true);return;}
-  await renderMessages(result.data||[]);
+  if (!currentUser || !activeChatFriendId) return;
+
+  const conversation = `and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatFriendId}),and(sender_id.eq.${activeChatFriendId},receiver_id.eq.${currentUser.id})`;
+  let result = await db.from("messages")
+    .select("id,sender_id,receiver_id,content,message,created_at,media_path")
+    .or(conversation).order("created_at",{ascending:true}).limit(200);
+
+  if (result.error) {
+    result = await db.from("messages")
+      .select("id,sender_id,receiver_id,content,created_at")
+      .or(conversation).order("created_at",{ascending:true}).limit(200);
+  }
+
+  if (result.error) {
+    $("chatMessages").textContent = "Could not load messages: " + result.error.message;
+    notify("Chat error: " + result.error.message,true);
+    return;
+  }
+  await renderMessages(result.data || []);
 }
+
 $("loadChatButton").addEventListener("click",openConversation);
-$("chatFriend").addEventListener("change",()=>{activeChatFriendId=$("chatFriend").value||null;if(activeChatFriendId)updateChatHeader(activeChatFriendId);else{$("chatFriendName").textContent="JFriendsChat";$("chatFriendAvatar").textContent="JF";$("chatFriendStatus").textContent="Choose a friend to start chatting";}$("chatMessages").textContent=activeChatFriendId?"Tap Open Conversation to load messages.":"Choose a friend.";});
-$("attachMediaButton").addEventListener("click",()=>{if(!$("chatFriend").value)return notify("Choose an accepted friend first.",true);$("mediaInput").click();});
-$("mediaInput").addEventListener("change",async()=>{
-  const file=$("mediaInput").files[0];if(!file)return;
-  const friendId=$("chatFriend").value;if(!currentUser||!friendId){notify("Choose an accepted friend first.",true);$("mediaInput").value="";return;}
-  const image=file.type.startsWith("image/"),video=file.type.startsWith("video/");
-  if(!image&&!video){notify("Choose an image or video file.",true);$("mediaInput").value="";return;}
-  if(file.size>20*1024*1024){notify("Please choose a file smaller than 20 MB.",true);$("mediaInput").value="";return;}
-  const button=$("attachMediaButton");button.disabled=true;button.textContent="…";
-  let uploadedPath=null;
-  try{
-    const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_").slice(-90);
-    const path=`${currentUser.id}/${friendId}/${Date.now()}_${safeName}`;
-    const {error:uploadError}=await db.storage.from("chat-media").upload(path,file,{upsert:false,contentType:file.type,cacheControl:"3600"});
-    if(uploadError)throw uploadError;uploadedPath=path;
-    const marker=`[[MEDIA|${image?"image":"video"}|${path}]]`;
-    const {error:messageError}=await db.from("messages").insert({sender_id:currentUser.id,receiver_id:friendId,content:marker,media_path:path});
-    if(messageError)throw messageError;
-    activeChatFriendId=friendId;await loadMessages();notify(image?"Picture sent!":"Video sent!");
-  }catch(error){
-    notify("Could not send media: "+error.message,true);
-    if(uploadedPath)console.warn("An uploaded file may remain in Storage because the message could not be saved:",uploadedPath);
-  }finally{$("mediaInput").value="";button.disabled=false;button.textContent="＋";}
-});
-$("chatForm").addEventListener("submit",async event=>{
-  event.preventDefault();if(!currentUser)return notify("Please log in first.",true);
-  const friendId=$("chatFriend").value,content=$("chatInput").value.trim();
-  if(!friendId)return notify("Choose an accepted friend first.",true);
-  if(!content)return notify("Type a message first.",true);
-  if(content.length>2000)return notify("Message is too long.",true);
-  const button=$("sendMessageButton");button.disabled=true;button.textContent="…";
-  try{
-    const {error}=await db.from("messages").insert({sender_id:currentUser.id,receiver_id:friendId,content});
-    if(error)throw error;$("chatInput").value="";activeChatFriendId=friendId;await loadMessages();notify("Message sent!");
-  }catch(error){notify("Could not send message: "+error.message,true);}
-  finally{button.disabled=false;button.textContent="➤";}
-});
-$("switchButton").onclick=()=>{isLogin=!isLogin;updateAuthForm();clearNotice();};
-$("authForm").addEventListener("submit",async event=>{
-  event.preventDefault();$("submitButton").disabled=true;clearNotice();
-  try{
-    const email=$("email").value.trim(),password=$("password").value,fullName=$("fullName").value.trim();
-    if(isLogin){const {data,error}=await db.auth.signInWithPassword({email,password});if(error)throw error;await showApp(data.user);notify("Logged in successfully!");}
-    else{const {data,error}=await db.auth.signUp({email,password,options:{data:{full_name:fullName}}});if(error)throw error;if(data.session){await showApp(data.user);notify("Account created!");}else notify("Check your email to confirm your account.");}
-  }catch(error){notify(error.message||"Something went wrong.",true);}
-  finally{$("submitButton").disabled=false;updateAuthForm();}
-});
-async function logout() {
-  if(messageChannel){await db.removeChannel(messageChannel);messageChannel=null;}
-  if(presenceChannel){try{await presenceChannel.untrack();await db.removeChannel(presenceChannel);}catch(e){}presenceChannel=null;}
-  clearTimeout(realtimeReloadTimer);shownAppUserId=null;
-  const {error}=await db.auth.signOut();if(error)return notify(error.message,true);
-  currentUser=null;activeChatFriendId=null;onlineUserIds=new Set();$("appSection").classList.add("hidden");showAuth();notify("You have logged out.");
-}
-$("logoutButton") && ($("logoutButton").onclick=logout);
-$("topLogoutButton").onclick=async()=>{ $("accountMenu").classList.add("hidden"); await logout(); };
-$("accountMenuButton").onclick=()=>{ if(!currentUser)return notify("Please sign in to open your profile."); $("accountMenu").classList.toggle("hidden"); };
-$("openProfileButton").onclick=async()=>{
-  $("accountMenu").classList.add("hidden");
-  if(!currentUser)return notify("Please sign in to open your profile.");
-  const meta=currentUser.user_metadata||{};
-  const displayName=meta.full_name||meta.name||meta.username||"Not set";
-  $("profileDetails").innerHTML="";
-  const details=[
-    ["Name",displayName],
-    ["Email",currentUser.email||"Not available"],
-    ["Username",meta.username||"Not set"]
-  ];
-  details.forEach(([label,value])=>{
-    const row=document.createElement("div");row.className="profile-detail";
-    const strong=document.createElement("strong");strong.textContent=label+": ";
-    const span=document.createElement("span");span.textContent=value;
-    row.append(strong,span);$("profileDetails").appendChild(row);
-  });
-  $("profilePopup").classList.remove("hidden");
-};
-$("closeProfileButton").onclick=()=>$("profilePopup").classList.add("hidden");
-$("profilePopup").addEventListener("click",event=>{if(event.target===$("profilePopup"))$("profilePopup").classList.add("hidden");});
-document.addEventListener("click",event=>{
-  if(!$("accountMenu").contains(event.target)&&event.target!==$("accountMenuButton"))$("accountMenu").classList.add("hidden");
+
+$("backToChatListButton").addEventListener("click",async () => {
+  activeChatFriendId = null;
+  showChatList();
+  await renderChatList();
 });
 
-$("searchForm").addEventListener("submit",async event=>{
-  event.preventDefault();if(!currentUser)return;
-  const term=$("searchTerm").value.trim();if(term.length<3)return notify("Enter at least 3 characters.",true);
-  $("searchResults").textContent="Searching...";
-  const {data,error}=await db.rpc("search_friends",{search_term:term});
-  if(error){$("searchResults").textContent="";notify("Search failed: "+error.message,true);return;}
-  $("searchResults").replaceChildren();const results=(data||[]).filter(p=>p.user_id!==currentUser.id);
-  if(!results.length){$("searchResults").textContent="No users found.";return;}
-  for(const profile of results){
-    const item=document.createElement("div");item.className="item";const label=document.createElement("div"),name=document.createElement("strong"),username=document.createElement("span");
-    name.textContent=profile.full_name||"JFriendsChat User";username.className="small";username.textContent="@"+(profile.username||"unknown");label.append(name,document.createElement("br"),username);
-    const button=document.createElement("button");button.textContent="Send Friend Request";
-    button.onclick=async()=>{button.disabled=true;const {error}=await db.from("friend_requests").insert({sender_id:currentUser.id,receiver_id:profile.user_id});if(error){notify("Could not send request: "+error.message,true);button.disabled=false;}else{button.textContent="Request Sent";notify("Friend request sent!");await loadRequests();}};
-    item.append(label,button);$("searchResults").appendChild(item);
+$("chatSearchInput").addEventListener("input",renderChatList);
+$("refreshChatListButton").addEventListener("click",renderChatList);
+
+$("chatFriend").addEventListener("change",() => {
+  activeChatFriendId = $("chatFriend").value || null;
+  if (activeChatFriendId) {
+    updateChatHeader(activeChatFriendId);
+  } else {
+    $("chatFriendName").textContent = "JFriendsChat";
+    $("chatFriendAvatar").textContent = "JF";
+    $("chatFriendStatus").textContent = "Choose a friend to start chatting";
   }
 });
-document.querySelectorAll("nav button").forEach(button=>button.onclick=async()=>{
-  const panel=button.dataset.panel;showPanel(panel);
-  if(panel==="requestsPanel")await loadRequests();
-  if(panel==="friendsPanel")await loadFriends();
-  if(panel==="chatPanel")await loadChatFriends();
+
+$("attachMediaButton").addEventListener("click",() => {
+  if (!$("chatFriend").value) return notify("Choose an accepted friend first.",true);
+  $("mediaInput").click();
 });
+
+$("mediaInput").addEventListener("change",async () => {
+  const file = $("mediaInput").files[0];
+  if (!file) return;
+  const friendId = $("chatFriend").value;
+
+  if (!currentUser || !friendId) {
+    notify("Choose an accepted friend first.",true);
+    $("mediaInput").value = "";
+    return;
+  }
+
+  const image = file.type.startsWith("image/");
+  const video = file.type.startsWith("video/");
+
+  if (!image && !video) {
+    notify("Choose an image or video file.",true);
+    $("mediaInput").value = "";
+    return;
+  }
+  if (file.size > 20 * 1024 * 1024) {
+    notify("Please choose a file smaller than 20 MB.",true);
+    $("mediaInput").value = "";
+    return;
+  }
+
+  const button = $("attachMediaButton");
+  button.disabled = true;
+  button.textContent = "…";
+  let uploadedPath = null;
+
+  try {
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,"_").slice(-90);
+    const path = `${currentUser.id}/${friendId}/${Date.now()}_${safeName}`;
+    const {error:uploadError} = await db.storage.from("chat-media").upload(path,file,{
+      upsert:false,contentType:file.type,cacheControl:"3600"
+    });
+    if (uploadError) throw uploadError;
+    uploadedPath = path;
+
+    const marker = `[[MEDIA|${image ? "image" : "video"}|${path}]]`;
+    const {error:messageError} = await db.from("messages").insert({
+      sender_id:currentUser.id,
+      receiver_id:friendId,
+      content:marker,
+      media_path:path
+    });
+    if (messageError) throw messageError;
+
+    activeChatFriendId = friendId;
+    await loadMessages();
+    notify(image ? "Picture sent!" : "Video sent!");
+  } catch (error) {
+    notify("Could not send media: " + error.message,true);
+    if (uploadedPath) console.warn("Uploaded file may remain in Storage:",uploadedPath);
+  } finally {
+    $("mediaInput").value = "";
+    button.disabled = false;
+    button.textContent = "＋";
+  }
+});
+
+$("chatForm").addEventListener("submit",async event => {
+  event.preventDefault();
+  if (!currentUser) return notify("Please log in first.",true);
+
+  const friendId = $("chatFriend").value;
+  const content = $("chatInput").value.trim();
+
+  if (!friendId) return notify("Choose an accepted friend first.",true);
+  if (!content) return notify("Type a message first.",true);
+  if (content.length > 2000) return notify("Message is too long.",true);
+
+  const button = $("sendMessageButton");
+  button.disabled = true;
+  button.textContent = "…";
+
+  try {
+    const {error} = await db.from("messages").insert({
+      sender_id:currentUser.id,
+      receiver_id:friendId,
+      content
+    });
+    if (error) throw error;
+
+    $("chatInput").value = "";
+    activeChatFriendId = friendId;
+    await loadMessages();
+    notify("Message sent!");
+  } catch (error) {
+    notify("Could not send message: " + error.message,true);
+  } finally {
+    button.disabled = false;
+    button.textContent = "➤";
+  }
+});
+
+$("switchButton").onclick = () => {
+  isLogin = !isLogin;
+  updateAuthForm();
+  clearNotice();
+};
+
+$("authForm").addEventListener("submit",async event => {
+  event.preventDefault();
+  $("submitButton").disabled = true;
+  clearNotice();
+
+  try {
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    const fullName = $("fullName").value.trim();
+
+    if (isLogin) {
+      const {data,error} = await db.auth.signInWithPassword({email,password});
+      if (error) throw error;
+      await showApp(data.user);
+      notify("Logged in successfully!");
+    } else {
+      const {data,error} = await db.auth.signUp({
+        email,password,options:{data:{full_name:fullName}}
+      });
+      if (error) throw error;
+      if (data.session) {
+        await showApp(data.user);
+        notify("Account created!");
+      } else {
+        notify("Check your email to confirm your account.");
+      }
+    }
+  } catch (error) {
+    notify(error.message || "Something went wrong.",true);
+  } finally {
+    $("submitButton").disabled = false;
+    updateAuthForm();
+  }
+});
+
+async function logout() {
+  if (messageChannel) {
+    await db.removeChannel(messageChannel);
+    messageChannel = null;
+  }
+  if (presenceChannel) {
+    try {
+      await presenceChannel.untrack();
+      await db.removeChannel(presenceChannel);
+    } catch (error) {}
+    presenceChannel = null;
+  }
+
+  clearTimeout(realtimeReloadTimer);
+  shownAppUserId = null;
+  const {error} = await db.auth.signOut();
+  if (error) return notify(error.message,true);
+
+  currentUser = null;
+  activeChatFriendId = null;
+  friendProfiles = [];
+  onlineUserIds = new Set();
+  $("appSection").classList.add("hidden");
+  showAuth();
+  notify("You have logged out.");
+}
+
+$("topLogoutButton").onclick = async () => {
+  $("accountMenu").classList.add("hidden");
+  await logout();
+};
+
+$("accountMenuButton").onclick = () => {
+  if (!currentUser) return notify("Please sign in to open your profile.");
+  $("accountMenu").classList.toggle("hidden");
+};
+
+$("openProfileButton").onclick = () => {
+  $("accountMenu").classList.add("hidden");
+  if (!currentUser) return notify("Please sign in to open your profile.");
+
+  const meta = currentUser.user_metadata || {};
+  const details = [
+    ["Name",meta.full_name || meta.name || meta.username || "Not set"],
+    ["Email",currentUser.email || "Not available"],
+    ["Username",meta.username || "Not set"]
+  ];
+
+  $("profileDetails").replaceChildren();
+
+  details.forEach(([label,value]) => {
+    const row = document.createElement("div");
+    row.className = "profile-detail";
+    const strong = document.createElement("strong");
+    strong.textContent = label + ": ";
+    const span = document.createElement("span");
+    span.textContent = value;
+    row.append(strong,span);
+    $("profileDetails").appendChild(row);
+  });
+
+  $("profilePopup").classList.remove("hidden");
+};
+
+$("closeProfileButton").onclick = () => $("profilePopup").classList.add("hidden");
+
+$("profilePopup").addEventListener("click",event => {
+  if (event.target === $("profilePopup")) $("profilePopup").classList.add("hidden");
+});
+
+document.addEventListener("click",event => {
+  if (!$("accountMenu").contains(event.target) && event.target !== $("accountMenuButton")) {
+    $("accountMenu").classList.add("hidden");
+  }
+});
+
+$("searchForm").addEventListener("submit",async event => {
+  event.preventDefault();
+  if (!currentUser) return;
+
+  const term = $("searchTerm").value.trim();
+  if (term.length < 3) return notify("Enter at least 3 characters.",true);
+
+  $("searchResults").textContent = "Searching...";
+  const {data,error} = await db.rpc("search_friends",{search_term:term});
+
+  if (error) {
+    $("searchResults").textContent = "";
+    notify("Search failed: " + error.message,true);
+    return;
+  }
+
+  $("searchResults").replaceChildren();
+  const results = (data || []).filter(profile => profile.user_id !== currentUser.id);
+
+  if (!results.length) {
+    $("searchResults").textContent = "No users found.";
+    return;
+  }
+
+  for (const profile of results) {
+    const item = document.createElement("div");
+    item.className = "item";
+    const label = document.createElement("div");
+    const name = document.createElement("strong");
+    name.textContent = profile.full_name || "JFriendsChat User";
+    const username = document.createElement("span");
+    username.className = "small";
+    username.textContent = "@" + (profile.username || "unknown");
+    label.append(name,document.createElement("br"),username);
+
+    const button = document.createElement("button");
+    button.textContent = "Send Friend Request";
+
+    button.onclick = async () => {
+      button.disabled = true;
+      const {error} = await db.from("friend_requests").insert({
+        sender_id:currentUser.id,
+        receiver_id:profile.user_id
+      });
+
+      if (error) {
+        notify("Could not send request: " + error.message,true);
+        button.disabled = false;
+      } else {
+        button.textContent = "Request Sent";
+        notify("Friend request sent!");
+        await loadRequests();
+      }
+    };
+
+    item.append(label,button);
+    $("searchResults").appendChild(item);
+  }
+});
+
+document.querySelectorAll("nav button").forEach(button => {
+  button.onclick = async () => {
+    const panel = button.dataset.panel;
+    showPanel(panel);
+
+    if (panel === "requestsPanel") await loadRequests();
+    if (panel === "friendsPanel") await loadFriends();
+
+    if (panel === "chatPanel") {
+      showChatList();
+      await renderChatList();
+    }
+  };
+});
+
 async function startApp() {
-  if(!window.supabase){$("setupCard").classList.remove("hidden");return;}
-  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-  $("authSection").classList.remove("hidden");updateAuthForm();
-  db.auth.onAuthStateChange((event,session)=>{
-    if(session)setTimeout(()=>showApp(session.user),0);
-    else if(event==="SIGNED_OUT"){
-      currentUser=null;activeChatFriendId=null;shownAppUserId=null;
-      if(messageChannel){db.removeChannel(messageChannel);messageChannel=null;}
-      if(presenceChannel){presenceChannel.untrack();db.removeChannel(presenceChannel);presenceChannel=null;}
-      onlineUserIds=new Set();clearTimeout(realtimeReloadTimer);$("appSection").classList.add("hidden");showAuth();
+  if (!window.supabase) {
+    $("setupCard").classList.remove("hidden");
+    return;
+  }
+
+  db = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+  $("authSection").classList.remove("hidden");
+  updateAuthForm();
+
+  db.auth.onAuthStateChange((event,session) => {
+    if (session) {
+      setTimeout(() => showApp(session.user),0);
+    } else if (event === "SIGNED_OUT") {
+      currentUser = null;
+      activeChatFriendId = null;
+      shownAppUserId = null;
+
+      if (messageChannel) {
+        db.removeChannel(messageChannel);
+        messageChannel = null;
+      }
+      if (presenceChannel) {
+        presenceChannel.untrack();
+        db.removeChannel(presenceChannel);
+        presenceChannel = null;
+      }
+
+      friendProfiles = [];
+      onlineUserIds = new Set();
+      clearTimeout(realtimeReloadTimer);
+      $("appSection").classList.add("hidden");
+      showAuth();
     }
   });
-  const {data,error}=await db.auth.getSession();
-  if(error)notify(error.message,true);else if(data.session)await showApp(data.session.user);
+
+  const {data,error} = await db.auth.getSession();
+  if (error) notify(error.message,true);
+  else if (data.session) await showApp(data.session.user);
 }
+
 startApp();
 </script>
 </body>
