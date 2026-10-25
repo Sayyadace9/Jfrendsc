@@ -50,13 +50,8 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 <section id="appSection" class="hidden">
 <section class="card"><h2>Welcome to JFriendsChat! 🎉</h2><p id="welcomeText"></p><button id="logoutButton" class="full danger" type="button">Log Out</button></section>
 <nav>
-<button type="button" data-panel="profilePanel">👤 My Profile</button><button type="button" data-panel="searchPanel">🔎 Find Friends</button><button type="button" data-panel="requestsPanel">🤝 Requests</button><button type="button" data-panel="friendsPanel">👥 Friends</button><button type="button" data-panel="chatPanel">💬 Chat</button>
+<button type="button" data-panel="searchPanel">🔎 Find Friends</button><button type="button" data-panel="requestsPanel">🤝 Requests</button><button type="button" data-panel="friendsPanel">👥 Friends</button><button type="button" data-panel="chatPanel">💬 Chat</button>
 </nav>
-<section id="profilePanel" class="card">
-<h2>👤 Edit My Profile</h2><div id="avatarDisplay"><div class="avatar-placeholder">👤</div></div><p class="note" style="text-align:center">Your profile picture</p>
-<form id="profileForm"><label for="profilePhoto">Choose a profile picture</label><input id="profilePhoto" type="file" accept="image/jpeg,image/png,image/webp"><label for="profileFullName">Full name</label><input id="profileFullName" type="text" maxlength="80" required><label for="profileUsername">Username</label><input id="profileUsername" type="text" disabled><button id="saveProfileButton" class="full" type="submit">Save Profile</button></form>
-<p class="note">Pictures must be JPG, PNG, or WebP and no larger than 2 MB.</p>
-</section>
 <section id="searchPanel" class="card hidden"><h2>🔎 Find Friends</h2><form id="searchForm" class="row"><input id="searchTerm" type="text" placeholder="Enter username" maxlength="30" required><button type="submit">Search</button></form><div id="searchResults"></div></section>
 <section id="requestsPanel" class="card hidden"><h2>🤝 Friend Requests</h2><h3>Received</h3><div id="receivedRequests"></div><h3>Sent</h3><div id="sentRequests"></div></section>
 <section id="friendsPanel" class="card hidden"><h2>👥 My Friends</h2><p class="note">Your accepted friends will appear here.</p><button id="refreshFriendsButton" class="secondary" type="button">Refresh Friends</button><div id="friendsList" aria-live="polite">Open this section to load your friends.</div></section>
@@ -64,7 +59,7 @@ nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}nav button{flex:1;min
 <h2>💬 Private Chat</h2><label for="chatFriend">Choose an accepted friend</label><select id="chatFriend"><option value="">Loading friends...</option></select>
 <button id="loadChatButton" class="full secondary" type="button">Open Conversation</button><div id="chatMessages" aria-live="polite">Choose a friend and tap Open Conversation.</div>
 <form id="chatForm"><textarea id="chatInput" maxlength="2000" placeholder="Type your message..." rows="3" required></textarea><button id="sendMessageButton" class="full" type="submit">Send Message</button></form>
-<button id="refreshChatButton" class="full secondary" type="button">Refresh Messages</button><p class="note">Only accepted friends can exchange messages. Messages can contain up to 2,000 characters.</p>
+<p class="note">Only accepted friends can exchange messages. Messages can contain up to 2,000 characters.</p>
 </section>
 </section>
 <section class="card"><h2>About JFriendsChat</h2><p>A place to bring friends and relatives closer together.</p></section>
@@ -97,7 +92,7 @@ function updateAuthForm() {
   $("switchButton").textContent = isLogin ? "Need an account? Register" : "Already have an account? Log in";
 }
 function showPanel(id) {
-  ["profilePanel","searchPanel","requestsPanel","friendsPanel","chatPanel"].forEach(panel => $(panel).classList.add("hidden"));
+  ["searchPanel","requestsPanel","friendsPanel","chatPanel"].forEach(panel => $(panel).classList.add("hidden"));
   $(id).classList.remove("hidden");
 }
 
@@ -143,8 +138,7 @@ async function showApp(user) {
   $("authSection").classList.add("hidden");
   $("appSection").classList.remove("hidden");
   $("welcomeText").textContent = user.email || "Signed in";
-  showPanel("profilePanel");
-  await loadProfile();
+  showPanel("searchPanel");
   await loadRequests();
   if (userChanged || shownAppUserId !== user.id || !messageChannel) {
     shownAppUserId = user.id;
@@ -156,8 +150,8 @@ async function loadProfile() {
   const {data,error} = await db.from("profiles").select("username,full_name,avatar_path").eq("id",currentUser.id).maybeSingle();
   if (error) {notify("Could not load profile: " + error.message,true);return;}
   if (!data) {notify("Profile not found. Check your Supabase profile setup.",true);return;}
-  $("profileFullName").value = data.full_name || "";
-  $("profileUsername").value = data.username || "";
+  $("profileDisplayName").textContent = data.full_name || "JFriendsChat User";
+  $("profileDisplayUsername").textContent = data.username ? "@" + data.username : "";
   currentAvatarPath = data.avatar_path || null;
   await displayAvatar(currentAvatarPath);
 }
@@ -324,35 +318,6 @@ async function logout() {
 }
 $("logoutButton").onclick=logout;
 
-$("profilePhoto").addEventListener("change",()=>{
-  const file=$("profilePhoto").files[0];
-  if (avatarObjectUrl) URL.revokeObjectURL(avatarObjectUrl);avatarObjectUrl=null;
-  if (!file) {displayAvatar(currentAvatarPath);return;}
-  if (!["image/jpeg","image/png","image/webp"].includes(file.type)) {$("profilePhoto").value="";notify("Choose a JPG, PNG, or WebP picture.",true);return;}
-  if (file.size>2*1024*1024) {$("profilePhoto").value="";notify("Picture must be 2 MB or smaller.",true);return;}
-  avatarObjectUrl=URL.createObjectURL(file);$("avatarDisplay").replaceChildren();
-  const img=document.createElement("img");img.className="avatar";img.alt="Picture preview";img.src=avatarObjectUrl;$("avatarDisplay").appendChild(img);
-});
-$("profileForm").addEventListener("submit",async event=>{
-  event.preventDefault();if(!currentUser)return;
-  const button=$("saveProfileButton");button.disabled=true;button.textContent="Saving...";clearNotice();
-  try {
-    const fullName=$("profileFullName").value.trim();if(!fullName||fullName.length>80)throw new Error("Enter your full name.");
-    let avatarPath=currentAvatarPath;const file=$("profilePhoto").files[0];
-    if (file) {
-      const extension={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[file.type];
-      if (!extension) throw new Error("Unsupported picture format.");if(file.size>2*1024*1024)throw new Error("Picture must be 2 MB or smaller.");
-      avatarPath=`${currentUser.id}/avatar.${extension}`;
-      const {error}=await db.storage.from("avatars").upload(avatarPath,file,{upsert:true,contentType:file.type,cacheControl:"3600"});if(error)throw error;
-    }
-    const {error}=await db.from("profiles").update({full_name:fullName,avatar_path:avatarPath}).eq("id",currentUser.id);if(error)throw error;
-    currentAvatarPath=avatarPath;$("profilePhoto").value="";
-    if(avatarObjectUrl)URL.revokeObjectURL(avatarObjectUrl);avatarObjectUrl=null;
-    await displayAvatar(currentAvatarPath);notify("Profile saved successfully! 🎉");
-  } catch(error) {notify("Could not save profile: "+error.message,true);}
-  finally {button.disabled=false;button.textContent="Save Profile";}
-});
-
 $("searchForm").addEventListener("submit",async event=>{
   event.preventDefault();if(!currentUser)return;
   const term=$("searchTerm").value.trim();if(term.length<3)return notify("Enter at least 3 characters.",true);
@@ -379,7 +344,6 @@ $("searchForm").addEventListener("submit",async event=>{
 document.querySelectorAll("nav button").forEach(button=>{
   button.onclick=async()=>{
     const panel=button.dataset.panel;showPanel(panel);
-    if(panel==="profilePanel")await loadProfile();
     if(panel==="requestsPanel")await loadRequests();
     if(panel==="friendsPanel")await loadFriends();
     if(panel==="chatPanel")await loadChatFriends();
