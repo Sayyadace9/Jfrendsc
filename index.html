@@ -161,9 +161,19 @@ nav button{flex-basis:76px;min-width:76px;width:76px;font-size:10px}
 <section id="accountPanel" class="card hidden"><h3>My Profile</h3><div id="accountDetails"></div><input id="newUsername" placeholder="New username"><button class="primary" onclick="updateUsername()">Save Username</button><button class="danger" onclick="signOut()">Log Out</button></section>
 
 <section id="founderPanel" class="hidden">
-<div class="card"><h3>👑 Founder Dashboard <span class="founder-badge">✓ FOUNDER</span></h3><p>Founder access is checked using your signed-in email and your verified founder setting in the database.</p><div id="founderStatus" class="muted">Checking founder permissions...</div>
-<div class="stat-grid"><div class="stat-box">Total registered profiles<strong id="founderUsers">—</strong></div><div class="stat-box">Posts<strong id="founderPosts">—</strong></div><div class="stat-box">Products<strong id="founderProducts">—</strong></div><div class="stat-box">Meetings<strong id="founderMeetings">—</strong></div></div>
-<button class="primary" onclick="loadFounderStats()">🔄 Refresh statistics</button><hr><h3>Founder account</h3><div id="founderAccountInfo"></div><p class="muted">This initial dashboard shows basic counts. User banning, admin promotion, and deleting other users require secure database functions and policies; this page does not pretend those actions are enabled.</p></div>
+<div class="card"><h3>👑 Founder Dashboard <span class="founder-badge">✓ FOUNDER</span></h3><p>Manage users, administrators, posts and your website statistics.</p><div id="founderStatus" class="muted">Checking founder permissions...</div>
+<div class="stat-grid">
+<div class="stat-box">Total users<strong id="founderUsers">—</strong></div><div class="stat-box">Daily active users<strong id="founderDAU">—</strong></div><div class="stat-box">Total posts<strong id="founderPosts">—</strong></div><div class="stat-box">Revenue recorded<strong id="founderRevenue">₦0</strong></div><div class="stat-box">Products<strong id="founderProducts">—</strong></div><div class="stat-box">Meetings<strong id="founderMeetings">—</strong></div><div class="stat-box">Administrators<strong id="founderAdmins">—</strong></div><div class="stat-box">Banned users<strong id="founderBanned">—</strong></div><div class="stat-box">Shops awaiting review<strong id="founderPendingShops">—</strong></div>
+</div>
+<button class="primary" onclick="loadFounderStats()">🔄 Refresh statistics</button><hr><h3>Founder account</h3><div id="founderAccountInfo"></div>
+<div class="submenu"><button onclick="loadFounderUsers()">👥 User Management</button><button onclick="loadFounderPosts()">🛡️ Content Moderation</button><button onclick="loadFounderBusinesses()">🏪 Business Verification</button><button onclick="loadFounderAnnouncements()">📢 Broadcasts</button><button onclick="loadFounderHealth()">🔧 System Health</button><button onclick="loadFounderMonetization()">💰 Monetization</button></div>
+<div id="founderUsersSection" class="hidden"><hr><h3>👥 User management</h3><input id="founderUserSearch" placeholder="Search name or email" oninput="renderFounderUsers()"><button class="secondary" onclick="loadFounderUsers()">Refresh users</button><div id="founderUsersList"></div></div>
+<div id="founderPostsSection" class="hidden"><hr><h3>🛡️ Content moderation</h3><button class="secondary" onclick="loadFounderPosts()">Refresh posts</button><div id="founderPostsList"></div></div>
+<div id="founderBusinessesSection" class="hidden"><hr><h3>🏪 Business verification</h3><p class="muted">Review shop profiles and verify or revoke verification.</p><button class="secondary" onclick="loadFounderBusinesses()">Refresh shops</button><div id="founderBusinessesList"></div></div>
+<div id="founderAnnouncementsSection" class="hidden"><hr><h3>📢 Broadcast announcement to all users</h3><input id="announcementTitle" maxlength="120" placeholder="Announcement title"><textarea id="announcementBody" maxlength="3000" placeholder="Write your announcement for all users"></textarea><button class="primary" onclick="sendFounderAnnouncement()">📢 Publish announcement</button><button class="secondary" onclick="loadFounderAnnouncements()">Refresh announcements</button><div id="founderAnnouncementsList"></div></div>
+<div id="founderHealthSection" class="hidden"><hr><h3>🔧 System health & SQL setup checker</h3><p class="muted">Checks whether required tables and dashboard functions exist. It does not run or change SQL automatically.</p><button class="primary" onclick="loadFounderHealth()">Run health check</button><div id="founderHealthList"></div></div>
+<div id="founderMonetizationSection" class="hidden"><hr><h3>💰 Monetization overview</h3><p class="muted">Revenue totals include only transactions recorded in the monetization table. Connect your payment provider to record real payments.</p><button class="primary" onclick="loadFounderMonetization()">Refresh monetization</button><div id="founderMonetizationList"></div></div>
+<p class="muted">Founder badge and dashboard access are displayed in the interface, but actual permissions are enforced by Supabase. Ban records need application/RLS enforcement to block restricted actions.</p></div>
 </section>
 </section></div>
 <footer>JFriendsChat © 2026 · Connect with friends and relatives ❤️</footer>
@@ -225,6 +235,7 @@ async function signOut(){
 }
 async function startApp(user){
  currentUser=user;el("authPanel").classList.add("hidden");el("appPanel").classList.remove("hidden");el("accountButton").classList.remove("hidden");
+ db.rpc("jf_record_activity").then(()=>{}).catch(()=>{});showLatestBroadcast().catch(()=>{});
  updateFounderUI();await ensureProfile();await loadChatFriends();openChatHome();await loadPresence();subscribeToMessages();await startPresence();
  if(refreshTimer)clearInterval(refreshTimer);
  refreshTimer=setInterval(async()=>{if(!currentUser)return;await loadChatFriends();if(!activeFriend)await renderChatList();if(!el("postsPanel").classList.contains("hidden"))await loadPosts();if(!el("businessPanel").classList.contains("hidden"))await loadProducts();if(!el("connectPanel").classList.contains("hidden"))await loadMeetings();if(!el("groupsPanel").classList.contains("hidden")&&window.activeGroupId&&!el("groupRoomPanel").classList.contains("hidden"))await loadGroupMessages();},20000);
@@ -326,33 +337,78 @@ async function openGroupRoom(id,name){window.activeGroupId=id;el("groupRoomTitle
 async function loadGroupMessages(){if(!window.activeGroupId)return;let {data,error}=await db.from("community_group_messages").select("*").eq("group_id",window.activeGroupId).order("created_at",{ascending:true}).limit(300);if(error){el("groupMessages").textContent=error.message;return;}let ids=[...new Set((data||[]).map(m=>m.user_id))],pr=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);pr=r.data||[];}el("groupMessages").innerHTML=(data||[]).map(m=>`<div class="message ${m.user_id===currentUser.id?"mine":""}"><strong>${esc(nameOf(pr.find(p=>p.id===m.user_id)))}</strong><div>${esc(m.content)}</div><small>${esc(timeOf(m.created_at))}</small></div>`).join("")||"<p>No messages yet. Say hello!</p>";el("groupMessages").scrollTop=el("groupMessages").scrollHeight;}
 async function sendGroupMessage(){let content=el("groupMessageInput").value.trim();if(!content||!window.activeGroupId)return;let {error}=await db.from("community_group_messages").insert({group_id:window.activeGroupId,user_id:currentUser.id,content});if(error)return alert(error.message);el("groupMessageInput").value="";await loadGroupMessages();}
 
-/* Founder dashboard: counts are visible only when the signed-in email matches the configured founder email. */
+/* Founder tools call server-side Supabase functions; browser UI is not the security boundary. */
+let founderUsersCache=[];
 async function openFounder(){
  if(!isFounder()){alert("Founder access only.");return;}
  hidePanels();setNav("founderNav");el("founderPanel").classList.remove("hidden");
  await loadFounderStats();
 }
-async function countRows(table){
- const {count,error}=await db.from(table).select("*",{count:"exact",head:true});
- if(error)throw new Error(table+": "+error.message);
- return count??0;
+async function founderRpc(name,args={}){
+ const {data,error}=await db.rpc(name,args);
+ if(error)throw new Error(error.message);
+ return data;
 }
 async function loadFounderStats(){
  if(!isFounder()){alert("Founder access only.");return;}
  el("founderStatus").textContent="Loading statistics...";
  try{
-  const [users,posts,products,meetings]=await Promise.all([
-   countRows("profiles"),countRows("posts"),countRows("market_products"),countRows("community_meetings")
-  ]);
-  el("founderUsers").textContent=users.toLocaleString();
-  el("founderPosts").textContent=posts.toLocaleString();
-  el("founderProducts").textContent=products.toLocaleString();
-  el("founderMeetings").textContent=meetings.toLocaleString();
-  el("founderStatus").textContent="Statistics refreshed at "+new Date().toLocaleTimeString()+". If a count fails, check that table permissions allow this query.";
- }catch(e){
-  el("founderStatus").textContent="Could not load all statistics: "+e.message+" — check your Supabase tables and Row Level Security policies.";
+  const d=await founderRpc("jf_founder_stats");
+  el("founderUsers").textContent=Number(d.total_users||0).toLocaleString();
+  el("founderDAU").textContent=Number(d.daily_active_users||0).toLocaleString();
+  el("founderRevenue").textContent=Number(d.revenue_total||0).toLocaleString("en-NG",{style:"currency",currency:"NGN",maximumFractionDigits:2});
+  el("founderPendingShops").textContent=Number(d.pending_businesses||0).toLocaleString();
+  el("founderPosts").textContent=Number(d.total_posts||0).toLocaleString();
+  el("founderProducts").textContent=Number(d.total_products||0).toLocaleString();
+  el("founderMeetings").textContent=Number(d.total_meetings||0).toLocaleString();
+  el("founderAdmins").textContent=Number(d.total_admins||0).toLocaleString();
+  el("founderBanned").textContent=Number(d.total_banned_users||0).toLocaleString();
+  el("founderActive").textContent=Number(d.recent_signins_24h||0).toLocaleString();
+  el("founderStatus").textContent="Statistics refreshed at "+new Date().toLocaleTimeString()+".";
+ }catch(e){el("founderStatus").textContent="Could not load statistics: "+e.message+". Run the matching Founder Dashboard SQL in Supabase first.";}
+}
+async function loadFounderUsers(){
+ if(!isFounder())return alert("Founder access only.");
+ el("founderUsersSection").classList.remove("hidden");el("founderPostsSection").classList.add("hidden");
+ el("founderUsersList").textContent="Loading users...";
+ try{founderUsersCache=await founderRpc("jf_list_users");renderFounderUsers();}
+ catch(e){el("founderUsersList").textContent="Could not load users: "+e.message+". Run the matching SQL first.";}
+}
+function renderFounderUsers(){
+ const box=el("founderUsersList");if(!box)return;box.replaceChildren();
+ const term=(el("founderUserSearch")?.value||"").toLowerCase();
+ const rows=(founderUsersCache||[]).filter(u=>String(u.email||"").toLowerCase().includes(term)||String(u.username||"").toLowerCase().includes(term));
+ if(!rows.length){box.textContent="No matching users.";return;}
+ for(const u of rows){
+  const row=document.createElement("div");row.className="row";
+  const info=document.createElement("div");info.className="flexinfo";
+  const title=document.createElement("strong");title.textContent=(u.username||"User")+" — "+(u.email||"no email");
+  const meta=document.createElement("div");meta.className="muted";meta.textContent="Joined: "+(u.created_at?new Date(u.created_at).toLocaleDateString():"unknown")+" · "+(u.is_admin?"Administrator":"Member")+" · "+(u.is_banned?"BANNED":"Active record");info.append(title,meta);row.append(info);
+  if(u.email!==FOUNDER_EMAIL){
+   const admin=document.createElement("button");admin.className="secondary";admin.textContent=u.is_admin?"Remove admin":"Make admin";admin.onclick=async()=>{if(!confirm((u.is_admin?"Remove administrator role from ":"Make ")+u.email+"?"))return;try{await founderRpc("jf_set_admin",{target_user:u.id,make_admin:!u.is_admin});await loadFounderUsers();await loadFounderStats();}catch(e){alert(e.message);}};row.append(admin);
+   const ban=document.createElement("button");ban.className=u.is_banned?"secondary":"danger";ban.textContent=u.is_banned?"Unban":"Ban";ban.onclick=async()=>{let reason=null;if(!u.is_banned){reason=prompt("Reason for banning this user (optional):")||null;if(!confirm("Record a ban for "+u.email+"?"))return;}try{await founderRpc("jf_set_banned",{target_user:u.id,should_ban:!u.is_banned,ban_reason:reason});await loadFounderUsers();await loadFounderStats();}catch(e){alert(e.message);}};row.append(ban);
+   const del=document.createElement("button");del.className="danger";del.textContent="Delete account";del.onclick=async()=>{if(!confirm("Permanently delete "+u.email+"? This cannot easily be undone."))return;try{await founderRpc("jf_delete_user",{target_user:u.id});alert("Account deleted.");await loadFounderUsers();await loadFounderStats();}catch(e){alert("Account deletion failed: "+e.message);}};row.append(del);
+  }
+  box.append(row);
  }
 }
+async function loadFounderPosts(){
+ if(!isFounder())return alert("Founder access only.");
+ el("founderPostsSection").classList.remove("hidden");el("founderUsersSection").classList.add("hidden");el("founderPostsList").textContent="Loading posts...";
+ try{const posts=await founderRpc("jf_list_posts");const box=el("founderPostsList");box.replaceChildren();if(!posts.length){box.textContent="No posts found.";return;}
+  for(const p of posts){const row=document.createElement("div");row.className="row";const info=document.createElement("div");info.className="flexinfo";const content=document.createElement("div");content.textContent=String(p.content||"[Post]").slice(0,350);const meta=document.createElement("div");meta.className="muted";meta.textContent="Post ID: "+p.id+" · "+(p.created_at?new Date(p.created_at).toLocaleString():"");info.append(content,meta);const del=document.createElement("button");del.className="danger";del.textContent="Delete post";del.onclick=async()=>{if(!confirm("Delete this post permanently?"))return;try{await founderRpc("jf_delete_post",{target_post:String(p.id)});await loadFounderPosts();await loadFounderStats();}catch(e){alert(e.message);}};row.append(info,del);box.append(row);}
+ }catch(e){el("founderPostsList").textContent="Could not load posts: "+e.message+". Run the matching SQL first.";}
+}
+
+function hideFounderSubsections(){["founderUsersSection","founderPostsSection","founderBusinessesSection","founderAnnouncementsSection","founderHealthSection","founderMonetizationSection"].forEach(id=>el(id)?.classList.add("hidden"));}
+async function founderSection(id){if(!isFounder())throw new Error("Founder access only.");hideFounderSubsections();el(id).classList.remove("hidden");}
+async function loadFounderBusinesses(){try{await founderSection("founderBusinessesSection");const box=el("founderBusinessesList");box.textContent="Loading business profiles...";const rows=await founderRpc("jf_list_businesses");box.replaceChildren();if(!rows?.length){box.textContent="No business profiles found.";return;}for(const b of rows){const row=document.createElement("div");row.className="row";const info=document.createElement("div");info.className="flexinfo";const title=document.createElement("strong");title.textContent=(b.business_name||"Business")+(b.is_verified?" ✓ VERIFIED":"");const meta=document.createElement("div");meta.className="muted";meta.textContent=(b.location||"No location")+" · Owner: "+(b.email||b.user_id||"Unknown")+" · Status: "+(b.is_verified?"Verified":"Pending review");info.append(title,meta);row.append(info);const btn=document.createElement("button");btn.className=b.is_verified?"secondary":"primary";btn.textContent=b.is_verified?"Revoke verification":"Verify shop";btn.onclick=async()=>{if(!confirm((b.is_verified?"Revoke verification for ":"Verify ")+(b.business_name||"this shop")+"?"))return;try{await founderRpc("jf_set_business_verified",{target_user:b.user_id,should_verify:!b.is_verified});await loadFounderBusinesses();await loadFounderStats();}catch(e){alert(e.message);}};row.append(btn);box.append(row);}}catch(e){el("founderBusinessesList").textContent="Could not load businesses: "+e.message+". Run the dashboard SQL extension.";}}
+async function sendFounderAnnouncement(){if(!isFounder())return alert("Founder access only.");const title=el("announcementTitle").value.trim(),body=el("announcementBody").value.trim();if(!title||!body)return alert("Enter both an announcement title and message.");if(!confirm("Publish this announcement for all signed-in JFriendsChat users?"))return;try{await founderRpc("jf_broadcast_announcement",{announcement_title:title,announcement_body:body});el("announcementTitle").value="";el("announcementBody").value="";alert("Announcement published.");await loadFounderAnnouncements();}catch(e){alert("Could not publish announcement: "+e.message+". Run the dashboard SQL extension first.");}}
+async function loadFounderAnnouncements(){try{await founderSection("founderAnnouncementsSection");const box=el("founderAnnouncementsList");box.textContent="Loading announcements...";const rows=await founderRpc("jf_list_announcements");box.replaceChildren();if(!rows?.length){box.textContent="No announcements published yet.";return;}for(const a of rows){const card=document.createElement("article");card.className="post";const h=document.createElement("h4");h.textContent=a.title||"Announcement";const p=document.createElement("p");p.textContent=a.body||"";const meta=document.createElement("div");meta.className="muted";meta.textContent=a.created_at?new Date(a.created_at).toLocaleString():"";card.append(h,p,meta);box.append(card);}}catch(e){el("founderAnnouncementsList").textContent="Could not load announcements: "+e.message+". Run the dashboard SQL extension first.";}}
+async function showLatestBroadcast(){if(!currentUser)return;const {data,error}=await db.from("jf_announcements").select("id,title,body,created_at").order("created_at",{ascending:false}).limit(1).maybeSingle();if(error||!data)return;const key="jf_seen_announcement_"+currentUser.id;if(localStorage.getItem(key)===data.id)return;localStorage.setItem(key,data.id);alert("📢 JFriendsChat announcement\n\n"+(data.title||"")+"\n\n"+(data.body||""));}
+async function loadFounderHealth(){try{await founderSection("founderHealthSection");const box=el("founderHealthList");box.textContent="Checking database setup...";const result=await founderRpc("jf_system_health");box.replaceChildren();for(const item of (result.checks||[])){const row=document.createElement("div");row.className="row";const info=document.createElement("div");info.className="flexinfo";const title=document.createElement("strong");title.textContent=item.name||"Check";const meta=document.createElement("div");meta.className="muted";meta.textContent=item.detail||"";info.append(title,meta);const status=document.createElement("span");status.textContent=item.ok?"✅ Ready":"❌ Missing";status.style.fontWeight="700";row.append(info,status);box.append(row);}const summary=document.createElement("p");summary.className="muted";summary.textContent="Checked at "+new Date().toLocaleString()+". "+(result.ok?"Required checks passed.":"Some setup items need attention.");box.prepend(summary);}catch(e){el("founderHealthList").textContent="Health check failed: "+e.message+". Run the dashboard SQL extension first.";}}
+async function loadFounderMonetization(){try{await founderSection("founderMonetizationSection");const box=el("founderMonetizationList");box.textContent="Loading monetization overview...";const d=await founderRpc("jf_monetization_overview");box.replaceChildren();const rows=[["Recorded gross revenue",Number(d.revenue_total||0).toLocaleString("en-NG",{style:"currency",currency:"NGN"})],["Transactions",Number(d.transaction_count||0).toLocaleString()],["Successful transactions",Number(d.successful_transactions||0).toLocaleString()],["Pending transactions",Number(d.pending_transactions||0).toLocaleString()],["Revenue today",Number(d.revenue_today||0).toLocaleString("en-NG",{style:"currency",currency:"NGN"})]];for(const [label,value] of rows){const row=document.createElement("div");row.className="row";const info=document.createElement("div");info.className="flexinfo";info.textContent=label;const strong=document.createElement("strong");strong.textContent=value;row.append(info,strong);box.append(row);}const note=document.createElement("p");note.className="muted";note.textContent="These figures come from recorded payment events only. They will remain zero until a payment provider or trusted server process records real transactions.";box.append(note);}catch(e){el("founderMonetizationList").textContent="Could not load monetization data: "+e.message+". Run the dashboard SQL extension first.";}}
+
 db.auth.getSession().then(async({data,error})=>{if(error){showAuthStatus(error.message);return;}if(data.session?.user)await startApp(data.session.user);});
 db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"){currentUser=null;currentProfile=null;}});
 </script>
