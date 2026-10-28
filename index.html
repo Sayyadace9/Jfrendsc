@@ -158,3 +158,3024 @@ nav{top:82px;width:220px}#appPanel{padding-left:235px}
 
 </style>
 </head>
+<body>
+
+<header>
+    <div class="brand-lockup">
+        <div class="brand-mark">💬</div>
+        <div class="brand-copy">
+            <h2>JFriendsChat</h2>
+            <div class="brand-tagline">Connect with friends and relatives ❤️</div>
+        </div>
+    </div>
+
+    <div class="header-actions">
+        <button class="profile-pill" onclick="openProfile()">👤 Profile</button>
+    </div>
+</header>
+
+<div class="container">
+
+<!-- STATUS MESSAGE -->
+<div id="status" role="status" aria-live="polite"></div>
+
+<!-- LOGIN AND REGISTRATION -->
+<section id="authPanel" class="card">
+    <h3>Welcome to JFriendsChat 👋</h3>
+    <p class="muted">Connect, chat, share posts, and keep in touch with people you care about.</p>
+
+    <div id="authStatus" role="status" aria-live="polite"></div>
+
+    <div id="registerFields">
+        <label for="fullName">Full name</label>
+        <input id="fullName" type="text" maxlength="100" placeholder="Enter your full name" autocomplete="name">
+
+        <label for="username">Username</label>
+        <input id="username" type="text" maxlength="20" placeholder="Choose a username" autocomplete="username">
+    </div>
+
+    <label for="email">Email address</label>
+    <input id="email" type="email" placeholder="Enter your email" autocomplete="email">
+
+    <label for="password">Password</label>
+    <input id="password" type="password" minlength="8" placeholder="At least 8 characters" autocomplete="current-password">
+
+    <button id="loginButton" class="primary" type="button" onclick="signIn()" style="width:100%">
+        Log In
+    </button>
+
+    <button id="registerButton" class="primary hidden" type="button" onclick="signUp()" style="width:100%">
+        Create Account
+    </button>
+
+    <p id="authSwitchText" style="text-align:center;margin-top:18px">
+        Don't have an account?
+        <button type="button" class="secondary" onclick="showRegisterForm()">Register</button>
+    </p>
+
+    <p class="muted">
+        If email confirmation is enabled, confirm your email before logging in.
+    </p>
+</section>
+
+<!-- MAIN APPLICATION -->
+<section id="appPanel" class="hidden">
+
+    <!-- NAVIGATION -->
+    <nav aria-label="Main navigation">
+        <button class="active" onclick="navigateTo('chatPanel',this)">💬 Chat</button>
+        <button onclick="navigateTo('friendsPanel',this)">👥 Friends</button>
+        <button onclick="navigateTo('requestsPanel',this)">📨 Requests</button>
+        <button onclick="navigateTo('searchPanel',this)">🔎 Find People</button>
+        <button onclick="navigateTo('postsPanel',this)">📝 Posts</button>
+        <button onclick="navigateTo('businessPanel',this)">🛍️ Business</button>
+        <button onclick="navigateTo('connectPanel',this)">📹 Meetings</button>
+        <button onclick="navigateTo('groupsPanel',this)">👨‍👩‍👧‍👦 Groups</button>
+        <button onclick="navigateTo('schoolPanel',this)">🏫 School</button>
+        <button onclick="navigateTo('companyPanel',this)">🏢 Company</button>
+        <button onclick="openProfile()">⚙️ My Profile</button>
+        <button onclick="signOut()">🚪 Log Out</button>
+    </nav>
+
+    <main>
+
+        <!-- CHAT PANEL -->
+        <section id="chatPanel" class="card">
+
+            <h2 id="chatHeading">Messages 💬</h2>
+
+            <div class="chat-search-wrap">
+                <span>⌕</span>
+                <input id="chatSearch" type="search" placeholder="Search conversations..." oninput="filterChatList()">
+                <button class="filter-button" type="button" onclick="loadFriends()" title="Refresh conversations">↻</button>
+            </div>
+
+            <div class="online-friends-heading">
+                <span><i></i> My Friends</span>
+                <button type="button" onclick="navigateTo('friendsPanel')">See all</button>
+            </div>
+
+            <div id="chatFriends" class="online-friends">
+                <p class="muted">Your accepted friends will appear here.</p>
+            </div>
+
+            <div id="conversationList">
+                <p class="muted">Choose a friend to start chatting.</p>
+            </div>
+
+            <!-- ACTIVE CONVERSATION -->
+            <div id="conversationArea" class="hidden">
+
+                <div class="conversation-top">
+                    <button class="back-chat" type="button" onclick="closeConversation()">‹</button>
+
+                    <div class="conversation-avatar">👤</div>
+
+                    <div class="conversation-title">
+                        <h3 id="chatWithName">Friend</h3>
+                        <div id="chatWithUsername" class="muted"></div>
+                    </div>
+
+                    <div class="conversation-tools">
+                        <button type="button" class="secondary" onclick="startVoiceCall()" title="Voice call">📞</button>
+                        <button type="button" class="secondary" onclick="startVideoCall()" title="Video call">📹</button>
+                    </div>
+                </div>
+
+                <div id="messages" aria-live="polite">
+                    <p class="muted">Your messages will appear here.</p>
+                </div>
+
+                <div class="composer message-composer">
+                    <label class="attach-button" for="chatImage" title="Attach image">＋</label>
+                    <input id="chatImage" type="file" accept="image/jpeg,image/png,image/webp" class="hidden">
+
+                    <input id="messageInput" type="text" maxlength="5000" placeholder="Write a message..." autocomplete="off">
+
+                    <button id="sendMessageButton" class="send-button" type="button" onclick="sendMessage()" title="Send message">➤</button>
+                </div>
+
+                <div class="media-picker">
+                    <span id="chatImageName" class="muted"></span>
+                    <button type="button" class="secondary" onclick="sendChatImage()">Send Image</button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FRIENDS PANEL -->
+        <section id="friendsPanel" class="card hidden">
+            <h3>👥 My Friends</h3>
+            <p class="muted">See your accepted friends and open a private conversation.</p>
+            <button class="secondary" type="button" onclick="loadFriends()">Refresh Friends</button>
+            <div id="friendsList"></div>
+        </section>
+
+        <!-- FRIEND REQUESTS PANEL -->
+        <section id="requestsPanel" class="card hidden">
+            <h3>📨 Friend Requests</h3>
+
+            <h4>Incoming requests</h4>
+            <div id="incomingRequests">
+                <p class="muted">Your incoming requests will appear here.</p>
+            </div>
+
+            <hr>
+
+            <h4>Sent requests</h4>
+            <div id="outgoingRequests">
+                <p class="muted">Your sent requests will appear here.</p>
+            </div>
+
+            <button class="secondary" type="button" onclick="loadRequests()">Refresh Requests</button>
+        </section>
+
+        <!-- FIND PEOPLE PANEL -->
+        <section id="searchPanel" class="card hidden">
+            <h3>🔎 Find People</h3>
+            <p class="muted">Search for registered members by name or username.</p>
+
+            <div class="composer">
+                <input id="friendSearch" type="search" placeholder="Search by name or username..." onkeydown="if(event.key==='Enter')searchUsers()">
+                <button class="primary" type="button" onclick="searchUsers()">Search</button>
+            </div>
+
+            <div id="searchResults"></div>
+        </section>
+
+        <!-- POSTS PANEL -->
+        <section id="postsPanel" class="hidden">
+            <div class="card">
+                <h3>📝 Share a Post</h3>
+
+                <textarea id="postContent" maxlength="5000" placeholder="What would you like to share with your friends?"></textarea>
+
+                <label for="postImage">Attach an image (optional)</label>
+                <input id="postImage" type="file" accept="image/jpeg,image/png,image/webp">
+
+                <button class="primary" type="button" onclick="createPost()">Publish Post</button>
+                <button class="secondary" type="button" onclick="loadMyPosts()">Refresh Posts</button>
+            </div>
+
+            <div id="postsFeed"></div>
+        </section>
+
+        <!-- BUSINESS PANEL -->
+        <section id="businessPanel" class="card hidden">
+            <h3>🛍️ Business Marketplace</h3>
+            <p class="muted">Share information about your business and discover opportunities from the community.</p>
+
+            <label for="businessName">Business name</label>
+            <input id="businessName" maxlength="150" placeholder="Enter your business name">
+
+            <label for="businessDescription">Description</label>
+            <textarea id="businessDescription" maxlength="3000" placeholder="Describe your business or product"></textarea>
+
+            <label for="businessLocation">Location</label>
+            <input id="businessLocation" maxlength="200" placeholder="City or area">
+
+            <label for="businessContact">Contact information</label>
+            <input id="businessContact" maxlength="200" placeholder="Phone number or business email">
+
+            <button class="primary" type="button" onclick="createBusinessListing()">Publish Business</button>
+
+            <div id="productsFeed"></div>
+        </section>
+
+        <!-- MEETINGS PANEL -->
+        <section id="connectPanel" class="card hidden">
+            <h3>📹 Online Meetings</h3>
+            <p class="muted">Meeting rooms and video calls require additional real-time calling setup.</p>
+
+            <label for="meetingTitle">Meeting title</label>
+            <input id="meetingTitle" maxlength="150" placeholder="Enter meeting title">
+
+            <label for="meetingDescription">Description</label>
+            <textarea id="meetingDescription" maxlength="1000" placeholder="What is the meeting about?"></textarea>
+
+            <button class="primary" type="button" onclick="createMeeting()">Create Meeting</button>
+
+            <div id="meetingsFeed"></div>
+        </section>
+
+        <!-- GROUPS PANEL -->
+        <section id="groupsPanel" class="card hidden">
+            <h3>👨‍👩‍👧‍👦 My Groups</h3>
+
+            <label for="groupName">Group name</label>
+            <input id="groupName" maxlength="100" placeholder="Enter group name">
+
+            <label for="groupDescription">Group description</label>
+            <textarea id="groupDescription" maxlength="1000" placeholder="What is this group for?"></textarea>
+
+            <button class="primary" type="button" onclick="createGroup()">Create Group</button>
+
+            <div id="groupsFeed"></div>
+
+            <div id="groupRoomPanel" class="card hidden">
+                <button class="secondary" type="button" onclick="loadGroups()">← Groups</button>
+                <h3 id="groupRoomTitle">Group Chat</h3>
+                <div id="groupMessages"></div>
+
+                <div class="composer">
+                    <input id="groupMessageInput" maxlength="3000" placeholder="Write to the group...">
+                    <button class="primary" type="button" onclick="sendGroupMessage()">Send</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCHOOL PANEL -->
+        <section id="schoolPanel" class="card hidden">
+            <h3>🏫 School Management</h3>
+            <p class="muted">School registration, staff memberships, and reports require the relevant database tables and permissions.</p>
+
+            <label for="schoolName">School name</label>
+            <input id="schoolName" maxlength="160" placeholder="Enter school name">
+
+            <label for="schoolLocation">School location</label>
+            <input id="schoolLocation" maxlength="220" placeholder="Enter location">
+
+            <button class="primary" type="button" onclick="registerSchool()">Register School</button>
+
+            <div id="schoolMemberships"></div>
+            <div id="schoolWorkArea"></div>
+        </section>
+
+        <!-- COMPANY PANEL -->
+        <section id="companyPanel" class="hidden">
+            <div class="company-hero">
+                <h2>🏢 My Company</h2>
+                <p>Organize your business, tasks, and financial records.</p>
+            </div>
+
+            <div class="company-grid">
+                <div class="company-stat">
+                    <span>Income</span>
+                    <strong id="companyIncome">₦0</strong>
+                </div>
+
+                <div class="company-stat">
+                    <span>Expenses</span>
+                    <strong id="companyExpenses">₦0</strong>
+                </div>
+
+                <div class="company-stat">
+                    <span>Balance</span>
+                    <strong id="companyBalance">₦0</strong>
+                </div>
+
+                <div class="company-stat">
+                    <span>Tasks</span>
+                    <strong id="companyTaskCount">0</strong>
+                </div>
+            </div>
+
+            <div class="company-columns">
+                <div class="company-section">
+                    <h3>💰 Record Income or Expense</h3>
+
+                    <label for="companyRecordType">Record type</label>
+                    <select id="companyRecordType">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+
+                    <label for="companyRecordAmount">Amount</label>
+                    <input id="companyRecordAmount" type="number" min="0.01" step="0.01" placeholder="Enter amount">
+
+                    <label for="companyRecordDescription">Description</label>
+                    <input id="companyRecordDescription" maxlength="200" placeholder="Description">
+
+                    <button class="primary" type="button" onclick="addCompanyRecord()">Save Record</button>
+                </div>
+
+                <div class="company-section">
+                    <h3>✅ Add Task</h3>
+
+                    <label for="companyTaskTitle">Task title</label>
+                    <input id="companyTaskTitle" maxlength="200" placeholder="What needs to be done?">
+
+                    <label for="companyTaskDue">Due date</label>
+                    <input id="companyTaskDue" type="date">
+
+                    <button class="primary" type="button" onclick="addCompanyTask()">Add Task</button>
+
+                    <div id="companyTasks"></div>
+                </div>
+            </div>
+
+            <div class="company-section">
+                <h3>📊 Financial Records</h3>
+                <div id="companyRecords"></div>
+            </div>
+        </section>
+
+        <!-- PROFILE PANEL -->
+        <section id="profilePanel" class="card hidden">
+            <h3>👤 My Profile</h3>
+
+            <div id="avatarContainer" class="avatar" style="width:100px;height:100px;font-size:35px;margin-bottom:15px">
+                👤
+            </div>
+
+            <label for="profilePhoto">Profile picture</label>
+            <input id="profilePhoto" type="file" accept="image/jpeg,image/png,image/webp">
+
+            <label for="profileFullName">Full name</label>
+            <input id="profileFullName" maxlength="100" placeholder="Enter your full name">
+
+            <label for="newUsername">Username</label>
+            <input id="newUsername" maxlength="20" placeholder="Your username">
+
+            <p class="muted">Your username must be unique. Profile pictures must be 2 MB or smaller.</p>
+
+            <button class="primary" type="button" onclick="saveProfile()">Save Profile</button>
+            <button class="secondary" type="button" onclick="backToApp()">Back to App</button>
+            <button class="danger" type="button" onclick="signOut()">Log Out</button>
+        </section>
+
+    </main>
+</section>
+</div>
+
+<footer>JFriendsChat © 2026 · Connect with friends and relatives ❤️</footer>
+
+<script>
+/* =========================================
+   JFriendsChat — PART 3 OF 8
+   Supabase, Authentication, Profiles,
+   and Navigation
+========================================= */
+
+/* SUPABASE CONNECTION */
+const SUPABASE_URL = "https://msifvhqvxfjjwcazacxj.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable__uU2wBTvE8tWoAFoRSWVEA_AgJvZOqg";
+
+const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+/* GLOBAL APP VARIABLES */
+let currentUser = null;
+let currentProfile = null;
+let currentChatUser = null;
+let currentAvatarPath = null;
+let activeSection = "chat";
+let chatRefreshTimer = null;
+
+/* SHORTCUTS */
+function el(id) {
+    return document.getElementById(id);
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function(char) {
+        const entities = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        };
+        return entities[char];
+    });
+}
+
+function showMessage(message, isError = false) {
+    const box = el("message");
+
+    if (!box) {
+        alert(message);
+        return;
+    }
+
+    box.textContent = message;
+    box.style.display = "block";
+    box.style.color = isError ? "#b42318" : "#087443";
+    box.style.background = isError ? "#fee4e2" : "#dcfae6";
+
+    clearTimeout(box.hideTimer);
+
+    box.hideTimer = setTimeout(function() {
+        box.style.display = "none";
+    }, 6000);
+}
+
+function setButtonLoading(button, loading, originalText) {
+    if (!button) return;
+
+    button.disabled = loading;
+    button.textContent = loading ? "Please wait..." : originalText;
+}
+
+/* SHOW REGISTRATION FORM */
+function showRegisterForm() {
+    const registerFields = el("registerFields");
+
+    if (registerFields) {
+        registerFields.style.display = "block";
+    }
+
+    const registerButton = el("registerButton");
+
+    if (registerButton) {
+        registerButton.style.display = "block";
+    }
+
+    const loginButton = el("loginButton");
+
+    if (loginButton) {
+        loginButton.style.display = "none";
+    }
+
+    const switchButton = el("authSwitchButton");
+
+    if (switchButton) {
+        switchButton.textContent = "Already registered? Log in";
+        switchButton.onclick = showLoginForm;
+    }
+
+    const title = el("authTitle");
+
+    if (title) {
+        title.textContent = "Create your JFriendsChat account";
+    }
+
+    const note = el("authNote");
+
+    if (note) {
+        note.textContent =
+            "Register with your name, username, email and password.";
+    }
+}
+
+/* SHOW LOGIN FORM */
+function showLoginForm() {
+    const registerFields = el("registerFields");
+
+    if (registerFields) {
+        registerFields.style.display = "none";
+    }
+
+    const registerButton = el("registerButton");
+
+    if (registerButton) {
+        registerButton.style.display = "none";
+    }
+
+    const loginButton = el("loginButton");
+
+    if (loginButton) {
+        loginButton.style.display = "block";
+    }
+
+    const switchButton = el("authSwitchButton");
+
+    if (switchButton) {
+        switchButton.textContent = "New here? Create an account";
+        switchButton.onclick = showRegisterForm;
+    }
+
+    const title = el("authTitle");
+
+    if (title) {
+        title.textContent = "Welcome back";
+    }
+
+    const note = el("authNote");
+
+    if (note) {
+        note.textContent = "Log in to chat with your friends and relatives.";
+    }
+}
+
+/* REGISTER NEW USER */
+async function signUp() {
+    const fullName = el("fullName")?.value.trim();
+    const username = el("username")?.value.trim().toLowerCase();
+    const email = el("email")?.value.trim().toLowerCase();
+    const password = el("password")?.value;
+
+    if (!fullName || !username || !email || !password) {
+        showMessage("Please complete all registration fields.", true);
+        return;
+    }
+
+    if (username.length < 3) {
+        showMessage("Your username must contain at least 3 characters.", true);
+        return;
+    }
+
+    if (!/^[a-z0-9_]+$/.test(username)) {
+        showMessage(
+            "Use only lowercase letters, numbers and underscores in your username.",
+            true
+        );
+        return;
+    }
+
+    if (password.length < 8) {
+        showMessage("Your password must contain at least 8 characters.", true);
+        return;
+    }
+
+    const button = el("registerButton");
+    setButtonLoading(button, true, "Create Account");
+
+    try {
+        const { data, error } = await db.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    full_name: fullName,
+                    username: username
+                }
+            }
+        });
+
+        if (error) throw error;
+
+        if (data.user) {
+            showMessage(
+                "Registration submitted. If email confirmation is enabled, open the confirmation email before logging in."
+            );
+
+            if (data.session) {
+                currentUser = data.user;
+                await ensureProfile(fullName, username);
+                await loadProfile();
+                showApp();
+            } else {
+                showLoginForm();
+            }
+        }
+    } catch (error) {
+        console.error("Registration error:", error);
+        showMessage(error.message || "Registration failed.", true);
+    } finally {
+        setButtonLoading(button, false, "Create Account");
+    }
+}
+
+/* LOGIN */
+async function signIn() {
+    const email = el("email")?.value.trim().toLowerCase();
+    const password = el("password")?.value;
+
+    if (!email || !password) {
+        showMessage("Enter your email and password.", true);
+        return;
+    }
+
+    const button = el("loginButton");
+    setButtonLoading(button, true, "Log In");
+
+    try {
+        const { data, error } = await db.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) throw error;
+
+        currentUser = data.user;
+
+        await ensureProfile(
+            currentUser.user_metadata?.full_name || "",
+            currentUser.user_metadata?.username || ""
+        );
+
+        await loadProfile();
+
+        showApp();
+
+        showMessage("Welcome to JFriendsChat!");
+    } catch (error) {
+        console.error("Login error:", error);
+        showMessage(error.message || "Login failed.", true);
+    } finally {
+        setButtonLoading(button, false, "Log In");
+    }
+}
+
+/* CREATE PROFILE IF IT DOES NOT EXIST */
+async function ensureProfile(fullName = "", username = "") {
+    if (!currentUser) return;
+
+    try {
+        const { data: existing, error: findError } = await db
+            .from("profiles")
+            .select("id,username,full_name,avatar_path")
+            .eq("id", currentUser.id)
+            .maybeSingle();
+
+        if (findError) throw findError;
+
+        if (existing) {
+            currentProfile = existing;
+            return;
+        }
+
+        let chosenUsername = username ||
+            currentUser.user_metadata?.username ||
+            (currentUser.email || "friend")
+                .split("@")[0]
+                .toLowerCase()
+                .replace(/[^a-z0-9_]/g, "");
+
+        if (chosenUsername.length < 3) {
+            chosenUsername = "friend_" +
+                currentUser.id.replace(/-/g, "").slice(0, 8);
+        }
+
+        const profileData = {
+            id: currentUser.id,
+            username: chosenUsername,
+            full_name: fullName ||
+                currentUser.user_metadata?.full_name ||
+                (currentUser.email || "JFriendsChat user").split("@")[0]
+        };
+
+        const { data, error } = await db
+            .from("profiles")
+            .insert(profileData)
+            .select()
+            .single();
+
+        if (error) {
+            /*
+              A database trigger may already have created
+              the profile. Try loading it again.
+            */
+            const { data: retryData, error: retryError } = await db
+                .from("profiles")
+                .select("id,username,full_name,avatar_path")
+                .eq("id", currentUser.id)
+                .maybeSingle();
+
+            if (retryError) throw error;
+
+            if (retryData) {
+                currentProfile = retryData;
+                return;
+            }
+
+            throw error;
+        }
+
+        currentProfile = data;
+    } catch (error) {
+        console.error("Profile setup error:", error);
+
+        showMessage(
+            "You logged in, but your profile could not be loaded. Check the profiles table and its security policies.",
+            true
+        );
+    }
+}
+
+/* LOAD PROFILE */
+async function loadProfile() {
+    if (!currentUser) return;
+
+    try {
+        const { data, error } = await db
+            .from("profiles")
+            .select("id,username,full_name,avatar_path")
+            .eq("id", currentUser.id)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        currentProfile = data || null;
+
+        if (currentProfile) {
+            currentAvatarPath = currentProfile.avatar_path || null;
+
+            if (el("profileFullName")) {
+                el("profileFullName").value =
+                    currentProfile.full_name || "";
+            }
+
+            if (el("newUsername")) {
+                el("newUsername").value =
+                    currentProfile.username || "";
+            }
+
+            if (el("welcomeName")) {
+                el("welcomeName").textContent =
+                    currentProfile.full_name ||
+                    currentProfile.username ||
+                    "Friend";
+            }
+
+            await displayAvatar();
+        }
+    } catch (error) {
+        console.error("Load profile error:", error);
+    }
+}
+
+/* DISPLAY PROFILE PHOTO */
+async function displayAvatar() {
+    const container = el("avatarContainer");
+    if (!container) return;
+
+    if (avatarObjectUrl) {
+        URL.revokeObjectURL(avatarObjectUrl);
+        avatarObjectUrl = null;
+    }
+
+    if (!currentAvatarPath) {
+        container.innerHTML = '<div class="avatar-placeholder">👤</div>';
+        return;
+    }
+
+    try {
+        const { data, error } = await db.storage
+            .from("avatars")
+            .createSignedUrl(currentAvatarPath, 3600);
+
+        if (error) throw error;
+
+        container.innerHTML =
+            '<img class="profile-avatar" src="' +
+            escapeHTML(data.signedUrl) +
+            '" alt="Profile photo">';
+    } catch (error) {
+        console.error("Avatar error:", error);
+        container.innerHTML = '<div class="avatar-placeholder">👤</div>';
+    }
+}
+
+/* SAVE PROFILE DETAILS */
+async function saveProfile() {
+    if (!currentUser) {
+        showMessage("Please log in first.", true);
+        return;
+    }
+
+    const fullName = el("profileFullName")?.value.trim();
+
+    if (!fullName) {
+        showMessage("Enter your full name.", true);
+        return;
+    }
+
+    try {
+        const { error } = await db
+            .from("profiles")
+            .update({ full_name: fullName })
+            .eq("id", currentUser.id);
+
+        if (error) throw error;
+
+        await loadProfile();
+        showMessage("Profile updated successfully.");
+    } catch (error) {
+        console.error("Save profile error:", error);
+        showMessage(error.message || "Could not update profile.", true);
+    }
+}
+
+/* LOG OUT */
+async function logOut() {
+    try {
+        if (chatRefreshTimer) {
+            clearInterval(chatRefreshTimer);
+            chatRefreshTimer = null;
+        }
+
+        const { error } = await db.auth.signOut();
+
+        if (error) throw error;
+
+        currentUser = null;
+        currentProfile = null;
+        currentChatUser = null;
+
+        showAuth();
+
+        showMessage("You have logged out.");
+    } catch (error) {
+        showMessage(error.message || "Could not log out.", true);
+    }
+}
+
+/* SHOW AUTHENTICATION PANEL */
+function showAuth() {
+    if (el("authSection")) {
+        el("authSection").style.display = "block";
+    }
+
+    if (el("appSection")) {
+        el("appSection").style.display = "none";
+    }
+
+    showLoginForm();
+}
+
+/* SHOW MAIN APP */
+function showApp() {
+    if (el("authSection")) {
+        el("authSection").style.display = "none";
+    }
+
+    if (el("appSection")) {
+        el("appSection").style.display = "block";
+    }
+
+    if (el("welcomeEmail")) {
+        el("welcomeEmail").textContent = currentUser?.email || "";
+    }
+
+    if (currentProfile && el("welcomeName")) {
+        el("welcomeName").textContent =
+            currentProfile.full_name ||
+            currentProfile.username ||
+            "Friend";
+    }
+
+    showSection("chat");
+}
+
+/* NAVIGATE BETWEEN APP SECTIONS */
+function showSection(sectionName) {
+    activeSection = sectionName;
+
+    const sections = [
+        "chat",
+        "friends",
+        "requests",
+        "findPeople",
+        "posts",
+        "business",
+        "meetings",
+        "groups",
+        "school",
+        "company",
+        "profile"
+    ];
+
+    sections.forEach(function(name) {
+        const panel = el(name + "Panel");
+
+        if (panel) {
+            panel.style.display =
+                name === sectionName ? "block" : "none";
+        }
+    });
+
+    document.querySelectorAll("[data-section]").forEach(function(button) {
+        button.classList.toggle(
+            "active",
+            button.dataset.section === sectionName
+        );
+    });
+
+    if (sectionName === "chat" && typeof loadConversations === "function") {
+        loadConversations();
+    }
+
+    if (sectionName === "friends" && typeof loadFriends === "function") {
+        loadFriends();
+    }
+
+    if (sectionName === "requests" && typeof loadRequests === "function") {
+        loadRequests();
+    }
+
+    if (sectionName === "posts" && typeof loadPosts === "function") {
+        loadPosts();
+    }
+
+    if (sectionName === "business" && typeof loadBusiness === "function") {
+        loadBusiness();
+    }
+
+    if (sectionName === "meetings" && typeof loadMeetings === "function") {
+        loadMeetings();
+    }
+
+    if (sectionName === "groups" && typeof loadGroups === "function") {
+        loadGroups();
+    }
+
+    if (sectionName === "school" && typeof loadSchool === "function") {
+        loadSchool();
+    }
+
+    if (sectionName === "company" && typeof loadCompany === "function") {
+        loadCompany();
+    }
+
+    if (sectionName === "profile") {
+        loadProfile();
+    }
+}
+
+/* CONNECT NAVIGATION BUTTONS */
+document.querySelectorAll("[data-section]").forEach(function(button) {
+    button.addEventListener("click", function() {
+        showSection(button.dataset.section);
+    });
+});
+
+/* CHECK EXISTING LOGIN SESSION */
+async function restoreSession() {
+    try {
+        const { data, error } = await db.auth.getSession();
+
+        if (error) throw error;
+
+        if (data.session && data.session.user) {
+            currentUser = data.session.user;
+
+            await ensureProfile(
+                currentUser.user_metadata?.full_name || "",
+                currentUser.user_metadata?.username || ""
+            );
+
+            await loadProfile();
+            showApp();
+        } else {
+            showAuth();
+        }
+    } catch (error) {
+        console.error("Session restore error:", error);
+        showAuth();
+    }
+}
+
+/* HANDLE SESSION CHANGES */
+db.auth.onAuthStateChange(function(event, session) {
+    if (event === "SIGNED_OUT") {
+        currentUser = null;
+        currentProfile = null;
+        showAuth();
+    }
+});
+
+/* INITIALIZE */
+document.addEventListener("DOMContentLoaded", function() {
+    restoreSession();
+});
+
+/*
+IMPORTANT:
+The remaining parts will add the other JFriendsChat
+features. Do not close the script tag yet.
+*/
+</script>
+<script>
+/* =========================================
+   JFriendsChat — PART 4 OF 8
+   Profile Photos, Friends, Friend Requests
+========================================= */
+
+/* UPLOAD PROFILE PHOTO */
+async function uploadProfilePhoto() {
+    if (!currentUser) {
+        showMessage("Please log in first.", true);
+        return;
+    }
+
+    const input = el("profilePhoto");
+    const file = input?.files?.[0];
+
+    if (!file) {
+        showMessage("Please choose a photo first.", true);
+        return;
+    }
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+        showMessage(
+            "Please select a JPG, PNG, or WebP image.",
+            true
+        );
+        return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+        showMessage("Your photo must be smaller than 2 MB.", true);
+        return;
+    }
+
+    try {
+        showMessage("Uploading your profile photo...");
+
+        const extension = file.type === "image/png"
+            ? "png"
+            : file.type === "image/webp"
+                ? "webp"
+                : "jpg";
+
+        const filePath =
+            currentUser.id + "/" + Date.now() + "." + extension;
+
+        const { error: uploadError } = await db.storage
+            .from("avatars")
+            .upload(filePath, file, {
+                cacheControl: "3600",
+                upsert: false,
+                contentType: file.type
+            });
+
+        if (uploadError) throw uploadError;
+
+        const { error: updateError } = await db
+            .from("profiles")
+            .update({
+                avatar_path: filePath
+            })
+            .eq("id", currentUser.id);
+
+        if (updateError) {
+            throw updateError;
+        }
+
+        currentAvatarPath = filePath;
+
+        await loadProfile();
+
+        input.value = "";
+
+        showMessage("Your profile photo has been updated!");
+    } catch (error) {
+        console.error("Photo upload error:", error);
+
+        showMessage(
+            error.message ||
+            "Photo upload failed. Check your avatars storage policies.",
+            true
+        );
+    }
+}
+
+/* SEARCH FOR PEOPLE */
+async function searchPeople() {
+    if (!currentUser) {
+        showMessage("Please log in first.", true);
+        return;
+    }
+
+    const input = el("friendSearch");
+    const query = input?.value.trim();
+
+    if (!query || query.length < 2) {
+        showMessage("Enter at least 2 characters to search.", true);
+        return;
+    }
+
+    const results = el("searchResults");
+
+    if (!results) return;
+
+    results.innerHTML = "<p>Searching for people...</p>";
+
+    try {
+        const { data, error } = await db
+            .from("profiles")
+            .select("id,username,full_name,avatar_path")
+            .neq("id", currentUser.id)
+            .or(
+                "username.ilike.%" + query + "%," +
+                "full_name.ilike.%" + query + "%"
+            )
+            .limit(30);
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            results.innerHTML =
+                "<p>No people found. Invite your friends to join JFriendsChat!</p>";
+            return;
+        }
+
+        results.innerHTML = data.map(function(person) {
+            return `
+                <div class="person-card">
+                    <div class="person-info">
+                        <strong>${escapeHTML(person.full_name || "JFriendsChat user")}</strong>
+                        <small>@${escapeHTML(person.username || "user")}</small>
+                    </div>
+                    <button
+                        type="button"
+                        onclick="sendFriendRequest('${escapeHTML(person.id)}')">
+                        Add Friend
+                    </button>
+                </div>
+            `;
+        }).join("");
+
+        await updateSearchRequestButtons(data);
+    } catch (error) {
+        console.error("Search people error:", error);
+
+        results.innerHTML =
+            "<p>Could not search for people. Check your profiles table and policies.</p>";
+    }
+}
+
+/* UPDATE SEARCH BUTTONS FOR EXISTING REQUESTS */
+async function updateSearchRequestButtons(people) {
+    if (!currentUser || !people.length) return;
+
+    const ids = people.map(person => person.id);
+
+    try {
+        const { data, error } = await db
+            .from("friend_requests")
+            .select("sender_id,receiver_id,status")
+            .or(
+                "sender_id.eq." + currentUser.id +
+                ",receiver_id.eq." + currentUser.id
+            );
+
+        if (error) throw error;
+
+        const requests = data || [];
+
+        document.querySelectorAll("#searchResults .person-card")
+            .forEach(function(card, index) {
+                const person = people[index];
+                if (!person) return;
+
+                const existing = requests.find(function(request) {
+                    return (
+                        (request.sender_id === currentUser.id &&
+                         request.receiver_id === person.id) ||
+                        (request.sender_id === person.id &&
+                         request.receiver_id === currentUser.id)
+                    ) && (
+                        request.status === "pending" ||
+                        request.status === "accepted"
+                    );
+                });
+
+                const button = card.querySelector("button");
+                if (!button || !existing) return;
+
+                if (existing.status === "accepted") {
+                    button.textContent = "Already Friends";
+                    button.disabled = true;
+                } else {
+                    button.textContent = "Request Sent";
+                    button.disabled = true;
+                }
+            });
+    } catch (error) {
+        console.error("Request status error:", error);
+    }
+}
+
+/* SEND FRIEND REQUEST */
+async function sendFriendRequest(receiverId) {
+    if (!currentUser) {
+        showMessage("Please log in first.", true);
+        return;
+    }
+
+    if (!receiverId || receiverId === currentUser.id) {
+        showMessage("You cannot add yourself.", true);
+        return;
+    }
+
+    try {
+        const { data: existing, error: checkError } = await db
+            .from("friend_requests")
+            .select("id,status")
+            .or(
+                "and(sender_id.eq." + currentUser.id +
+                ",receiver_id.eq." + receiverId + ")," +
+                "and(sender_id.eq." + receiverId +
+                ",receiver_id.eq." + currentUser.id + ")"
+            )
+            .limit(1);
+
+        if (checkError) throw checkError;
+
+        if (existing && existing.length > 0) {
+            const request = existing[0];
+
+            if (request.status === "accepted") {
+                showMessage("You are already friends.");
+            } else if (request.status === "pending") {
+                showMessage("A friend request already exists.");
+            } else {
+                showMessage(
+                    "A previous request exists. Please check your requests."
+                );
+            }
+
+            return;
+        }
+
+        const { error } = await db
+            .from("friend_requests")
+            .insert({
+                sender_id: currentUser.id,
+                receiver_id: receiverId,
+                status: "pending"
+            });
+
+        if (error) throw error;
+
+        showMessage("Friend request sent!");
+
+        await searchPeople();
+
+        if (typeof loadRequests === "function") {
+            await loadRequests();
+        }
+    } catch (error) {
+        console.error("Send friend request error:", error);
+
+        showMessage(
+            error.message ||
+            "Could not send the request. Check your friend_requests table and policies.",
+            true
+        );
+    }
+}
+
+/* LOAD FRIEND REQUESTS */
+async function loadRequests() {
+    if (!currentUser) return;
+
+    const incomingBox = el("incomingRequests");
+    const outgoingBox = el("outgoingRequests");
+
+    try {
+        const { data, error } = await db
+            .from("friend_requests")
+            .select("id,sender_id,receiver_id,status,created_at")
+            .or(
+                "sender_id.eq." + currentUser.id +
+                ",receiver_id.eq." + currentUser.id
+            )
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        const requests = data || [];
+
+        const incoming = requests.filter(function(request) {
+            return request.receiver_id === currentUser.id &&
+                   request.status === "pending";
+        });
+
+        const outgoing = requests.filter(function(request) {
+            return request.sender_id === currentUser.id &&
+                   request.status === "pending";
+        });
+
+        const otherIds = [
+            ...new Set(
+                requests.map(function(request) {
+                    return request.sender_id === currentUser.id
+                        ? request.receiver_id
+                        : request.sender_id;
+                })
+            )
+        ];
+
+        let profiles = [];
+
+        if (otherIds.length > 0) {
+            const { data: profileData, error: profileError } = await db
+                .from("profiles")
+                .select("id,username,full_name")
+                .in("id", otherIds);
+
+            if (profileError) throw profileError;
+
+            profiles = profileData || [];
+        }
+
+        function getPerson(id) {
+            return profiles.find(profile => profile.id === id) || {};
+        }
+
+        if (incomingBox) {
+            incomingBox.innerHTML = incoming.length
+                ? incoming.map(function(request) {
+                    const person = getPerson(request.sender_id);
+
+                    return `
+                        <div class="person-card">
+                            <div class="person-info">
+                                <strong>${escapeHTML(person.full_name || "JFriendsChat user")}</strong>
+                                <small>@${escapeHTML(person.username || "user")}</small>
+                            </div>
+                            <button
+                                type="button"
+                                onclick="respondToRequest('${escapeHTML(request.id)}','accepted')">
+                                Accept
+                            </button>
+                            <button
+                                type="button"
+                                onclick="respondToRequest('${escapeHTML(request.id)}','rejected')">
+                                Decline
+                            </button>
+                        </div>
+                    `;
+                }).join("")
+                : "<p>No incoming friend requests.</p>";
+        }
+
+        if (outgoingBox) {
+            outgoingBox.innerHTML = outgoing.length
+                ? outgoing.map(function(request) {
+                    const person = getPerson(request.receiver_id);
+
+                    return `
+                        <div class="person-card">
+                            <div class="person-info">
+                                <strong>${escapeHTML(person.full_name || "JFriendsChat user")}</strong>
+                                <small>@${escapeHTML(person.username || "user")}</small>
+                            </div>
+                            <span>Request pending</span>
+                        </div>
+                    `;
+                }).join("")
+                : "<p>No outgoing friend requests.</p>";
+        }
+    } catch (error) {
+        console.error("Load requests error:", error);
+
+        if (incomingBox) {
+            incomingBox.innerHTML =
+                "<p>Could not load incoming requests.</p>";
+        }
+
+        if (outgoingBox) {
+            outgoingBox.innerHTML =
+                "<p>Could not load outgoing requests.</p>";
+        }
+    }
+}
+
+/* ACCEPT OR DECLINE A REQUEST */
+async function respondToRequest(requestId, status) {
+    if (!currentUser) return;
+
+    if (!["accepted", "rejected"].includes(status)) {
+        showMessage("Invalid request action.", true);
+        return;
+    }
+
+    try {
+        const { data, error: readError } = await db
+            .from("friend_requests")
+            .select("id,receiver_id,status")
+            .eq("id", requestId)
+            .eq("receiver_id", currentUser.id)
+            .eq("status", "pending")
+            .maybeSingle();
+
+        if (readError) throw readError;
+
+        if (!data) {
+            showMessage(
+                "This request is no longer available. Refresh your requests.",
+                true
+            );
+            return;
+        }
+
+        const { error } = await db
+            .from("friend_requests")
+            .update({ status: status })
+            .eq("id", requestId)
+            .eq("receiver_id", currentUser.id)
+            .eq("status", "pending");
+
+        if (error) throw error;
+
+        showMessage(
+            status === "accepted"
+                ? "Friend request accepted!"
+                : "Friend request declined."
+        );
+
+        await loadRequests();
+
+        if (typeof loadFriends === "function") {
+            await loadFriends();
+        }
+    } catch (error) {
+        console.error("Respond to request error:", error);
+
+        showMessage(
+            error.message || "Could not update the friend request.",
+            true
+        );
+    }
+}
+
+/* LOAD ACCEPTED FRIENDS */
+async function loadFriends() {
+    if (!currentUser) return;
+
+    const box = el("friendsList");
+    if (!box) return;
+
+    box.innerHTML = "<p>Loading friends...</p>";
+
+    try {
+        const { data, error } = await db
+            .from("friend_requests")
+            .select("sender_id,receiver_id,status")
+            .eq("status", "accepted")
+            .or(
+                "sender_id.eq." + currentUser.id +
+                ",receiver_id.eq." + currentUser.id
+            );
+
+        if (error) throw error;
+
+        const friendIds = [
+            ...new Set((data || []).map(function(request) {
+                return request.sender_id === currentUser.id
+                    ? request.receiver_id
+                    : request.sender_id;
+            }))
+        ];
+
+        if (friendIds.length === 0) {
+            box.innerHTML =
+                "<p>You have no friends yet. Open Find People to connect with someone.</p>";
+            return;
+        }
+
+        const { data: people, error: peopleError } = await db
+            .from("profiles")
+            .select("id,username,full_name")
+            .in("id", friendIds);
+
+        if (peopleError) throw peopleError;
+
+        box.innerHTML = (people || []).map(function(person) {
+            return `
+                <div class="person-card">
+                    <div class="person-info">
+                        <strong>${escapeHTML(person.full_name || "JFriendsChat user")}</strong>
+                        <small>@${escapeHTML(person.username || "user")}</small>
+                    </div>
+                    <button
+                        type="button"
+                        onclick="openChat('${escapeHTML(person.id)}')">
+                        Message
+                    </button>
+                </div>
+            `;
+        }).join("");
+    } catch (error) {
+        console.error("Load friends error:", error);
+
+        box.innerHTML =
+            "<p>Could not load friends. Check your database security policies.</p>";
+    }
+}
+
+/* CONNECT SEARCH BUTTON */
+if (el("friendSearch")) {
+    el("friendSearch").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            searchPeople();
+        }
+    });
+}
+
+/* NOTE:
+   This part expects a button in Part 2 that calls
+   searchPeople(), and a profile-photo button that calls
+   uploadProfilePhoto().
+*/
+</script>
+<script>
+/* =========================================
+   JFriendsChat — PART 5 OF 8
+   Posts, Photo Sharing, Likes and Comments
+========================================= */
+
+/* PUBLISH A POST */
+async function publishPost() {
+    if (!currentUser) {
+        showMessage("Please log in first.", true);
+        return;
+    }
+
+    const content = el("postContent")?.value.trim();
+    const imageFile = el("postImage")?.files?.[0];
+
+    if (!content && !imageFile) {
+        showMessage("Write something or choose a photo.", true);
+        return;
+    }
+
+    let imagePath = null;
+
+    try {
+        showMessage("Publishing your post...");
+
+        /* UPLOAD OPTIONAL PHOTO */
+        if (imageFile) {
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+            if (!allowedTypes.includes(imageFile.type)) {
+                showMessage(
+                    "Please choose a JPG, PNG, or WebP photo.",
+                    true
+                );
+                return;
+            }
+
+            if (imageFile.size > 5 * 1024 * 1024) {
+                showMessage("Your photo must be smaller than 5 MB.", true);
+                return;
+            }
+
+            const extension =
+                imageFile.type === "image/png" ? "png" :
+                imageFile.type === "image/webp" ? "webp" : "jpg";
+
+            imagePath =
+                currentUser.id + "/" + Date.now() + "." + extension;
+
+            const { error: uploadError } = await db.storage
+                .from("post-images")
+                .upload(imagePath, imageFile, {
+                    contentType: imageFile.type,
+                    cacheControl: "3600",
+                    upsert: false
+                });
+
+            if (uploadError) throw uploadError;
+        }
+
+        /* SAVE POST TO DATABASE */
+        const { error } = await db
+            .from("posts")
+            .insert({
+                user_id: currentUser.id,
+                content: content || "",
+                image_path: imagePath
+            });
+
+        if (error) throw error;
+
+        if (el("postContent")) {
+            el("postContent").value = "";
+        }
+
+        if (el("postImage")) {
+            el("postImage").value = "";
+        }
+
+        showMessage("Your post has been published!");
+
+        await loadPosts();
+
+    } catch (error) {
+        console.error("Publish post error:", error);
+
+        showMessage(
+            error.message ||
+            "Could not publish. Check your posts table and post-images storage bucket.",
+            true
+        );
+    }
+}
+
+/* LOAD POSTS */
+async function loadPosts() {
+    if (!currentUser) return;
+
+    const feed = el("postsFeed");
+    if (!feed) return;
+
+    feed.innerHTML = "<p>Loading posts...</p>";
+
+    try {
+        const { data: posts, error } = await db
+            .from("posts")
+            .select("id,user_id,content,image_path,created_at")
+            .order("created_at", { ascending: false })
+            .limit(50);
+
+        if (error) throw error;
+
+        if (!posts || posts.length === 0) {
+            feed.innerHTML =
+                "<p>No posts yet. Be the first to share something!</p>";
+            return;
+        }
+
+        const userIds = [
+            ...new Set(posts.map(post => post.user_id))
+        ];
+
+        const { data: profiles, error: profileError } = await db
+            .from("profiles")
+            .select("id,username,full_name,avatar_path")
+            .in("id", userIds);
+
+        if (profileError) throw profileError;
+
+        const profileMap = {};
+
+        (profiles || []).forEach(function(profile) {
+            profileMap[profile.id] = profile;
+        });
+
+        /* LOAD LIKES */
+        const postIds = posts.map(post => post.id);
+
+        const { data: likes, error: likesError } = await db
+            .from("post_likes")
+            .select("post_id,user_id")
+            .in("post_id", postIds);
+
+        if (likesError) {
+            console.warn("Could not load post likes:", likesError);
+        }
+
+        /* LOAD COMMENTS */
+        const { data: comments, error: commentsError } = await db
+            .from("post_comments")
+            .select("id,post_id,user_id,comment_text,created_at")
+            .in("post_id", postIds)
+            .order("created_at", { ascending: true });
+
+        if (commentsError) {
+            console.warn("Could not load post comments:", commentsError);
+        }
+
+        const allLikes = likes || [];
+        const allComments = comments || [];
+
+        feed.innerHTML = posts.map(function(post) {
+            const author = profileMap[post.user_id] || {};
+            const postLikes = allLikes.filter(
+                like => like.post_id === post.id
+            );
+
+            const likedByMe = postLikes.some(
+                like => like.user_id === currentUser.id
+            );
+
+            const postComments = allComments.filter(
+                comment => comment.post_id === post.id
+            );
+
+            let photoHTML = "";
+
+            if (post.image_path) {
+                const { data } = db.storage
+                    .from("post-images")
+                    .getPublicUrl(post.image_path);
+
+                photoHTML = `
+                    <img
+                        class="post-image"
+                        src="${escapeHTML(data.publicUrl)}"
+                        alt="Post photo"
+                        loading="lazy">
+                `;
+            }
+
+            const commentHTML = postComments.map(function(comment) {
+                const commentAuthor =
+                    profileMap[comment.user_id] || {};
+
+                return `
+                    <div class="post-comment">
+                        <strong>
+                            ${escapeHTML(
+                                commentAuthor.full_name || "JFriendsChat user"
+                            )}
+                        </strong>
+                        <span>
+                            ${escapeHTML(comment.comment_text)}
+                        </span>
+                    </div>
+                `;
+            }).join("");
+
+            const deleteButton = post.user_id === currentUser.id
+                ? `
+                    <button
+                        type="button"
+                        onclick="deletePost('${escapeHTML(post.id)}')">
+                        Delete
+                    </button>
+                  `
+                : "";
+
+            return `
+                <article class="post-card">
+                    <div class="post-author">
+                        <div>
+                            <strong>
+                                ${escapeHTML(
+                                    author.full_name || "JFriendsChat user"
+                                )}
+                            </strong>
+                            <small>
+                                @${escapeHTML(author.username || "user")}
+                            </small>
+                        </div>
+                        <small>
+                            ${escapeHTML(
+                                new Date(post.created_at).toLocaleString()
+                            )}
+                        </small>
+                    </div>
+
+                    <div class="post-content">
+                        ${escapeHTML(post.content || "").replace(/\n/g, "<br>")}
+                    </div>
+
+                    ${photoHTML}
+
+                    <div class="post-actions">
+                        <button
+                            type="button"
+                            onclick="togglePostLike('${escapeHTML(post.id)}')">
+                            ${likedByMe ? "❤️ Liked" : "🤍 Like"}
+                            (${postLikes.length})
+                        </button>
+
+                        <span>
+                            💬 ${postComments.length} comments
+                        </span>
+
+                        ${deleteButton}
+                    </div>
+
+                    <div class="post-comments">
+                        ${commentHTML}
+                    </div>
+
+                    <form
+                        onsubmit="event.preventDefault(); addPostComment('${escapeHTML(post.id)}', this);">
+                        <input
+                            type="text"
+                            name="comment"
+                            placeholder="Write a comment..."
+                            maxlength="1000"
+                            required>
+                        <button type="submit">Comment</button>
+                    </form>
+                </article>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Load posts error:", error);
+
+        feed.innerHTML =
+            "<p>Could not load posts. Check your database tables and security policies.</p>";
+    }
+}
+
+/* LIKE OR UNLIKE A POST */
+async function togglePostLike(postId) {
+    if (!currentUser) return;
+
+    try {
+        const { data: existing, error: readError } = await db
+            .from("post_likes")
+            .select("id")
+            .eq("post_id", postId)
+            .eq("user_id", currentUser.id)
+            .maybeSingle();
+
+        if (readError) throw readError;
+
+        if (existing) {
+            const { error } = await db
+                .from("post_likes")
+                .delete()
+                .eq("id", existing.id)
+                .eq("user_id", currentUser.id);
+
+            if (error) throw error;
+        } else {
+            const { error } = await db
+                .from("post_likes")
+                .insert({
+                    post_id: postId,
+                    user_id: currentUser.id
+                });
+
+            if (error) throw error;
+        }
+
+        await loadPosts();
+
+    } catch (error) {
+        console.error("Post like error:", error);
+
+        showMessage(
+            error.message || "Could not update your like.",
+            true
+        );
+    }
+}
+
+/* ADD COMMENT */
+async function addPostComment(postId, form) {
+    if (!currentUser) return;
+
+    const input = form.elements.comment;
+    const commentText = input.value.trim();
+
+    if (!commentText) return;
+
+    try {
+        const { error } = await db
+            .from("post_comments")
+            .insert({
+                post_id: postId,
+                user_id: currentUser.id,
+                comment_text: commentText
+            });
+
+        if (error) throw error;
+
+        input.value = "";
+
+        showMessage("Comment added!");
+
+        await loadPosts();
+
+    } catch (error) {
+        console.error("Post comment error:", error);
+
+        showMessage(
+            error.message || "Could not add your comment.",
+            true
+        );
+    }
+}
+
+/* DELETE YOUR OWN POST */
+async function deletePost(postId) {
+    if (!currentUser) return;
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this post?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+        const { error } = await db
+            .from("posts")
+            .delete()
+            .eq("id", postId)
+            .eq("user_id", currentUser.id);
+
+        if (error) throw error;
+
+        showMessage("Post deleted.");
+
+        await loadPosts();
+
+    } catch (error) {
+        console.error("Delete post error:", error);
+
+        showMessage(
+            error.message || "Could not delete this post.",
+            true
+        );
+    }
+}
+</script>
+<script>
+/* =========================================
+   JFriendsChat — PART 6 OF 8
+   Private Messaging and Chat Media
+========================================= */
+
+/* OPEN A CHAT WITH A FRIEND */
+async function openChat(friendId) {
+    if (!currentUser || !friendId) return;
+
+    if (friendId === currentUser.id) {
+        showMessage("You cannot open a chat with yourself.", true);
+        return;
+    }
+
+    try {
+        const { data: friendship, error: friendError } = await db
+            .from("friend_requests")
+            .select("id")
+            .eq("status", "accepted")
+            .or(
+                "and(sender_id.eq." + currentUser.id +
+                ",receiver_id.eq." + friendId + ")," +
+                "and(sender_id.eq." + friendId +
+                ",receiver_id.eq." + currentUser.id + ")"
+            )
+            .limit(1);
+
+        if (friendError) throw friendError;
+
+        if (!friendship || friendship.length === 0) {
+            showMessage("You can chat after becoming friends.", true);
+            return;
+        }
+
+        const { data: profile, error } = await db
+            .from("profiles")
+            .select("id,username,full_name")
+            .eq("id", friendId)
+            .single();
+
+        if (error) throw error;
+
+        currentChatUser = profile;
+
+        if (el("chatWithName")) {
+            el("chatWithName").textContent =
+                profile.full_name || "Friend";
+        }
+
+        if (el("chatWithUsername")) {
+            el("chatWithUsername").textContent =
+                "@" + (profile.username || "user");
+        }
+
+        if (el("conversationArea")) {
+            el("conversationArea").style.display = "block";
+        }
+
+        showSection("chat");
+
+        await loadMessages();
+
+        if (chatRefreshTimer) {
+            clearInterval(chatRefreshTimer);
+        }
+
+        chatRefreshTimer = setInterval(function() {
+            if (currentChatUser) {
+                loadMessages();
+            }
+        }, 5000);
+
+    } catch (error) {
+        console.error("Open chat error:", error);
+
+        showMessage(
+            error.message || "Could not open this conversation.",
+            true
+        );
+    }
+}
+
+/* LOAD FRIENDS FOR CHAT LIST */
+async function loadConversations() {
+    if (!currentUser) return;
+
+    const list = el("conversationList");
+    if (!list) return;
+
+    try {
+        const { data, error } = await db
+            .from("friend_requests")
+            .select("sender_id,receiver_id,status")
+            .eq("status", "accepted")
+            .or(
+                "sender_id.eq." + currentUser.id +
+                ",receiver_id.eq." + currentUser.id
+            );
+
+        if (error) throw error;
+
+        const friendIds = [
+            ...new Set((data || []).map(function(request) {
+                return request.sender_id === currentUser.id
+                    ? request.receiver_id
+                    : request.sender_id;
+            }))
+        ];
+
+        if (!friendIds.length) {
+            list.innerHTML =
+                "<p>Add friends to start chatting.</p>";
+            return;
+        }
+
+        const { data: friends, error: profileError } = await db
+            .from("profiles")
+            .select("id,username,full_name")
+            .in("id", friendIds);
+
+        if (profileError) throw profileError;
+
+        list.innerHTML = (friends || []).map(function(friend) {
+            const selected =
+                currentChatUser &&
+                currentChatUser.id === friend.id;
+
+            return `
+                <button
+                    type="button"
+                    class="conversation-item ${selected ? "active" : ""}"
+                    onclick="openChat('${escapeHTML(friend.id)}')">
+                    <strong>
+                        ${escapeHTML(friend.full_name || "Friend")}
+                    </strong>
+                    <small>
+                        @${escapeHTML(friend.username || "user")}
+                    </small>
+                </button>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Load conversations error:", error);
+
+        list.innerHTML =
+            "<p>Could not load your conversations.</p>";
+    }
+}
+
+/* LOAD PRIVATE MESSAGES */
+async function loadMessages() {
+    if (!currentUser || !currentChatUser) return;
+
+    const box = el("messages");
+    if (!box) return;
+
+    try {
+        const { data, error } = await db
+            .from("messages")
+            .select("id,sender_id,receiver_id,message_text,created_at")
+            .or(
+                "and(sender_id.eq." + currentUser.id +
+                ",receiver_id.eq." + currentChatUser.id + ")," +
+                "and(sender_id.eq." + currentChatUser.id +
+                ",receiver_id.eq." + currentUser.id + ")"
+            )
+            .order("created_at", { ascending: true })
+            .limit(200);
+
+        if (error) throw error;
+
+        const messages = data || [];
+
+        box.innerHTML = messages.map(function(message) {
+            const mine = message.sender_id === currentUser.id;
+
+            return `
+                <div class="message-row ${mine ? "mine" : "theirs"}">
+                    <div class="message-bubble">
+                        <div>
+                            ${escapeHTML(message.message_text || "")}
+                        </div>
+                        <small>
+                            ${escapeHTML(
+                                new Date(message.created_at)
+                                    .toLocaleTimeString([], {
+                                        hour: "2-digit",
+                                        minute: "2-digit"
+                                    })
+                            )}
+                        </small>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        box.scrollTop = box.scrollHeight;
+
+    } catch (error) {
+        console.error("Load messages error:", error);
+
+        box.innerHTML =
+            "<p>Messages could not be loaded. Check your messages table and RLS policies.</p>";
+    }
+}
+
+/* SEND A TEXT MESSAGE */
+async function sendMessage() {
+    if (!currentUser) {
+        showMessage("Please log in first.", true);
+        return;
+    }
+
+    if (!currentChatUser) {
+        showMessage("Choose a friend before sending a message.", true);
+        return;
+    }
+
+    const input = el("messageInput");
+    const messageText = input?.value.trim();
+
+    if (!messageText) return;
+
+    try {
+        const { error } = await db
+            .from("messages")
+            .insert({
+                sender_id: currentUser.id,
+                receiver_id: currentChatUser.id,
+                message_text: messageText
+            });
+
+        if (error) throw error;
+
+        input.value = "";
+
+        await loadMessages();
+
+    } catch (error) {
+        console.error("Send message error:", error);
+
+        showMessage(
+            error.message || "Could not send your message.",
+            true
+        );
+    }
+}
+
+/* SEND CHAT IMAGE */
+async function sendChatImage() {
+    if (!currentUser || !currentChatUser) {
+        showMessage("Choose a friend before sending an image.", true);
+        return;
+    }
+
+    const input = el("chatImage");
+    const file = input?.files?.[0];
+
+    if (!file) {
+        showMessage("Choose an image first.", true);
+        return;
+    }
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+        showMessage("Choose a JPG, PNG, or WebP image.", true);
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        showMessage("The image must be smaller than 5 MB.", true);
+        return;
+    }
+
+    try {
+        const extension =
+            file.type === "image/png" ? "png" :
+            file.type === "image/webp" ? "webp" : "jpg";
+
+        const path =
+            currentUser.id + "/" + Date.now() + "." + extension;
+
+        const { error: uploadError } = await db.storage
+            .from("chat-media")
+            .upload(path, file, {
+                contentType: file.type,
+                cacheControl: "3600",
+                upsert: false
+            });
+
+        if (uploadError) throw uploadError;
+
+        /*
+          Store a media marker in message_text.
+          The bucket must be accessible to authorized chat users.
+        */
+        const mediaMessage = "[CHAT_IMAGE]" + path;
+
+        const { error } = await db
+            .from("messages")
+            .insert({
+                sender_id: currentUser.id,
+                receiver_id: currentChatUser.id,
+                message_text: mediaMessage
+            });
+
+        if (error) throw error;
+
+        input.value = "";
+
+        await loadMessages();
+
+        showMessage("Image sent!");
+
+    } catch (error) {
+        console.error("Send image error:", error);
+
+        showMessage(
+            error.message || "Could not send the image.",
+            true
+        );
+    }
+}
+
+/* CONNECT SEND BUTTONS */
+if (el("sendMessageButton")) {
+    el("sendMessageButton").addEventListener("click", sendMessage);
+}
+
+if (el("messageInput")) {
+    el("messageInput").addEventListener("keydown", function(event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+}
+
+/* =========================================
+   VOICE AND VIDEO CALL PREPARATION
+   Full calls need signaling and WebRTC.
+========================================= */
+
+let localCallStream = null;
+let remoteCallStream = null;
+let peerConnection = null;
+let activeCallType = null;
+
+/*
+  These functions prepare the device camera and microphone.
+  They do not establish a call by themselves.
+  A complete call also needs signaling between both users.
+*/
+
+async function prepareCall(type) {
+    if (!currentUser || !currentChatUser) {
+        showMessage("Open a friend's chat before calling.", true);
+        return;
+    }
+
+    if (type !== "audio" && type !== "video") {
+        showMessage("Unknown call type.", true);
+        return;
+    }
+
+    try {
+        localCallStream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: type === "video"
+        });
+
+        activeCallType = type;
+
+        showMessage(
+            type === "video"
+                ? "Camera and microphone are ready. Call signaling still needs to be connected."
+                : "Microphone is ready. Call signaling still needs to be connected."
+        );
+
+    } catch (error) {
+        console.error("Call media error:", error);
+
+        showMessage(
+            "Cannot access your camera or microphone. Check browser permissions and use your HTTPS website.",
+            true
+        );
+    }
+}
+
+async function startVoiceCall() {
+    await prepareCall("audio");
+}
+
+async function startVideoCall() {
+    await prepareCall("video");
+}
+
+function endCall() {
+    if (localCallStream) {
+        localCallStream.getTracks().forEach(function(track) {
+            track.stop();
+        });
+    }
+
+    if (remoteCallStream) {
+        remoteCallStream.getTracks().forEach(function(track) {
+            track.stop();
+        });
+    }
+
+    if (peerConnection) {
+        peerConnection.close();
+    }
+
+    localCallStream = null;
+    remoteCallStream = null;
+    peerConnection = null;
+    activeCallType = null;
+
+    showMessage("Call media stopped.");
+}
+</script>
+<script>
+/* =========================================
+   JFriendsChat — PART 7 OF 8
+   Business, Meetings, Groups, School,
+   and Company Workspace
+========================================= */
+
+/* ---------- BUSINESS ---------- */
+
+async function publishBusiness() {
+    if (!currentUser) return;
+
+    const name = el("businessName")?.value.trim();
+    const description = el("businessDescription")?.value.trim();
+    const location = el("businessLocation")?.value.trim();
+    const contact = el("businessContact")?.value.trim();
+
+    if (!name || !description) {
+        showMessage("Enter your business name and description.", true);
+        return;
+    }
+
+    try {
+        const { error } = await db.from("business_listings").insert({
+            user_id: currentUser.id,
+            business_name: name,
+            description: description,
+            location: location || "",
+            contact: contact || ""
+        });
+
+        if (error) throw error;
+
+        el("businessName").value = "";
+        el("businessDescription").value = "";
+        el("businessLocation").value = "";
+        el("businessContact").value = "";
+
+        showMessage("Your business listing was published!");
+        await loadBusiness();
+
+    } catch (error) {
+        console.error("Business listing error:", error);
+
+        showMessage(
+            error.message ||
+            "Could not publish your business. Check your database setup.",
+            true
+        );
+    }
+}
+
+async function loadBusiness() {
+    if (!currentUser) return;
+
+    const box = el("productsFeed");
+    if (!box) return;
+
+    box.innerHTML = "<p>Loading business listings...</p>";
+
+    try {
+        const { data, error } = await db
+            .from("business_listings")
+            .select("id,user_id,business_name,description,location,contact,created_at")
+            .order("created_at", { ascending: false })
+            .limit(50);
+
+        if (error) throw error;
+
+        if (!data || !data.length) {
+            box.innerHTML =
+                "<p>No business listings yet. Be the first to share your business!</p>";
+            return;
+        }
+
+        box.innerHTML = data.map(function(item) {
+            return `
+                <article class="post-card">
+                    <h3>${escapeHTML(item.business_name)}</h3>
+                    <p>${escapeHTML(item.description)}</p>
+                    <p>📍 ${escapeHTML(item.location || "Location not provided")}</p>
+                    <p>📞 ${escapeHTML(item.contact || "Contact not provided")}</p>
+                    ${
+                        item.user_id === currentUser.id
+                        ? `<button type="button"
+                             onclick="deleteBusiness('${escapeHTML(item.id)}')">
+                             Delete listing
+                           </button>`
+                        : ""
+                    }
+                </article>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Load business error:", error);
+        box.innerHTML =
+            "<p>Business listings are unavailable. The business_listings table may need to be created.</p>";
+    }
+}
+
+async function deleteBusiness(id) {
+    if (!confirm("Delete your business listing?")) return;
+
+    try {
+        const { error } = await db
+            .from("business_listings")
+            .delete()
+            .eq("id", id)
+            .eq("user_id", currentUser.id);
+
+        if (error) throw error;
+
+        showMessage("Business listing deleted.");
+        await loadBusiness();
+
+    } catch (error) {
+        showMessage(error.message || "Could not delete listing.", true);
+    }
+}
+
+/* ---------- MEETINGS ---------- */
+
+async function createMeeting() {
+    if (!currentUser) return;
+
+    const title = el("meetingTitle")?.value.trim();
+    const description = el("meetingDescription")?.value.trim();
+
+    if (!title) {
+        showMessage("Enter a meeting title.", true);
+        return;
+    }
+
+    try {
+        const { error } = await db.from("meetings").insert({
+            user_id: currentUser.id,
+            title: title,
+            description: description || ""
+        });
+
+        if (error) throw error;
+
+        el("meetingTitle").value = "";
+        el("meetingDescription").value = "";
+
+        showMessage("Meeting created.");
+        await loadMeetings();
+
+    } catch (error) {
+        console.error("Create meeting error:", error);
+
+        showMessage(
+            error.message ||
+            "Could not create meeting. Check the meetings table.",
+            true
+        );
+    }
+}
+
+async function loadMeetings() {
+    if (!currentUser) return;
+
+    const box = el("meetingsFeed");
+    if (!box) return;
+
+    try {
+        const { data, error } = await db
+            .from("meetings")
+            .select("id,user_id,title,description,created_at")
+            .order("created_at", { ascending: false })
+            .limit(50);
+
+        if (error) throw error;
+
+        if (!data || !data.length) {
+            box.innerHTML = "<p>No meetings have been created yet.</p>";
+            return;
+        }
+
+        box.innerHTML = data.map(function(meeting) {
+            return `
+                <article class="post-card">
+                    <h3>📅 ${escapeHTML(meeting.title)}</h3>
+                    <p>${escapeHTML(meeting.description || "")}</p>
+                    <small>
+                        Created ${escapeHTML(
+                            new Date(meeting.created_at).toLocaleString()
+                        )}
+                    </small>
+                    ${
+                        meeting.user_id === currentUser.id
+                        ? `<button type="button"
+                             onclick="deleteMeeting('${escapeHTML(meeting.id)}')">
+                             Delete
+                           </button>`
+                        : ""
+                    }
+                </article>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Load meetings error:", error);
+        box.innerHTML =
+            "<p>Meetings are not available until the meetings table is configured.</p>";
+    }
+}
+
+async function deleteMeeting(id) {
+    if (!confirm("Delete this meeting?")) return;
+
+    try {
+        const { error } = await db
+            .from("meetings")
+            .delete()
+            .eq("id", id)
+            .eq("user_id", currentUser.id);
+
+        if (error) throw error;
+
+        showMessage("Meeting deleted.");
+        await loadMeetings();
+
+    } catch (error) {
+        showMessage(error.message || "Could not delete meeting.", true);
+    }
+}
+
+/* ---------- GROUPS ---------- */
+
+async function createGroup() {
+    if (!currentUser) return;
+
+    const name = el("groupName")?.value.trim();
+    const description = el("groupDescription")?.value.trim();
+
+    if (!name) {
+        showMessage("Enter a group name.", true);
+        return;
+    }
+
+    try {
+        const { data, error } = await db
+            .from("chat_groups")
+            .insert({
+                owner_id: currentUser.id,
+                name: name,
+                description: description || ""
+            })
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        const { error: memberError } = await db
+            .from("group_members")
+            .insert({
+                group_id: data.id,
+                user_id: currentUser.id
+            });
+
+        if (memberError) {
+            console.warn("Group created, but membership setup failed:", memberError);
+        }
+
+        el("groupName").value = "";
+        el("groupDescription").value = "";
+
+        showMessage("Group created.");
+        await loadGroups();
+
+    } catch (error) {
+        console.error("Create group error:", error);
+
+        showMessage(
+            error.message ||
+            "Could not create group. The chat_groups and group_members tables are required.",
+            true
+        );
+    }
+}
+
+async function loadGroups() {
+    if (!currentUser) return;
+
+    const box = el("groupsFeed");
+    if (!box) return;
+
+    try {
+        const { data: memberships, error: membershipError } = await db
+            .from("group_members")
+            .select("group_id")
+            .eq("user_id", currentUser.id);
+
+        if (membershipError) throw membershipError;
+
+        const ids = (memberships || []).map(item => item.group_id);
+
+        if (!ids.length) {
+            box.innerHTML =
+                "<p>You have not joined any groups. Create a group to get started.</p>";
+            return;
+        }
+
+        const { data, error } = await db
+            .from("chat_groups")
+            .select("id,owner_id,name,description,created_at")
+            .in("id", ids)
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        box.innerHTML = (data || []).map(function(group) {
+            return `
+                <article class="post-card">
+                    <h3>👥 ${escapeHTML(group.name)}</h3>
+                    <p>${escapeHTML(group.description || "")}</p>
+                    <button type="button"
+                        onclick="openGroup('${escapeHTML(group.id)}','${escapeHTML(group.name)}')">
+                        Open Group
+                    </button>
+                </article>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Load groups error:", error);
+        box.innerHTML =
+            "<p>Groups are unavailable until the group tables are configured.</p>";
+    }
+}
+
+async function openGroup(groupId, groupName) {
+    if (!currentUser) return;
+
+    try {
+        const { data: membership, error } = await db
+            .from("group_members")
+            .select("group_id")
+            .eq("group_id", groupId)
+            .eq("user_id", currentUser.id)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        if (!membership) {
+            showMessage("You are not a member of this group.", true);
+            return;
+        }
+
+        el("groupRoomPanel").style.display = "block";
+        el("groupRoomTitle").textContent = groupName;
+        el("groupRoomPanel").dataset.groupId = groupId;
+
+        await loadGroupMessages(groupId);
+
+    } catch (error) {
+        showMessage(error.message || "Could not open group.", true);
+    }
+}
+
+async function sendGroupMessage() {
+    if (!currentUser) return;
+
+    const panel = el("groupRoomPanel");
+    const groupId = panel?.dataset.groupId;
+    const input = el("groupMessageInput");
+    const message = input?.value.trim();
+
+    if (!groupId || !message) {
+        showMessage("Open a group and enter a message.", true);
+        return;
+    }
+
+    try {
+        const { error } = await db
+            .from("group_messages")
+            .insert({
+                group_id: groupId,
+                sender_id: currentUser.id,
+                message_text: message
+            });
+
+        if (error) throw error;
+
+        input.value = "";
+        await loadGroupMessages(groupId);
+
+    } catch (error) {
+        showMessage(
+            error.message ||
+            "Could not send group message. Check the group_messages table.",
+            true
+        );
+    }
+}
+
+async function loadGroupMessages(groupId) {
+    if (!currentUser) return;
+
+    const box = el("groupMessages");
+    if (!box) return;
+
+    try {
+        const { data, error } = await db
+            .from("group_messages")
+            .select("id,group_id,sender_id,message_text,created_at")
+            .eq("group_id", groupId)
+            .order("created_at", { ascending: true })
+            .limit(100);
+
+        if (error) throw error;
+
+        box.innerHTML = (data || []).map(function(message) {
+            const mine = message.sender_id === currentUser.id;
+
+            return `
+                <div class="message-row ${mine ? "mine" : "theirs"}">
+                    <div class="message-bubble">
+                        ${escapeHTML(message.message_text)}
+                        <small>
+                            ${escapeHTML(
+                                new Date(message.created_at).toLocaleTimeString()
+                            )}
+                        </small>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        box.scrollTop = box.scrollHeight;
+
+    } catch (error) {
+        console.error("Group message error:", error);
+        box.innerHTML =
+            "<p>Could not load group messages.</p>";
+    }
+}
+
+/* ---------- SCHOOL ---------- */
+
+async function createSchool() {
+    if (!currentUser) return;
+
+    const name = el("schoolName")?.value.trim();
+    const location = el("schoolLocation")?.value.trim();
+
+    if (!name) {
+        showMessage("Enter a school name.", true);
+        return;
+    }
+
+    try {
+        const { error } = await db.from("schools").insert({
+            owner_id: currentUser.id,
+            name: name,
+            location: location || ""
+        });
+
+        if (error) throw error;
+
+        el("schoolName").value = "";
+        el("schoolLocation").value = "";
+
+        showMessage("School created.");
+        await loadSchool();
+
+    } catch (error) {
+        console.error("Create school error:", error);
+
+        showMessage(
+            error.message ||
+            "Could not create school. The schools table must be configured.",
+            true
+        );
+    }
+}
+
+async function loadSchool() {
+    if (!currentUser) return;
+
+    const box = el("schoolMemberships");
+    if (!box) return;
+
+    try {
+        const { data, error } = await db
+            .from("schools")
+            .select("id,owner_id,name,location,created_at")
+            .order("created_at", { ascending: false })
+            .limit(50);
+
+        if (error) throw error;
+
+        if (!data || !data.length) {
+            box.innerHTML =
+                "<p>No schools have been registered yet.</p>";
+            return;
+        }
+
+        box.innerHTML = data.map(function(school) {
+            return `
+                <article class="post-card">
+                    <h3>🏫 ${escapeHTML(school.name)}</h3>
+                    <p>${escapeHTML(school.location || "Location not provided")}</p>
+                </article>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Load schools error:", error);
+        box.innerHTML =
+            "<p>School features need the schools table and suitable access policies.</p>";
+    }
+}
+
+/* ---------- COMPANY WORKSPACE ---------- */
+
+async function addCompanyRecord(type) {
+    if (!currentUser) return;
+
+    if (!["income", "expense", "task"].includes(type)) {
+        showMessage("Invalid company record type.", true);
+        return;
+    }
+
+    const description = prompt(
+        type === "income" ? "Describe this income:" :
+        type === "expense" ? "Describe this expense:" :
+        "Enter the task:"
+    );
+
+    if (!description || !description.trim()) return;
+
+    let amount = null;
+
+    if (type === "income" || type === "expense") {
+        const amountText = prompt("Enter the amount:");
+
+        if (amountText === null) return;
+
+        amount = Number(amountText);
+
+        if (!Number.isFinite(amount) || amount < 0) {
+            showMessage("Enter a valid non-negative amount.", true);
+            return;
+        }
+    }
+
+    try {
+        const { error } = await db.from("company_records").insert({
+            user_id: currentUser.id,
+            record_type: type,
+            description: description.trim(),
+            amount: amount
+        });
+
+        if (error) throw error;
+
+        showMessage("Company record added.");
+        await loadCompany();
+
+    } catch (error) {
+        console.error("Company record error:", error);
+
+        showMessage(
+            error.message ||
+            "Company workspace needs the company_records table.",
+            true
+        );
+    }
+}
+
+async function loadCompany() {
+    if (!currentUser) return;
+
+    const box = el("companyRecords");
+    if (!box) return;
+
+    try {
+        const { data, error } = await db
+            .from("company_records")
+            .select("id,user_id,record_type,description,amount,created_at")
+            .eq("user_id", currentUser.id)
+            .order("created_at", { ascending: false })
+            .limit(100);
+
+        if (error) throw error;
+
+        if (!data || !data.length) {
+            box.innerHTML =
+                "<p>No company records yet. Add income, expenses or tasks.</p>";
+            return;
+        }
+
+        box.innerHTML = data.map(function(record) {
+            const amountText = record.amount === null
+                ? ""
+                : `<p>Amount: ${escapeHTML(Number(record.amount).toLocaleString())}</p>`;
+
+            return `
+                <article class="post-card">
+                    <strong>${escapeHTML(record.record_type.toUpperCase())}</strong>
+                    <p>${escapeHTML(record.description)}</p>
+                    ${amountText}
+                    <small>
+                        ${escapeHTML(
+                            new Date(record.created_at).toLocaleString()
+                        )}
+                    </small>
+                </article>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error("Load company error:", error);
+        box.innerHTML =
+            "<p>Company workspace needs the company_records table and access policies.</p>";
+    }
+}
+
+/* CONNECT PROFILE PHOTO AND PROFILE SAVE BUTTONS */
+if (el("profilePhoto")) {
+    el("profilePhoto").addEventListener("change", function() {
+        if (this.files && this.files.length) {
+            uploadProfilePhoto();
+        }
+    });
+}
+
+if (el("saveProfileButton")) {
+    el("saveProfileButton").addEventListener("click", saveProfile);
+}
+
+/*
+  IMPORTANT:
+  The features above need matching database tables,
+  columns and RLS policies. Part 8 will finish the
+  app's remaining controls and setup instructions.
+*/
+</script>
