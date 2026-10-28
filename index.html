@@ -7,124 +7,59 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
-:root{--blue:#1769e0;--darkblue:#1254bd;--lightblue:#e8f1ff;--page:#edf2f8;--text:#18243b;--muted:#738096;--border:#e4eaf2;--green:#18a66a}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--page);color:var(--text);font-size:15px}
-header{height:70px;background:linear-gradient(110deg,#1456bd,#1875ee);color:white;padding:0 22px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px #143d7620}
-header h2{margin:0;font-size:25px;font-weight:750;letter-spacing:-.5px}
-button{border:0;border-radius:9px;padding:11px 15px;cursor:pointer;font-size:14px;font-weight:600;transition:.2s}
-button:hover{filter:brightness(.96)}
-button:disabled{opacity:.55;cursor:not-allowed}
-.primary{background:var(--blue);color:white}
-.secondary{background:#edf3fb;color:#24528d}
-.danger{background:#ffe9e9;color:#c62828}
-input,textarea,select{width:100%;padding:12px 14px;border:1px solid #dce4ef;border-radius:10px;margin:6px 0;font:inherit;color:var(--text);background:white;outline:none}
-input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1769e015}
-textarea{min-height:85px;resize:vertical}
-input[type=file]{background:#f8faff}
-.container{width:100%;max-width:none;margin:0;padding:18px}
+:root{--blue:#1767d5;--blue2:#2478ed;--ink:#1d3557;--soft:#edf3fa;--muted:#718096}
+body{margin:0;font-family:Arial,sans-serif;background:#edf3fa;color:#1d3557;padding-bottom:92px}
+header{background:linear-gradient(105deg,#1758bd,#2478ed);color:#fff;padding:19px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:86px;box-shadow:0 3px 8px #173f7920}
+header h2{margin:0;font-size:clamp(19px,4.4vw,25px);font-weight:800;white-space:nowrap}
+button{border:0;border-radius:12px;padding:12px 14px;cursor:pointer;font-size:15px;font-weight:600}
+.primary{background:#176bd8;color:white}.secondary{background:#edf4fc;color:#315b8b}.danger{background:#c62828;color:white}
+input,textarea,select{width:100%;padding:14px 15px;border:1px solid #d8e1ec;border-radius:14px;margin:6px 0;font:inherit;background:#fff;color:#24364f}
+textarea{min-height:75px;resize:vertical}
+.container{max-width:760px;margin:auto;padding:14px 12px}
+.card,.post{background:#fff;border-radius:23px;padding:20px;margin:12px 0;box-shadow:0 8px 26px #193b6810}
 .hidden{display:none!important}
-#authPanel{max-width:470px;margin:55px auto;padding:30px;border-radius:18px;box-shadow:0 8px 35px #18345b12}
-#authPanel h3{font-size:25px;margin-top:0;color:#164f9e}
-#authPanel button{margin-top:8px}
-#appPanel{padding-left:270px;min-height:calc(100vh - 100px)}
-nav{position:fixed;left:0;top:70px;bottom:0;width:255px;padding:22px 13px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;background:white;border-right:1px solid var(--border);z-index:50}
-nav button{width:100%;min-height:47px;flex:none;text-align:left;padding:13px 16px;background:transparent;color:#33445d;border-radius:10px;font-size:15px}
-nav button:hover{background:#f1f6ff}
-nav button.active{background:#e3efff;color:#1769e0;box-shadow:inset 3px 0 0 var(--blue)}
-.card,.post{background:white;border:1px solid #e8edf4;border-radius:15px;padding:20px;margin:0 0 18px;box-shadow:0 2px 12px rgba(24,52,91,.07)}
-#chatPanel,#friendsMenuPanel,#friendsPanel,#requestsPanel,#searchPanel,#accountPanel,#postsPanel,#businessPanel,#connectPanel,#groupsPanel,#founderPanel{max-width:1100px}
-.card h3,.post h3{margin-top:0;color:#172d50}
-.card h4{color:#324969}
-hr{border:0;border-top:1px solid var(--border);margin:22px 0}
-#status,#authStatus{font-size:13px;color:#245da9;margin:10px 0 15px;overflow-wrap:anywhere}
-.row{display:flex;align-items:center;gap:12px;padding:13px 2px;border-bottom:1px solid #edf0f5}
-.row:last-child{border-bottom:0}
-.avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,#c8ddff,#80a9ed);color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;flex-shrink:0;overflow:hidden}
-.flexinfo{flex:1;min-width:0}
-.muted{font-size:13px;color:var(--muted);overflow-wrap:anywhere;margin-top:4px}
-.online{color:var(--green);font-size:12px}
-.chat-list-row{display:flex;align-items:center;gap:13px;padding:15px 5px;border-bottom:1px solid #edf0f5;min-height:82px;cursor:pointer;background:white}
-.chat-list-row:hover{background:#f6f9ff}
-.chat-list-row .avatar{width:56px;height:56px;min-width:56px;font-size:21px}
-.chat-list-main{flex:1;min-width:0}
-.chat-list-top,.chat-list-bottom{display:flex;align-items:center;justify-content:space-between;gap:9px;min-width:0}
-.chat-list-name{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#172d50}
-.chat-list-time{font-size:12px;color:#16865b;white-space:nowrap;flex-shrink:0}
-.chat-list-preview{font-size:14px;color:#758196;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:6px;min-width:0}
-.chat-list-status{font-size:11px;color:#159d64;white-space:nowrap;flex-shrink:0}
-#messages,#groupMessages{height:48vh;min-height:230px;overflow-y:auto;padding:15px;background:#f0f5fc;border:1px solid #e3ebf6;border-radius:12px;display:flex;flex-direction:column;gap:10px}
-.message{max-width:82%;padding:11px 13px;background:white;border:1px solid #e4eaf2;border-radius:13px 13px 13px 3px;align-self:flex-start;overflow-wrap:anywhere;box-shadow:0 1px 3px #00000008}
-.message.mine{background:#dceaff;border-color:#d1e2ff;align-self:flex-end;border-radius:13px 13px 3px 13px}
-.message img,.message video,.post-media{max-width:100%;width:100%;border-radius:10px;display:block;margin:8px 0}
-.message small{display:block;text-align:right;font-size:10px;color:#738096;margin-top:6px}
-.composer{display:flex;gap:8px;align-items:center;margin-top:10px}
-.composer input{margin:0;min-width:0}
-.composer button{flex-shrink:0}
-.post{margin:14px 0}
-.post-head{display:flex;align-items:center;gap:11px}
-.post-head .avatar{width:43px;height:43px}
-.post-body{white-space:pre-wrap;overflow-wrap:anywhere;margin:15px 0;line-height:1.65;font-size:15px}
-.post-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid #edf0f5}
-.post-actions button{background:#f0f5fc;color:#405776}
-.post-actions button:hover{background:#e2edff;color:#1769e0}
-.post-actions button.liked{background:#e2efff;color:#1769e0}
-.comment{padding:10px 12px;background:#f3f6fb;border-radius:10px;margin:8px 0;overflow-wrap:anywhere}
-.comment strong{margin-right:5px}
-#productsFeed,#meetingsFeed,#groupsFeed{margin-top:15px}
-#productsFeed .post-media{max-height:300px;object-fit:contain;background:#f5f7fb}
-.submenu{display:flex;flex-wrap:wrap;gap:10px;margin:15px 0}
-.submenu button{flex:1;min-width:130px;padding:14px;background:#edf4ff;color:#1769e0}
-.founder-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(120deg,#fff1b8,#ffe08a);color:#795400;border:1px solid #edc85e;padding:4px 9px;border-radius:20px;font-weight:800;font-size:12px;vertical-align:middle}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
-.stat-box{padding:16px;border-radius:13px;background:#f2f6ff;border:1px solid #e0eaff}
-.stat-box strong{display:block;font-size:25px;color:#1456bd;margin-top:8px}
-footer{text-align:center;padding:22px;color:#8590a2;font-size:12px}
-@media(max-width:760px){
-header{height:62px;padding:0 14px}
-header h2{font-size:21px}
-.container{padding:10px}
-#appPanel{padding-left:0;padding-bottom:75px}
-nav{position:fixed;top:auto;bottom:0;left:0;right:0;width:100%;height:66px;padding:6px 4px;display:flex;flex-direction:row;align-items:stretch;justify-content:flex-start;gap:4px;overflow-x:auto;overflow-y:hidden;background:white;border-top:1px solid var(--border);border-right:0;box-shadow:0 -3px 12px #18345b0c}
-nav button{flex:0 0 86px;width:86px;min-width:86px;min-height:48px;height:50px;padding:7px 4px;text-align:center;font-size:11px;border-radius:9px;white-space:normal}
-nav button.active{box-shadow:inset 0 -3px 0 var(--blue)}
-.card,.post{padding:14px;margin-bottom:12px;border-radius:13px}
-#authPanel{margin:25px auto;padding:23px}
-.chat-list-row{gap:10px;padding:12px 1px}
-.chat-list-row .avatar{width:48px;height:48px;min-width:48px}
-.chat-list-name{font-size:15px}
-.chat-list-preview{font-size:13px}
-.composer{gap:5px}
-.composer button{padding:11px 10px}
-.submenu button{min-width:100px}
-footer{padding-bottom:85px}
-}
-@media(max-width:380px){
-header h2{font-size:18px}
-.card,.post{padding:11px}
-nav button{flex-basis:76px;min-width:76px;width:76px;font-size:10px}
-}
+nav{display:flex;gap:5px;padding:8px;background:#fff;position:fixed;left:0;right:0;bottom:0;z-index:20;box-shadow:0 -4px 18px #233f6517;overflow-x:auto;overscroll-behavior-x:contain;border-top:1px solid #e2eaf4}
+nav button{flex:0 0 auto;min-width:112px;background:transparent;color:#4a5568;font-weight:700;padding:17px 12px;border-radius:17px;white-space:nowrap}
+nav button.active{background:#e4efff;color:#176bd8;box-shadow:inset 0 -4px #176bd8}
+.submenu{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.submenu button{flex:1;min-width:100px}
+.row{display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid #edf1f6}.row:last-child{border-bottom:0}
+.avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#c8dcff,#7fa8f0);color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0}
+.flexinfo{flex:1;min-width:0}.muted{font-size:14px;color:#78869a;overflow-wrap:anywhere}
+.chat-list-row{display:flex;align-items:center;gap:13px;padding:17px 2px;border-bottom:1px solid #edf1f6;min-height:88px;cursor:pointer;background:#fff}
+.chat-list-row:active{background:#f4f8ff}.chat-list-row .avatar{width:64px;height:64px;min-width:64px;font-size:23px}
+.chat-list-main{flex:1;min-width:0}.chat-list-top,.chat-list-bottom{display:flex;align-items:center;justify-content:space-between;gap:9px;min-width:0}
+.chat-list-name{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#1f3555}
+.chat-list-time{font-size:13px;color:#319873;white-space:nowrap;flex-shrink:0}
+.chat-list-preview{font-size:15px;color:#7b8799;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:7px;min-width:0}
+.chat-list-status{font-size:13px;color:#319873;white-space:nowrap;flex-shrink:0}
+.chat-list-row .muted{overflow:hidden}.online{color:#319873;font-size:13px}
+#chatHeading{font-size:25px;margin:0 0 28px;font-weight:800;color:#203858}
+#chatSearch{font-size:17px;padding:20px 25px;border:2px solid #e0e7f0;border-radius:20px;margin:0 0 10px}
+#chatListView>button{font-size:17px;padding:18px 24px;margin:0 0 12px}
+#messages{height:42vh;min-height:220px;overflow-y:auto;padding:10px;background:#edf3fa;border-radius:14px;display:flex;flex-direction:column;gap:8px}
+.message{max-width:82%;padding:10px;background:white;border-radius:14px;align-self:flex-start;overflow-wrap:anywhere}.message.mine{background:#dceaff;align-self:flex-end}
+.message img,.message video,.post-media{max-width:100%;width:100%;border-radius:9px;display:block;margin:7px 0}
+.message small{display:block;text-align:right;font-size:10px;color:#65716b;margin-top:5px}
+.composer{display:flex;gap:7px;align-items:center;margin-top:8px}.composer input{margin:0}.composer button{flex-shrink:0}
+.post-head{display:flex;align-items:center;gap:9px}.post-head .avatar{width:40px;height:40px}.post-body{white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0}
+.post-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.post-actions button{background:#eef4fc}.post-actions button.liked{background:#dceaff;color:#176bd8}
+.comment{padding:8px;background:#f5f8fc;border-radius:8px;margin:6px 0;overflow-wrap:anywhere}.comment strong{margin-right:5px}
+#status,#authStatus{font-size:13px;color:#176bd8;margin:8px 0;overflow-wrap:anywhere}
+footer{text-align:center;padding:18px;color:#777;font-size:12px}
+@media(max-width:430px){.container{padding:10px}.card,.post{padding:20px;border-radius:22px}header{padding:18px 14px}nav button{min-width:110px;padding:17px 12px}.composer button{padding:10px 9px}}
 </style>
 </head>
 <body>
-<header>
-<h2>💬 JFriendsChat</h2>
-<div style="display:flex;gap:8px;align-items:center">
-<button id="founderHeaderBadge" class="secondary hidden" onclick="openFounder()">👑 Founder</button>
-<button id="accountButton" class="secondary hidden" onclick="toggleAccount()">👤 Profile</button>
-</div>
-</header>
+<header><h2>💬 JFriendsChat</h2><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><button id="accountButton" class="secondary hidden" onclick="toggleAccount()" style="background:#edf4fc;color:#315b8b;border-radius:16px;padding:17px 20px;font-size:17px">👤 Profile</button></div></header>
 <div class="container">
 <section id="authPanel" class="card">
-<h3>Welcome to JFriendsChat 💙</h3>
-<p>Connect with friends and relatives.</p>
+<h3>Welcome to JFriendsChat</h3><p>Log in or create an account.</p>
 <input id="email" type="email" placeholder="Email address" autocomplete="email">
 <input id="password" type="password" placeholder="Password" autocomplete="current-password">
 <input id="username" placeholder="Username (new accounts)">
-<button class="primary" onclick="signIn()">Log In</button>
-<button class="secondary" onclick="signUp()">Create Account</button>
+<button class="primary" onclick="signIn()">Log In</button> <button class="secondary" onclick="signUp()">Create Account</button>
 <div id="authStatus"></div>
 </section>
-
 <section id="appPanel" class="hidden">
 <nav>
 <button id="chatNav" class="active" onclick="openChatHome()">💬 Chat</button>
@@ -133,281 +68,141 @@ nav button{flex-basis:76px;min-width:76px;width:76px;font-size:10px}
 <button id="businessNav" onclick="openBusiness()">🏪 Business</button>
 <button id="connectNav" onclick="openConnect()">🎥 Connect</button>
 <button id="groupsNav" onclick="openGroups()">👥 My Groups</button>
-<button id="founderNav" class="hidden" onclick="openFounder()">👑 Founder</button>
 </nav>
 <div id="status"></div>
 <section id="chatPanel" class="card">
 <h3 id="chatHeading">Your Chats</h3>
 <div id="chatListView"><input id="chatSearch" placeholder="Search chats..." oninput="renderChatList()"><button class="secondary" onclick="refreshChatList()">🔄 Refresh</button><div id="chatList"></div></div>
 <div id="conversationView" class="hidden">
-<button class="secondary" onclick="backToChatList()">← Back to chats</button><h3 id="conversationName">Conversation</h3><div id="conversationStatus" class="muted"></div><div id="messages"></div>
+<button class="secondary" onclick="backToChatList()">← Back to chats</button><h3 id="conversationName">Conversation</h3><div id="conversationStatus" class="muted"></div>
+<div id="messages"></div>
 <div class="composer"><input id="messageInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()"><button class="primary" onclick="sendMessage()">Send</button></div>
 <div class="composer"><input type="file" id="chatMediaInput" accept="image/*,video/*"><button class="secondary" onclick="sendChatMedia()">📎 Media</button></div>
 </div></section>
-
-<section id="friendsMenuPanel" class="card hidden"><h3>👥 Friends</h3><div class="submenu"><button onclick="openFriendsList()">👥 My Friends</button><button onclick="openRequests()">📨 Friend Requests</button><button onclick="openFindFriends()">🔍 Find Friends</button></div></section>
+<section id="friendsMenuPanel" class="card hidden"><h3>Friends</h3><div class="submenu">
+<button class="primary" onclick="openFriendsList()">👥 My Friends</button><button class="primary" onclick="openRequests()">📨 Friend Requests</button><button class="primary" onclick="openFindFriends()">🔍 Find Friends</button></div></section>
 <section id="friendsPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>My Friends</h3><div id="friendsList"></div></section>
 <section id="requestsPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>Friend Requests</h3><h4>Incoming</h4><div id="incomingRequests"></div><h4>Sent</h4><div id="outgoingRequests"></div></section>
 <section id="searchPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>Find Friends</h3><input id="friendSearch" placeholder="Search by username..." oninput="searchFriends()"><div id="searchResults"></div></section>
-
-<section id="postsPanel" class="hidden"><div class="card"><h3>📰 Create a post</h3><textarea id="postText" placeholder="What's on your mind?"></textarea><label for="postMedia"><strong>Add picture or video</strong></label><input id="postMedia" type="file" accept="image/*,video/*"><label for="postVisibility">Who can see this post?</label><select id="postVisibility"><option value="public">🌍 Public</option><option value="private">🔒 Private — only me</option></select><button class="primary" onclick="createPost()">Publish Post</button></div><div class="card"><h3>Posts Feed</h3><button class="secondary" onclick="loadPosts()">🔄 Refresh feed</button><div id="postsFeed"></div></div></section>
-
-<section id="businessPanel" class="hidden"><div class="card"><h3>🏪 Business Marketplace</h3><p class="muted">Create a business profile and advertise your products.</p><h4>Create / update business profile</h4><input id="bizName" placeholder="Business name"><input id="bizLocation" placeholder="Business location"><input id="bizPhone" placeholder="Business phone (optional)"><button class="primary" onclick="saveBusiness()">Save Business Profile</button><hr><h4>Advertise a product</h4><input id="productName" placeholder="Product name"><input id="productPrice" type="number" min="0" placeholder="Price (NGN)"><input id="productLocation" placeholder="Product location"><input id="productImage" type="url" placeholder="Product picture URL (optional)"><textarea id="productDetails" placeholder="Product description"></textarea><button class="primary" onclick="publishProduct()">Publish Product</button></div><div class="card"><h3>Products for Sale</h3><input id="productSearch" placeholder="Search products or location" oninput="loadProducts()"><button class="secondary" onclick="loadProducts()">Refresh Marketplace</button><div id="productsFeed"></div></div></section>
-
-<section id="connectPanel" class="hidden"><div class="card"><h3>🎥 Connect — Online Meetings</h3><p>Create a meeting and share the join link with your friends. Meetings open in Jitsi Meet.</p><input id="meetingTitle" placeholder="Meeting title"><textarea id="meetingDescription" placeholder="Meeting details (optional)"></textarea><label>Meeting date and time</label><input id="meetingTime" type="datetime-local"><label>Maximum participants</label><input id="meetingCapacity" type="number" min="2" max="200" value="10"><button class="primary" onclick="createMeeting()">Create Meeting</button></div><div class="card"><h3>Upcoming Meetings</h3><button class="secondary" onclick="loadMeetings()">Refresh</button><div id="meetingsFeed"></div></div></section>
-
-<section id="groupsPanel" class="hidden"><div class="card"><h3>👥 My Groups</h3><input id="groupName" placeholder="New group name"><textarea id="groupDescription" placeholder="What is this group for?"></textarea><button class="primary" onclick="createGroup()">Create Group</button><div id="groupsFeed"></div></div><div id="groupRoomPanel" class="card hidden"><button class="secondary" onclick="openGroups()">← Groups</button><h3 id="groupRoomTitle">Group Chat</h3><div id="groupMessages"></div><div class="composer"><input id="groupMessageInput" placeholder="Write to the group..." onkeydown="if(event.key==='Enter')sendGroupMessage()"><button class="primary" onclick="sendGroupMessage()">Send</button></div></div></section>
-
-<section id="accountPanel" class="card hidden"><h3>My Profile</h3><div id="accountDetails"></div><input id="newUsername" placeholder="New username"><button class="primary" onclick="updateUsername()">Save Username</button><button class="danger" onclick="signOut()">Log Out</button></section>
-
-<section id="founderPanel" class="hidden">
-<div class="card"><h3>👑 Founder Dashboard <span class="founder-badge">✓ FOUNDER</span></h3><p>Manage users, administrators, posts and your website statistics.</p><div id="founderStatus" class="muted">Checking founder permissions...</div>
-<div class="stat-grid">
-<div class="stat-box">Total users<strong id="founderUsers">—</strong></div><div class="stat-box">Daily active users<strong id="founderDAU">—</strong></div><div class="stat-box">Total posts<strong id="founderPosts">—</strong></div><div class="stat-box">Revenue recorded<strong id="founderRevenue">₦0</strong></div><div class="stat-box">Products<strong id="founderProducts">—</strong></div><div class="stat-box">Meetings<strong id="founderMeetings">—</strong></div><div class="stat-box">Administrators<strong id="founderAdmins">—</strong></div><div class="stat-box">Banned users<strong id="founderBanned">—</strong></div><div class="stat-box">Shops awaiting review<strong id="founderPendingShops">—</strong></div>
+<section id="postsPanel" class="hidden">
+<div class="card"><h3>📰 Create a post</h3>
+<textarea id="postText" placeholder="What's on your mind? Add a caption or write a text-only post..."></textarea>
+<label for="postMedia"><strong>Add picture or video (optional)</strong></label><input id="postMedia" type="file" accept="image/*,video/*">
+<label for="postVisibility">Who can see this post?</label>
+<select id="postVisibility"><option value="public">🌍 Public</option><option value="private">🔒 Private — only me</option></select>
+<button class="primary" onclick="createPost()">Publish Post</button>
+<p class="muted">Public posts can be viewed by signed-in users. Private posts are visible only to you.</p>
 </div>
-<button class="primary" onclick="loadFounderStats()">🔄 Refresh statistics</button><hr><h3>Founder account</h3><div id="founderAccountInfo"></div>
-<div class="submenu"><button onclick="loadFounderUsers()">👥 User Management</button><button onclick="loadFounderPosts()">🛡️ Content Moderation</button><button onclick="loadFounderBusinesses()">🏪 Business Verification</button><button onclick="loadFounderAnnouncements()">📢 Broadcasts</button><button onclick="loadFounderHealth()">🔧 System Health</button><button onclick="loadFounderMonetization()">💰 Monetization</button></div>
-<div id="founderUsersSection" class="hidden"><hr><h3>👥 User management</h3><input id="founderUserSearch" placeholder="Search name or email" oninput="renderFounderUsers()"><button class="secondary" onclick="loadFounderUsers()">Refresh users</button><div id="founderUsersList"></div></div>
-<div id="founderPostsSection" class="hidden"><hr><h3>🛡️ Content moderation</h3><button class="secondary" onclick="loadFounderPosts()">Refresh posts</button><div id="founderPostsList"></div></div>
-<div id="founderBusinessesSection" class="hidden"><hr><h3>🏪 Business verification</h3><p class="muted">Review shop profiles and verify or revoke verification.</p><button class="secondary" onclick="loadFounderBusinesses()">Refresh shops</button><div id="founderBusinessesList"></div></div>
-<div id="founderAnnouncementsSection" class="hidden"><hr><h3>📢 Broadcast announcement to all users</h3><input id="announcementTitle" maxlength="120" placeholder="Announcement title"><textarea id="announcementBody" maxlength="3000" placeholder="Write your announcement for all users"></textarea><button class="primary" onclick="sendFounderAnnouncement()">📢 Publish announcement</button><button class="secondary" onclick="loadFounderAnnouncements()">Refresh announcements</button><div id="founderAnnouncementsList"></div></div>
-<div id="founderHealthSection" class="hidden"><hr><h3>🔧 System health & SQL setup checker</h3><p class="muted">Checks whether required tables and dashboard functions exist. It does not run or change SQL automatically.</p><button class="primary" onclick="loadFounderHealth()">Run health check</button><div id="founderHealthList"></div></div>
-<div id="founderMonetizationSection" class="hidden"><hr><h3>💰 Monetization overview</h3><p class="muted">Revenue totals include only transactions recorded in the monetization table. Connect your payment provider to record real payments.</p><button class="primary" onclick="loadFounderMonetization()">Refresh monetization</button><div id="founderMonetizationList"></div></div>
-<p class="muted">Founder badge and dashboard access are displayed in the interface, but actual permissions are enforced by Supabase. Ban records need application/RLS enforcement to block restricted actions.</p></div>
+<div class="card"><h3>Posts feed</h3><button class="secondary" onclick="loadPosts()">🔄 Refresh feed</button><div id="postsFeed"></div></div>
 </section>
+<section id="businessPanel" class="hidden">
+<div class="card"><h3>🏪 Business Marketplace</h3><p class="muted">Create a market account and list products. Signed-in JFriendsChat users can discover your items and message you to buy.</p><h4>Create / update market profile</h4><input id="bizName" placeholder="Shop or business name"><input id="bizLocation" placeholder="Shop location / address"><input id="bizPhone" placeholder="Business phone (optional)"><button class="primary" onclick="saveBusiness()">Save Market Account</button><hr><h4>Advertise a product</h4><input id="productName" placeholder="Product name"><input id="productPrice" type="number" min="0" placeholder="Price (NGN)"><input id="productLocation" placeholder="Product location (town / address)"><input id="productImage" type="url" placeholder="Product picture URL (optional)"><textarea id="productDetails" placeholder="Description, condition, delivery details..."></textarea><button class="primary" onclick="publishProduct()">Publish Product</button></div>
+<div class="card"><h3>Products for sale</h3><input id="productSearch" placeholder="Search products or location" oninput="loadProducts()"><button class="secondary" onclick="loadProducts()">Refresh marketplace</button><div id="productsFeed"></div></div></section>
+<section id="connectPanel" class="hidden"><div class="card"><h3>🎥 Connect — Online Meetings</h3><p>Schedule a meeting and share its join link. The meeting room opens in Jitsi Meet. A 200-person meeting may require a suitable paid/managed video service; this public room link alone cannot guarantee 200 seats.</p><input id="meetingTitle" placeholder="Meeting title"><textarea id="meetingDescription" placeholder="Agenda / details (optional)"></textarea><label>Meeting date and time</label><input id="meetingTime" type="datetime-local"><label>Maximum participants</label><input id="meetingCapacity" type="number" min="2" max="200" value="200"><button class="primary" onclick="createMeeting()">Create Meeting</button></div><div class="card"><h3>Upcoming meetings</h3><button class="secondary" onclick="loadMeetings()">Refresh</button><div id="meetingsFeed"></div></div></section>
+<section id="groupsPanel" class="hidden"><div class="card"><h3>👥 My Groups</h3><input id="groupName" placeholder="New group name"><textarea id="groupDescription" placeholder="What is this group for? (optional)"></textarea><button class="primary" onclick="createGroup()">Create Group</button><div id="groupsFeed"></div></div><div id="groupRoomPanel" class="card hidden"><button class="secondary" onclick="openGroups()">← Groups</button><h3 id="groupRoomTitle">Group chat</h3><div id="groupMessages" class="messages"></div><div class="composer"><input id="groupMessageInput" placeholder="Write to the group..." onkeydown="if(event.key==='Enter')sendGroupMessage()"><button class="primary" onclick="sendGroupMessage()">Send</button></div></div></section>
+<section id="accountPanel" class="card hidden"><h3>My Account</h3><div id="accountDetails"></div><input id="newUsername" placeholder="New username"><button class="primary" onclick="updateUsername()">Save username</button> <button class="danger" onclick="signOut()">Log Out</button></section>
 </section></div>
-<footer>JFriendsChat © 2026 · Connect with friends and relatives ❤️</footer>
-
+<footer>JFriendsChat · Stay connected</footer>
 <script>
 const SUPABASE_URL="https://msifvhqvxfjjwcazacxj.supabase.co";
 const SUPABASE_KEY="sb_publishable__uU2wBTvE8tWoAFoRSWVEA_AgJvZOqg";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const POST_BUCKET="social-posts";
-/* Founder email is used only to display the founder UI. Real authorization must also be enforced by database RLS. */
-const FOUNDER_EMAIL="jamilua263@gmail.com".toLowerCase();
-let currentUser=null,currentProfile=null,chatFriends=[],activeFriend=null;
-let messageChannel=null,presenceChannel=null,knownOnlineUsers=new Set(),renderedMessages=new Set(),refreshTimer=null;
+let currentUser=null,currentProfile=null,chatFriends=[],activeFriend=null,messageChannel=null,presenceChannel=null,knownOnlineUsers=new Set(),renderedMessages=new Set(),refreshTimer=null;
 const el=id=>document.getElementById(id);
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
 function setStatus(t){el("status").textContent=t||""}
 function showAuthStatus(t){el("authStatus").textContent=t||""}
 function nameOf(p){return p?.username||p?.display_name||p?.full_name||"Friend"}
 function initials(n){return (n||"F").trim().charAt(0).toUpperCase()}
-function isFounder(){return (currentUser?.email||"").toLowerCase()===FOUNDER_EMAIL}
-function updateFounderUI(){
- const yes=isFounder();
- el("founderHeaderBadge").classList.toggle("hidden",!yes);
- el("founderNav").classList.toggle("hidden",!yes);
- if(yes)el("founderAccountInfo").textContent="Founder email: "+currentUser.email;
-}
-function avatar(p){
- let photo=p?.avatar_url||p?.photo_url||p?.profile_picture||p?.picture_url||p?.avatar;
- if(photo)return `<div class="avatar"><img src="${esc(photo)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.textContent='${esc(initials(nameOf(p)))}'"></div>`;
- return `<div class="avatar">${esc(initials(nameOf(p)))}</div>`;
-}
+function avatar(p){let photo=p?.avatar_url||p?.photo_url||p?.profile_picture||p?.picture_url||p?.avatar;if(photo)return `<div class="avatar"><img src="${esc(photo)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.innerHTML='${esc(initials(nameOf(p)))}'"></div>`;return `<div class="avatar">${esc(initials(nameOf(p)))}</div>`}
 function timeOf(v){if(!v)return "";let d=new Date(v);if(isNaN(d))return "";return d.toDateString()===new Date().toDateString()?d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):d.toLocaleDateString([],{month:"short",day:"numeric"});}
-function hidePanels(){["chatPanel","friendsMenuPanel","friendsPanel","requestsPanel","searchPanel","postsPanel","accountPanel","businessPanel","connectPanel","groupsPanel","founderPanel"].forEach(id=>el(id).classList.add("hidden"));}
-function setNav(which){["chatNav","friendsNav","postsNav","businessNav","connectNav","groupsNav","founderNav"].forEach(id=>el(id).classList.toggle("active",id===which));}
-async function signUp(){
- let email=el("email").value.trim(),password=el("password").value,username=el("username").value.trim();
- if(!email||!password||!username)return showAuthStatus("Enter your email, password and username.");
- if(password.length<6)return showAuthStatus("Password must be at least 6 characters.");
- showAuthStatus("Creating account...");
- let {data,error}=await db.auth.signUp({email,password,options:{data:{username}}});
- if(error)return showAuthStatus(error.message);
- if(data.session)await startApp(data.user);else showAuthStatus("Account created. Confirm your email if required, then log in.");
-}
-async function signIn(){
- let email=el("email").value.trim(),password=el("password").value;
- if(!email||!password)return showAuthStatus("Enter your email and password.");
- showAuthStatus("Logging in...");
- let {data,error}=await db.auth.signInWithPassword({email,password});
- if(error)return showAuthStatus(error.message);
- await startApp(data.user);
-}
-async function signOut(){
- if(refreshTimer)clearInterval(refreshTimer);
- if(presenceChannel)await db.removeChannel(presenceChannel);
- if(messageChannel)await db.removeChannel(messageChannel);
- await db.auth.signOut();currentUser=null;currentProfile=null;activeFriend=null;
- el("appPanel").classList.add("hidden");el("authPanel").classList.remove("hidden");
- el("accountButton").classList.add("hidden");el("founderHeaderBadge").classList.add("hidden");el("founderNav").classList.add("hidden");showAuthStatus("Logged out.");
-}
-async function startApp(user){
- currentUser=user;el("authPanel").classList.add("hidden");el("appPanel").classList.remove("hidden");el("accountButton").classList.remove("hidden");
- db.rpc("jf_record_activity").then(()=>{}).catch(()=>{});showLatestBroadcast().catch(()=>{});
- updateFounderUI();await ensureProfile();await loadChatFriends();openChatHome();await loadPresence();subscribeToMessages();await startPresence();
- if(refreshTimer)clearInterval(refreshTimer);
- refreshTimer=setInterval(async()=>{if(!currentUser)return;await loadChatFriends();if(!activeFriend)await renderChatList();if(!el("postsPanel").classList.contains("hidden"))await loadPosts();if(!el("businessPanel").classList.contains("hidden"))await loadProducts();if(!el("connectPanel").classList.contains("hidden"))await loadMeetings();if(!el("groupsPanel").classList.contains("hidden")&&window.activeGroupId&&!el("groupRoomPanel").classList.contains("hidden"))await loadGroupMessages();},20000);
-}
-async function ensureProfile(){
- let {data,error}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
- if(error){setStatus("Profile error: "+error.message);return;}
- if(data){currentProfile=data;return;}
- let username=currentUser.user_metadata?.username||currentUser.email.split("@")[0]||"User";
- let r=await db.from("profiles").insert({id:currentUser.id,username}).select().single();
- if(r.error)setStatus("Profile setup failed: "+r.error.message);else currentProfile=r.data;
-}
-function toggleAccount(){hidePanels();setNav(null);el("accountPanel").classList.remove("hidden");el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile)+(isFounder()?" | 👑 Founder":"");}
-async function updateUsername(){let username=el("newUsername").value.trim();if(!username)return alert("Enter a username.");let {data,error}=await db.from("profiles").update({username}).eq("id",currentUser.id).select().single();if(error)return alert(error.message);currentProfile=data;el("newUsername").value="";el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile)+(isFounder()?" | 👑 Founder":"");alert("Username updated.");}
-async function openChatHome(){hidePanels();setNav("chatNav");el("chatPanel").classList.remove("hidden");el("chatListView").classList.remove("hidden");el("conversationView").classList.add("hidden");el("chatHeading").textContent="Your Chats";activeFriend=null;await loadChatFriends();await renderChatList();}
-function openFriendsMenu(){hidePanels();setNav("friendsNav");el("friendsMenuPanel").classList.remove("hidden");}
+function hidePanels(){["chatPanel","friendsMenuPanel","friendsPanel","requestsPanel","searchPanel","postsPanel","accountPanel","businessPanel","connectPanel","groupsPanel"].forEach(id=>el(id).classList.add("hidden"))}
+function setNav(which){["chatNav","friendsNav","postsNav","businessNav","connectNav","groupsNav"].forEach(id=>el(id).classList.toggle("active",id===which))}
+async function signUp(){let email=el("email").value.trim(),password=el("password").value,username=el("username").value.trim();if(!email||!password||!username)return showAuthStatus("Enter email, password and username.");if(password.length<6)return showAuthStatus("Password must be at least 6 characters.");showAuthStatus("Creating account...");let {data,error}=await db.auth.signUp({email,password,options:{data:{username}}});if(error)return showAuthStatus(error.message);if(data.session)await startApp(data.user);else showAuthStatus("Account created. Confirm your email if required, then log in.");}
+async function signIn(){let email=el("email").value.trim(),password=el("password").value;if(!email||!password)return showAuthStatus("Enter email and password.");showAuthStatus("Logging in...");let {data,error}=await db.auth.signInWithPassword({email,password});if(error)return showAuthStatus(error.message);await startApp(data.user);}
+async function signOut(){if(refreshTimer)clearInterval(refreshTimer);if(presenceChannel)await db.removeChannel(presenceChannel);if(messageChannel)await db.removeChannel(messageChannel);await db.auth.signOut();currentUser=null;currentProfile=null;activeFriend=null;el("appPanel").classList.add("hidden");el("authPanel").classList.remove("hidden");el("accountButton").classList.add("hidden");showAuthStatus("Logged out.");}
+async function startApp(user){currentUser=user;el("authPanel").classList.add("hidden");el("appPanel").classList.remove("hidden");el("accountButton").classList.remove("hidden");await ensureProfile();await loadChatFriends();openChatHome();await loadPresence();subscribeToMessages();await startPresence();if(refreshTimer)clearInterval(refreshTimer);refreshTimer=setInterval(async()=>{if(!currentUser)return;await loadChatFriends();if(!activeFriend)await renderChatList();if(!el("postsPanel").classList.contains("hidden"))await loadPosts();if(!el("businessPanel").classList.contains("hidden"))await loadProducts();if(!el("connectPanel").classList.contains("hidden"))await loadMeetings();if(!el("groupsPanel").classList.contains("hidden")&&window.activeGroupId&&!el("groupRoomPanel").classList.contains("hidden"))await loadGroupMessages();},20000);}
+async function ensureProfile(){let {data,error}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();if(error){setStatus("Profile error: "+error.message);return;}if(data){currentProfile=data;return;}let username=currentUser.user_metadata?.username||currentUser.email.split("@")[0]||"User";let r=await db.from("profiles").insert({id:currentUser.id,username}).select().single();if(r.error)setStatus("Profile setup failed: "+r.error.message);else currentProfile=r.data;}
+function toggleAccount(){hidePanels();el("accountPanel").classList.remove("hidden");el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile);}
+async function updateUsername(){let username=el("newUsername").value.trim();if(!username)return alert("Enter a username.");let {data,error}=await db.from("profiles").update({username}).eq("id",currentUser.id).select().single();if(error)return alert(error.message);currentProfile=data;alert("Username updated.");}
+async function openChatHome(){hidePanels();setNav("chat");el("chatPanel").classList.remove("hidden");el("chatListView").classList.remove("hidden");el("conversationView").classList.add("hidden");el("chatHeading").textContent="Your Chats";activeFriend=null;await loadChatFriends();await renderChatList();}
+function openFriendsMenu(){hidePanels();setNav("friends");el("friendsMenuPanel").classList.remove("hidden");}
 async function openPosts(){hidePanels();setNav("postsNav");el("postsPanel").classList.remove("hidden");await loadPosts();}
 function backToChatList(){activeFriend=null;el("conversationView").classList.add("hidden");el("chatListView").classList.remove("hidden");el("chatHeading").textContent="Your Chats";renderChatList();}
-async function openFriendsList(){hidePanels();setNav("friendsNav");el("friendsPanel").classList.remove("hidden");await loadFriendsList();}
-async function openRequests(){hidePanels();setNav("friendsNav");el("requestsPanel").classList.remove("hidden");await loadRequests();}
-async function openFindFriends(){hidePanels();setNav("friendsNav");el("searchPanel").classList.remove("hidden");await searchFriends();}
-async function loadChatFriends(){
- if(!currentUser)return;let {data,error}=await db.from("friend_requests").select("*").eq("status","accepted").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
- if(error){setStatus("Could not load friends: "+error.message);return;}
- let ids=[...new Set((data||[]).map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id))].filter(id=>id&&id!==currentUser.id);
- if(!ids.length){chatFriends=[];return;}let p=await db.from("profiles").select("*").in("id",ids);if(p.error){setStatus(p.error.message);return;}chatFriends=p.data||[];
-}
+async function openFriendsList(){hidePanels();setNav("friends");el("friendsPanel").classList.remove("hidden");await loadFriendsList();}
+async function openRequests(){hidePanels();setNav("friends");el("requestsPanel").classList.remove("hidden");await loadRequests();}
+async function openFindFriends(){hidePanels();setNav("friends");el("searchPanel").classList.remove("hidden");await searchFriends();}
+async function loadChatFriends(){if(!currentUser)return;let {data,error}=await db.from("friend_requests").select("*").eq("status","accepted").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);if(error){setStatus("Could not load friends: "+error.message);return;}let ids=[...new Set((data||[]).map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id))].filter(id=>id&&id!==currentUser.id);if(!ids.length){chatFriends=[];return;}let p=await db.from("profiles").select("*").in("id",ids);if(p.error){setStatus(p.error.message);return;}chatFriends=p.data||[];}
 async function loadFriendsList(){await loadChatFriends();el("friendsList").innerHTML=chatFriends.length?chatFriends.map(p=>`<div class="row">${avatar(p)}<div class="flexinfo"><strong>${esc(nameOf(p))}</strong><div class="muted">${knownOnlineUsers.has(p.id)?"● Online":"○ Offline"}</div></div><button class="primary" onclick="openConversation('${p.id}')">Chat</button></div>`).join(""):"<p>No friends yet. Find friends to get started.</p>";}
-async function searchFriends(){
- if(!currentUser)return;let q=el("friendSearch").value.trim(),box=el("searchResults");if(q.length<2){box.innerHTML="<p>Type at least two characters.</p>";return;}box.textContent="Searching...";
- let {data,error}=await db.rpc("search_friends",{search_term:q});if(error){box.textContent="Search error: "+error.message;return;}
- let people=(data||[]).filter(p=>p.id!==currentUser.id);if(!people.length){box.innerHTML="<p>No users found.</p>";return;}
- let req=await db.from("friend_requests").select("*").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
- box.innerHTML=people.map(p=>{let r=(req.data||[]).find(x=>(x.sender_id===currentUser.id&&x.receiver_id===p.id)||(x.receiver_id===currentUser.id&&x.sender_id===p.id));let b=r?.status==="accepted"?`<button class="secondary" onclick="openConversation('${p.id}')">Chat</button>`:r?.status==="pending"?`<button class="secondary" disabled>Pending</button>`:`<button class="primary" onclick="sendFriendRequest('${p.id}')">Add Friend</button>`;return `<div class="row">${avatar(p)}<div class="flexinfo"><strong>${esc(nameOf(p))}</strong></div>${b}</div>`;}).join("");
-}
+async function searchFriends(){if(!currentUser)return;let q=el("friendSearch").value.trim(),box=el("searchResults");if(q.length<2){box.innerHTML="<p>Type at least two characters.</p>";return;}box.textContent="Searching...";let {data,error}=await db.rpc("search_friends",{search_term:q});if(error){box.textContent="Search error: "+error.message+" (Check the search_friends RPC parameter name.)";return;}let people=(data||[]).filter(p=>p.id!==currentUser.id);if(!people.length){box.innerHTML="<p>No users found.</p>";return;}let req=await db.from("friend_requests").select("*").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);box.innerHTML=people.map(p=>{let r=(req.data||[]).find(x=>(x.sender_id===currentUser.id&&x.receiver_id===p.id)||(x.receiver_id===currentUser.id&&x.sender_id===p.id));let b=r?.status==="accepted"?`<button class="secondary" onclick="openConversation('${p.id}')">Chat</button>`:r?.status==="pending"?`<button class="secondary" disabled>Pending</button>`:`<button class="primary" onclick="sendFriendRequest('${p.id}')">Add Friend</button>`;return `<div class="row">${avatar(p)}<div class="flexinfo"><strong>${esc(nameOf(p))}</strong></div>${b}</div>`}).join("");}
 async function sendFriendRequest(id){let {error}=await db.from("friend_requests").insert({sender_id:currentUser.id,receiver_id:id,status:"pending"});if(error)return alert(error.message);alert("Friend request sent.");await searchFriends();}
-async function loadRequests(){
- let {data,error}=await db.from("friend_requests").select("*").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);if(error){el("incomingRequests").textContent=error.message;return;}
- let rs=data||[],inc=rs.filter(r=>r.receiver_id===currentUser.id&&r.status==="pending"),out=rs.filter(r=>r.sender_id===currentUser.id&&r.status==="pending"),ids=[...new Set(rs.map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id))],pr=[];
- if(ids.length){let p=await db.from("profiles").select("*").in("id",ids);pr=p.data||[];}let find=id=>pr.find(p=>p.id===id);
- el("incomingRequests").innerHTML=inc.length?inc.map(r=>`<div class="row">${avatar(find(r.sender_id))}<div class="flexinfo"><strong>${esc(nameOf(find(r.sender_id)))}</strong></div><button class="primary" onclick="acceptRequest('${r.id}')">Accept</button><button class="secondary" onclick="declineRequest('${r.id}')">Decline</button></div>`).join(""):"<p>No incoming requests.</p>";
- el("outgoingRequests").innerHTML=out.length?out.map(r=>`<div class="row">${avatar(find(r.receiver_id))}<div class="flexinfo">${esc(nameOf(find(r.receiver_id)))}</div><span class="muted">Pending</span></div>`).join(""):"<p>No sent requests waiting.</p>";
-}
+async function loadRequests(){let {data,error}=await db.from("friend_requests").select("*").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);if(error){el("incomingRequests").textContent=error.message;return;}let rs=data||[],inc=rs.filter(r=>r.receiver_id===currentUser.id&&r.status==="pending"),out=rs.filter(r=>r.sender_id===currentUser.id&&r.status==="pending"),ids=[...new Set(rs.map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id))],pr=[];if(ids.length){let p=await db.from("profiles").select("*").in("id",ids);pr=p.data||[];}let find=id=>pr.find(p=>p.id===id);el("incomingRequests").innerHTML=inc.length?inc.map(r=>`<div class="row">${avatar(find(r.sender_id))}<div class="flexinfo"><strong>${esc(nameOf(find(r.sender_id)))}</strong></div><button class="primary" onclick="acceptRequest('${r.id}')">Accept</button><button class="secondary" onclick="declineRequest('${r.id}')">Decline</button></div>`).join(""):"<p>No incoming requests.</p>";el("outgoingRequests").innerHTML=out.length?out.map(r=>`<div class="row">${avatar(find(r.receiver_id))}<div class="flexinfo">${esc(nameOf(find(r.receiver_id)))}</div><span class="muted">Pending</span></div>`).join(""):"<p>No sent requests waiting.</p>";}
 async function acceptRequest(id){let {error}=await db.from("friend_requests").update({status:"accepted"}).eq("id",id);if(error)return alert(error.message);await loadChatFriends();await loadRequests();alert("Friend accepted and added to Chat.");}
 async function declineRequest(id){let {error}=await db.from("friend_requests").delete().eq("id",id);if(error)return alert(error.message);await loadRequests();}
 async function lastMessage(friendId){let filter=`and(sender_id.eq.${currentUser.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${currentUser.id})`;let {data,error}=await db.from("messages").select("*").or(filter).order("created_at",{ascending:false}).limit(1);return error?null:(data?.[0]||null);}
-function messageText(m){return m?.message_text||""}
-function preview(m){if(!m)return "No messages yet. Tap to chat.";let t=messageText(m);if(m.media_path&&!t)t="📎 Media";if(m.sender_id===currentUser.id)t="You: "+t;return t;}
+function preview(m){if(!m)return "No messages yet. Tap to chat.";let t=m.content||"";if(m.media_path&&!t)t="📎 Media";if(m.sender_id===currentUser.id)t="You: "+t;return t;}
 async function renderChatList(){
- if(!currentUser)return;let box=el("chatList"),q=(el("chatSearch").value||"").toLowerCase();if(!chatFriends.length){box.innerHTML='<p>No friends yet.</p><button class="primary" onclick="openFindFriends()">Find Friends</button>';return;}
- box.innerHTML="<p>Loading chats...</p>";let rows=await Promise.all(chatFriends.map(async f=>({f,m:await lastMessage(f.id)})));rows.sort((a,b)=>new Date(b.m?.created_at||0)-new Date(a.m?.created_at||0));rows=rows.filter(r=>nameOf(r.f).toLowerCase().includes(q));
+ if(!currentUser)return;
+ let box=el("chatList"),q=(el("chatSearch").value||"").toLowerCase();
+ if(!chatFriends.length){box.innerHTML='<p>No friends yet.</p><button class="primary" onclick="openFindFriends()">Find Friends</button>';return;}
+ box.innerHTML="<p>Loading chats...</p>";
+ let rows=await Promise.all(chatFriends.map(async f=>({f,m:await lastMessage(f.id)})));
+ rows.sort((a,b)=>new Date(b.m?.created_at||0)-new Date(a.m?.created_at||0));
+ rows=rows.filter(r=>nameOf(r.f).toLowerCase().includes(q));
  box.innerHTML=rows.length?rows.map(({f,m})=>`<div class="chat-list-row" onclick="openConversation('${f.id}')">${avatar(f)}<div class="chat-list-main"><div class="chat-list-top"><div class="chat-list-name">${esc(nameOf(f))}</div><span class="chat-list-time">${esc(timeOf(m?.created_at))}</span></div><div class="chat-list-bottom"><div class="chat-list-preview">${esc(m?preview(m):(knownOnlineUsers.has(f.id)?"● Online":"Tap to chat"))}</div>${knownOnlineUsers.has(f.id)?'<span class="chat-list-status">Online</span>':''}</div></div></div>`).join(""):"<p>No matching chats.</p>";
 }
 async function refreshChatList(){await loadChatFriends();await renderChatList();}
 async function openConversation(id){await loadChatFriends();activeFriend=chatFriends.find(p=>p.id===id);if(!activeFriend)return alert("This user is not an accepted friend.");el("chatListView").classList.add("hidden");el("conversationView").classList.remove("hidden");el("conversationName").textContent=nameOf(activeFriend);updateConversationStatus();await loadMessages();}
 function updateConversationStatus(){if(activeFriend)el("conversationStatus").textContent=knownOnlineUsers.has(activeFriend.id)?"● Online":"○ Offline";}
-async function mediaURL(path){if(!path)return null;let r=await db.storage.from("chat-media").createSignedUrl(path,3600);if(!r.error&&r.data?.signedUrl)return r.data.signedUrl;let pub=db.storage.from("chat-media").getPublicUrl(path);return pub.data?.publicUrl||null;}
+async function mediaURL(path){if(!path)return null;let {data,error}=await db.storage.from(POST_BUCKET).createSignedUrl(path,3600);if(!error&&data?.signedUrl)return data.signedUrl;let pub=db.storage.from("chat-media").getPublicUrl(path);return pub.data?.publicUrl||null;}
 async function loadMessages(){if(!activeFriend)return;let filter=`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeFriend.id}),and(sender_id.eq.${activeFriend.id},receiver_id.eq.${currentUser.id})`;let {data,error}=await db.from("messages").select("*").or(filter).order("created_at",{ascending:true});if(error)return setStatus("Message load error: "+error.message);el("messages").innerHTML="";renderedMessages.clear();for(let m of data||[])await renderMessage(m);el("messages").scrollTop=el("messages").scrollHeight;}
-async function renderMessage(m){if(m.id&&renderedMessages.has(m.id))return;if(m.id)renderedMessages.add(m.id);let item=document.createElement("div");item.className="message"+(m.sender_id===currentUser.id?" mine":"");let c="";if(m.media_path){let url=await mediaURL(m.media_path);if(url)c+=/\.(mp4|mov|webm|m4v)$/i.test(m.media_path)?`<video controls playsinline src="${esc(url)}"></video>`:`<a href="${esc(url)}" target="_blank" rel="noopener"><img src="${esc(url)}" alt="Shared image"></a>`;}if(messageText(m))c+=`<div>${esc(messageText(m))}</div>`;c+=`<small>${esc(timeOf(m.created_at))}</small>`;item.innerHTML=c;el("messages").appendChild(item);el("messages").scrollTop=el("messages").scrollHeight;}
-async function sendMessage(){if(!activeFriend)return alert("Open a conversation first.");let content=el("messageInput").value.trim();if(!content)return;let {error}=await db.from("messages").insert({sender_id:currentUser.id,receiver_id:activeFriend.id,message_text:content});if(error)return alert("Message could not be sent: "+error.message);el("messageInput").value="";await loadMessages();await renderChatList();}
-async function sendChatMedia(){if(!activeFriend)return alert("Open a conversation first.");let file=el("chatMediaInput").files[0];if(!file)return alert("Choose a file.");let path=currentUser.id+"/"+Date.now()+"_"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");let {error}=await db.storage.from("chat-media").upload(path,file,{upsert:false,contentType:file.type});if(error)return alert(error.message);let r=await db.from("messages").insert({sender_id:currentUser.id,receiver_id:activeFriend.id,message_text:"",media_path:path});if(r.error)return alert("Media uploaded, but message could not be saved: "+r.error.message);el("chatMediaInput").value="";await loadMessages();await renderChatList();}
+async function renderMessage(m){if(m.id&&renderedMessages.has(m.id))return;if(m.id)renderedMessages.add(m.id);let item=document.createElement("div");item.className="message"+(m.sender_id===currentUser.id?" mine":"");let c="";if(m.media_path){let url=await mediaURL(m.media_path);if(url)c+=/\.(mp4|mov|webm|m4v)$/i.test(m.media_path)?`<video controls src="${esc(url)}"></video>`:`<a href="${esc(url)}" target="_blank"><img src="${esc(url)}" alt="Shared image"></a>`;}if(m.content)c+=`<div>${esc(m.content)}</div>`;c+=`<small>${esc(timeOf(m.created_at))}</small>`;item.innerHTML=c;el("messages").appendChild(item);el("messages").scrollTop=el("messages").scrollHeight;}
+async function sendMessage(){if(!activeFriend)return alert("Open a conversation first.");let content=el("messageInput").value.trim();if(!content)return;let {error}=await db.from("messages").insert({sender_id:currentUser.id,receiver_id:activeFriend.id,content});if(error)return alert(error.message);el("messageInput").value="";await loadMessages();await renderChatList();}
+async function sendChatMedia(){if(!activeFriend)return alert("Open a conversation first.");let file=el("chatMediaInput").files[0];if(!file)return alert("Choose a file.");let path=currentUser.id+"/"+Date.now()+"_"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");let {error}=await db.storage.from("chat-media").upload(path,file,{upsert:false,contentType:file.type});if(error)return alert(error.message);let r=await db.from("messages").insert({sender_id:currentUser.id,receiver_id:activeFriend.id,content:"",media_path:path});if(r.error)return alert(r.error.message);el("chatMediaInput").value="";await loadMessages();await renderChatList();}
 function subscribeToMessages(){if(messageChannel)db.removeChannel(messageChannel);messageChannel=db.channel("jfc-messages-"+currentUser.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},async p=>{let m=p.new;if(m.sender_id!==currentUser.id&&m.receiver_id!==currentUser.id)return;if(activeFriend&&((m.sender_id===activeFriend.id&&m.receiver_id===currentUser.id)||(m.sender_id===currentUser.id&&m.receiver_id===activeFriend.id)))await renderMessage(m);await renderChatList();}).subscribe();}
 async function startPresence(){presenceChannel=db.channel("jfc-presence",{config:{presence:{key:currentUser.id}}});presenceChannel.on("presence",{event:"sync"},()=>{knownOnlineUsers=new Set(Object.keys(presenceChannel.presenceState()));updateConversationStatus();if(!activeFriend)renderChatList();}).subscribe(async s=>{if(s==="SUBSCRIBED")await presenceChannel.track({online_at:new Date().toISOString()});});}
 async function loadPresence(){updateConversationStatus();}
-async function createPost(){
- let text=el("postText").value.trim(),file=el("postMedia").files[0],visibility=el("postVisibility").value;if(!text&&!file)return alert("Write something or choose a picture/video.");if(file&&file.size>100*1024*1024)return alert("Choose a file smaller than 100 MB.");
- setStatus("Publishing post...");let postId=crypto.randomUUID(),path=null;if(file){path=currentUser.id+"/"+postId+"/"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");let {error}=await db.storage.from(POST_BUCKET).upload(path,file,{upsert:false,contentType:file.type});if(error){setStatus("Upload failed: "+error.message);return;}}
- let {error}=await db.from("posts").insert({id:postId,user_id:currentUser.id,content:text,media_path:path,media_type:file?(file.type.startsWith("video/")?"video":"image"):null,visibility});if(error){setStatus("Post could not be saved: "+error.message);return;}el("postText").value="";el("postMedia").value="";setStatus("Post published.");await loadPosts();
+
+/* POSTS: media is stored in a private bucket and accessed using signed URLs. */
+async function createPost(){let text=el("postText").value.trim(),file=el("postMedia").files[0],visibility=el("postVisibility").value;if(!text&&!file)return alert("Write something or choose a picture/video.");if(file&&file.size>100*1024*1024)return alert("Choose a file smaller than 100 MB.");setStatus("Publishing post...");let postId=crypto.randomUUID(),path=null;if(file){path=currentUser.id+"/"+postId+"/"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");let {error}=await db.storage.from(POST_BUCKET).upload(path,file,{upsert:false,contentType:file.type});if(error){setStatus("Upload failed: "+error.message);return;}}
+let {error}=await db.from("posts").insert({id:postId,user_id:currentUser.id,content:text,media_path:path,media_type:file?(file.type.startsWith("video/")?"video":"image"):null,visibility});if(error){setStatus("Post could not be saved: "+error.message);return;}el("postText").value="";el("postMedia").value="";setStatus("Post published.");await loadPosts();}
+async function loadPosts(){if(!currentUser)return;let box=el("postsFeed");box.innerHTML="<p>Loading posts...</p>";let {data:posts,error}=await db.from("posts").select("*").order("created_at",{ascending:false}).limit(100);if(error){box.innerHTML="<p>Could not load posts: "+esc(error.message)+"</p>";return;}posts=posts||[];if(!posts.length){box.innerHTML="<p>No posts yet. Be the first to publish something!</p>";return;}
+let ids=[...new Set(posts.map(p=>p.user_id))],profiles=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);profiles=r.data||[];}
+let {data:likes}=await db.from("post_likes").select("post_id,user_id").in("post_id",posts.map(p=>p.id));let {data:comments}=await db.from("post_comments").select("id,post_id,user_id,content,created_at").in("post_id",posts.map(p=>p.id)).order("created_at",{ascending:true});let commentUsers=[...new Set((comments||[]).map(c=>c.user_id))],commentProfiles=[];if(commentUsers.length){let r=await db.from("profiles").select("*").in("id",commentUsers);commentProfiles=r.data||[];}
+let getProfile=id=>profiles.find(p=>p.id===id)||commentProfiles.find(p=>p.id===id);let html=[];
+for(let p of posts){let own=p.user_id===currentUser.id;if(p.visibility==="private"&&!own)continue;let author=getProfile(p.user_id);let media="";if(p.media_path){let {data:sd,error:se}=await db.storage.from(POST_BUCKET).createSignedUrl(p.media_path,3600);if(!se&&sd?.signedUrl){let url=sd.signedUrl;if(p.media_type==="video")media=`<video class="post-media" controls playsinline preload="metadata" src="${esc(url)}"></video>`;else media=`<img class="post-media" src="${esc(url)}" alt="Post image">`;media+=`<div class="post-actions"><a href="${esc(url)}" target="_blank" rel="noopener"><button class="secondary">⬇️ Open / Save media</button></a><button class="secondary" onclick="sharePost('${p.id}')">↗️ Share</button></div>`;}}
+let pl=(likes||[]).filter(l=>l.post_id===p.id),pc=(comments||[]).filter(c=>c.post_id===p.id),liked=pl.some(l=>l.user_id===currentUser.id);
+let commentHtml=pc.map(c=>`<div class="comment"><strong>${esc(nameOf(getProfile(c.user_id)))}</strong>${esc(c.content)}<div class="muted">${esc(timeOf(c.created_at))}</div></div>`).join("");
+html.push(`<article class="post"><div class="post-head">${avatar(author)}<div class="flexinfo"><strong>${esc(nameOf(author))}</strong><div class="muted">${esc(timeOf(p.created_at))} · ${p.visibility==="public"?"🌍 Public":"🔒 Private"}</div></div>${own?`<button class="secondary" onclick="deletePost('${p.id}')">Delete</button>`:""}</div>${p.content?`<div class="post-body">${esc(p.content)}</div>`:""}${media}<div class="post-actions"><button class="${liked?"liked":""}" onclick="toggleLike('${p.id}',${liked})">❤️ ${liked?"Liked":"Like"} · ${pl.length}</button><button onclick="focusComment('${p.id}')">💬 Comment · ${pc.length}</button><button onclick="sharePost('${p.id}')">↗️ Share</button></div><div id="comments-${p.id}">${commentHtml}</div><div class="composer"><input id="commentInput-${p.id}" placeholder="Write a comment..."><button class="primary" onclick="addComment('${p.id}')">Send</button></div></article>`);
 }
-async function loadPosts(){
- if(!currentUser)return;let box=el("postsFeed");box.innerHTML="<p>Loading posts...</p>";let {data:posts,error}=await db.from("posts").select("*").order("created_at",{ascending:false}).limit(100);if(error){box.innerHTML="<p>Could not load posts: "+esc(error.message)+"</p>";return;}posts=posts||[];if(!posts.length){box.innerHTML="<p>No posts yet. Be the first to publish something!</p>";return;}
- let ids=[...new Set(posts.map(p=>p.user_id))],profiles=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);profiles=r.data||[];}let {data:likes}=await db.from("post_likes").select("post_id,user_id").in("post_id",posts.map(p=>p.id));let {data:comments}=await db.from("post_comments").select("id,post_id,user_id,content,created_at").in("post_id",posts.map(p=>p.id)).order("created_at",{ascending:true});let commentUsers=[...new Set((comments||[]).map(c=>c.user_id))],commentProfiles=[];if(commentUsers.length){let r=await db.from("profiles").select("*").in("id",commentUsers);commentProfiles=r.data||[];}let getProfile=id=>profiles.find(p=>p.id===id)||commentProfiles.find(p=>p.id===id),html=[];
- for(let p of posts){let own=p.user_id===currentUser.id;if(p.visibility==="private"&&!own)continue;let author=getProfile(p.user_id),media="";if(p.media_path){let {data:sd,error:se}=await db.storage.from(POST_BUCKET).createSignedUrl(p.media_path,3600);if(!se&&sd?.signedUrl){let url=sd.signedUrl;media=p.media_type==="video"?`<video class="post-media" controls playsinline preload="metadata" src="${esc(url)}"></video>`:`<img class="post-media" src="${esc(url)}" alt="Post image">`;}}
- let pl=(likes||[]).filter(l=>l.post_id===p.id),pc=(comments||[]).filter(c=>c.post_id===p.id),liked=pl.some(l=>l.user_id===currentUser.id),commentHtml=pc.map(c=>`<div class="comment"><strong>${esc(nameOf(getProfile(c.user_id)))}</strong>${esc(c.content)}<div class="muted">${esc(timeOf(c.created_at))}</div></div>`).join("");
- html.push(`<article class="post"><div class="post-head">${avatar(author)}<div class="flexinfo"><strong>${esc(nameOf(author))}</strong><div class="muted">${esc(timeOf(p.created_at))} · ${p.visibility==="public"?"🌍 Public":"🔒 Private"}</div></div>${own?`<button class="secondary" onclick="deletePost('${p.id}')">Delete</button>`:""}</div>${p.content?`<div class="post-body">${esc(p.content)}</div>`:""}${media}<div class="post-actions"><button class="${liked?"liked":""}" onclick="toggleLike('${p.id}',${liked})">❤️ ${liked?"Liked":"Like"} · ${pl.length}</button><button onclick="focusComment('${p.id}')">💬 Comment · ${pc.length}</button><button onclick="sharePost('${p.id}')">↗️ Share</button></div><div id="comments-${p.id}">${commentHtml}</div><div class="composer"><input id="commentInput-${p.id}" placeholder="Write a comment..."><button class="primary" onclick="addComment('${p.id}')">Send</button></div></article>`);
- }box.innerHTML=html.join("")||"<p>No posts visible to you.</p>";
+box.innerHTML=html.join("")||"<p>No posts visible to you.</p>";
 }
 async function toggleLike(postId,alreadyLiked){if(alreadyLiked){let {error}=await db.from("post_likes").delete().eq("post_id",postId).eq("user_id",currentUser.id);if(error)return alert(error.message);}else{let {error}=await db.from("post_likes").insert({post_id:postId,user_id:currentUser.id});if(error)return alert(error.message);}await loadPosts();}
 function focusComment(id){el("commentInput-"+id)?.focus();}
 async function addComment(postId){let input=el("commentInput-"+postId),content=input.value.trim();if(!content)return;let {error}=await db.from("post_comments").insert({post_id:postId,user_id:currentUser.id,content});if(error)return alert("Comment failed: "+error.message);input.value="";await loadPosts();}
 async function deletePost(id){if(!confirm("Delete this post?"))return;let {error}=await db.from("posts").delete().eq("id",id);if(error)return alert(error.message);await loadPosts();}
-async function sharePost(id){let url=location.href.split("#")[0]+"#post-"+id;if(navigator.share){try{await navigator.share({title:"JFriendsChat post",text:"See this post on JFriendsChat",url});return;}catch(e){}}try{await navigator.clipboard.writeText(url);alert("Post link copied.");}catch(e){prompt("Copy this link:",url);}}
+async function sharePost(id){let url=location.href.split("#")[0]+"#post-"+id;if(navigator.share){try{await navigator.share({title:"JFriendsChat post",text:"See this post on JFriendsChat",url});return;}catch(e){}}try{await navigator.clipboard.writeText(url);alert("Post link copied. Note: people may need to log in and the feed must be available to them.");}catch(e){prompt("Copy this link:",url);}}
+
+/* MARKETPLACE: requires the companion SQL setup file to be run in Supabase. */
 async function openBusiness(){hidePanels();setNav("businessNav");el("businessPanel").classList.remove("hidden");await loadBusiness();await loadProducts();}
-async function saveBusiness(){let business_name=el("bizName").value.trim(),location=el("bizLocation").value.trim(),phone=el("bizPhone").value.trim();if(!business_name||!location)return alert("Enter your business name and location.");let {error}=await db.from("business_profiles").upsert({user_id:currentUser.id,business_name,location,phone},{onConflict:"user_id"});if(error)return alert("Could not save business profile: "+error.message);setStatus("Business profile saved.");}
-async function loadBusiness(){let {data,error}=await db.from("business_profiles").select("*").eq("user_id",currentUser.id).maybeSingle();if(error){setStatus("Marketplace setup may be needed: "+error.message);return;}if(data){el("bizName").value=data.business_name||"";el("bizLocation").value=data.location||"";el("bizPhone").value=data.phone||"";}}
-async function publishProduct(){let name=el("productName").value.trim(),price=Number(el("productPrice").value),location=el("productLocation").value.trim(),details=el("productDetails").value.trim(),image_url=el("productImage").value.trim();if(!name||!location||!details||!el("productPrice").value)return alert("Enter product name, price, location, and description.");if(price<0)return alert("Price cannot be negative.");let {data:biz,error:be}=await db.from("business_profiles").select("id").eq("user_id",currentUser.id).maybeSingle();if(be)return alert(be.message);if(!biz)return alert("Please save your business profile first.");let {error}=await db.from("market_products").insert({seller_id:currentUser.id,business_id:biz.id,name,price,location,details,image_url:image_url||null});if(error)return alert("Product could not be published: "+error.message);["productName","productPrice","productLocation","productImage","productDetails"].forEach(id=>el(id).value="");await loadProducts();alert("Product published.");}
-async function loadProducts(){if(!currentUser)return;let box=el("productsFeed");if(!box)return;let q=(el("productSearch")?.value||"").trim(),req=db.from("market_products").select("*").order("created_at",{ascending:false}).limit(100);if(q)req=req.or(`name.ilike.%${q}%,location.ilike.%${q}%,details.ilike.%${q}%`);let {data,error}=await req;if(error){box.innerHTML="<p>Could not load marketplace: "+esc(error.message)+"</p>";return;}let items=data||[];if(!items.length){box.innerHTML="<p>No products yet. Be the first to advertise.</p>";return;}let ids=[...new Set(items.map(x=>x.seller_id))],profiles=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);profiles=r.data||[];}box.innerHTML=items.map(x=>{let seller=profiles.find(p=>p.id===x.seller_id);return `<article class="post">${x.image_url?`<img class="post-media" src="${esc(x.image_url)}" alt="${esc(x.name)}" loading="lazy">`:""}<h3>${esc(x.name)}</h3><strong>₦${Number(x.price).toLocaleString("en-NG")}</strong><p>${esc(x.details)}</p><p>📍 ${esc(x.location)}</p><p class="muted">Seller: ${esc(nameOf(seller))} · ${esc(timeOf(x.created_at))}</p>${x.seller_id!==currentUser.id?`<button class="primary" onclick="messageSeller('${x.seller_id}')">💬 Chat to Buy</button>`:`<span class="muted">Your listing</span> <button class="danger" onclick="deleteProduct('${x.id}')">Delete listing</button>`}</article>`;}).join("");}
-async function messageSeller(id){await loadChatFriends();if(chatFriends.some(p=>p.id===id)){await openChatHome();await openConversation(id);}else alert("Add the seller as a friend first to start chatting.");}
+async function saveBusiness(){let business_name=el("bizName").value.trim(),location=el("bizLocation").value.trim(),phone=el("bizPhone").value.trim();if(!business_name||!location)return alert("Enter your business name and location.");let {error}=await db.from("business_profiles").upsert({user_id:currentUser.id,business_name,location,phone},{onConflict:"user_id"});if(error)return alert("Could not save market account: "+error.message);setStatus("Market account saved.");}
+async function loadBusiness(){let {data,error}=await db.from("business_profiles").select("*").eq("user_id",currentUser.id).maybeSingle();if(error){el("productsFeed").innerHTML="<p>Marketplace setup needed. Run jfriendschat_marketplace_setup.sql in Supabase.</p>";return;}if(data){el("bizName").value=data.business_name||"";el("bizLocation").value=data.location||"";el("bizPhone").value=data.phone||"";}}
+async function publishProduct(){let name=el("productName").value.trim(),price=Number(el("productPrice").value),location=el("productLocation").value.trim(),details=el("productDetails").value.trim(),image_url=el("productImage").value.trim();if(!name||!location||!details||!el("productPrice").value)return alert("Enter product name, price, location, and description.");if(price<0)return alert("Price cannot be negative.");let {data:biz,error:be}=await db.from("business_profiles").select("id").eq("user_id",currentUser.id).maybeSingle();if(be)return alert(be.message);if(!biz)return alert("Please save your Market Account first.");let {error}=await db.from("market_products").insert({seller_id:currentUser.id,business_id:biz.id,name,price,location,details,image_url:image_url||null});if(error)return alert("Product could not be published: "+error.message);["productName","productPrice","productLocation","productImage","productDetails"].forEach(id=>el(id).value="");await loadProducts();alert("Product published to the marketplace.");}
+async function loadProducts(){if(!currentUser)return;let box=el("productsFeed");if(!box)return;let q=(el("productSearch")?.value||"").trim();let req=db.from("market_products").select("*").order("created_at",{ascending:false}).limit(100);if(q)req=req.or(`name.ilike.%${q}%,location.ilike.%${q}%,details.ilike.%${q}%`);let {data,error}=await req;if(error){box.innerHTML='<p>Could not load marketplace. Run the SQL setup file in Supabase. '+esc(error.message)+'</p>';return;}let items=data||[];if(!items.length){box.innerHTML="<p>No products yet. Be the first to advertise.</p>";return;}let ids=[...new Set(items.map(x=>x.seller_id))],profiles=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);profiles=r.data||[];}box.innerHTML=items.map(x=>{let seller=profiles.find(p=>p.id===x.seller_id);return `<article class="post">${x.image_url?`<img class="post-media" src="${esc(x.image_url)}" alt="${esc(x.name)}" loading="lazy">`:""}<h3>${esc(x.name)}</h3><strong>₦${Number(x.price).toLocaleString("en-NG")}</strong><p>${esc(x.details)}</p><p>📍 ${esc(x.location)}</p><p class="muted">Seller: ${esc(nameOf(seller))} · ${esc(timeOf(x.created_at))}</p>${x.seller_id!==currentUser.id?`<button class="primary" onclick="messageSeller('${x.seller_id}')">💬 Chat to Buy</button>`:`<span class="muted">Your listing</span> <button class="danger" onclick="deleteProduct('${x.id}')">Delete listing</button>`}</article>`}).join("");}
+async function messageSeller(id){await loadChatFriends();if(chatFriends.some(p=>p.id===id)){await openChatHome();await openConversation(id);}else alert("To protect users, chat-to-buy currently works with accepted JFriendsChat friends. Add the seller as a friend first.");}
 async function deleteProduct(id){if(!confirm("Delete this product listing?"))return;let {error}=await db.from("market_products").delete().eq("id",id).eq("seller_id",currentUser.id);if(error)return alert(error.message);await loadProducts();}
 async function openConnect(){hidePanels();setNav("connectNav");el("connectPanel").classList.remove("hidden");await loadMeetings();}
-async function createMeeting(){let title=el("meetingTitle").value.trim(),scheduled_at=el("meetingTime").value,capacity=Number(el("meetingCapacity").value),description=el("meetingDescription").value.trim();if(!title||!scheduled_at)return alert("Enter a title and meeting date/time.");if(new Date(scheduled_at)<=new Date())return alert("Choose a future date and time.");if(capacity<2||capacity>200)return alert("Capacity must be between 2 and 200.");let room="jfriendschat-"+crypto.randomUUID().replace(/-/g,"").slice(0,18),join_url="https://meet.jit.si/"+room;let {error}=await db.from("community_meetings").insert({host_id:currentUser.id,title,description,scheduled_at:new Date(scheduled_at).toISOString(),capacity,room_name:room,join_url});if(error)return alert("Meeting could not be saved: "+error.message);el("meetingTitle").value="";el("meetingDescription").value="";await loadMeetings();alert("Meeting created. Share the join link with participants. The public Jitsi service does not guarantee 200-person capacity.");}
-async function loadMeetings(){let box=el("meetingsFeed");if(!box)return;let {data,error}=await db.from("community_meetings").select("*").order("scheduled_at",{ascending:true}).limit(100);if(error){box.innerHTML="<p>Meeting setup may be needed: "+esc(error.message)+"</p>";return;}let ms=(data||[]).filter(m=>new Date(m.scheduled_at)>new Date()||m.host_id===currentUser.id);if(!ms.length){box.innerHTML="<p>No meetings scheduled yet.</p>";return;}let ids=[...new Set(ms.map(m=>m.host_id))],pr=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);pr=r.data||[];}box.innerHTML=ms.map(m=>`<article class="post"><h3>${esc(m.title)}</h3><p>${esc(m.description||"")}</p><p>🗓 ${esc(new Date(m.scheduled_at).toLocaleString())}</p><p>👥 Capacity: ${Number(m.capacity)} · Host: ${esc(nameOf(pr.find(p=>p.id===m.host_id)))}</p><button class="primary" onclick="window.open('${esc(m.join_url)}','_blank','noopener')">🎥 Join Meeting</button><button class="secondary" onclick="copyMeetingLink('${esc(m.join_url)}')">Copy Link</button>${m.host_id===currentUser.id?`<button class="danger" onclick="deleteMeeting('${m.id}')">Delete</button>`:""}</article>`).join("");}
+async function createMeeting(){let title=el("meetingTitle").value.trim(),scheduled_at=el("meetingTime").value,capacity=Number(el("meetingCapacity").value),description=el("meetingDescription").value.trim();if(!title||!scheduled_at)return alert("Enter a title and meeting date/time.");if(new Date(scheduled_at)<=new Date())return alert("Choose a future date and time.");if(capacity<2||capacity>200)return alert("Capacity must be between 2 and 200.");let room="jfriendschat-"+crypto.randomUUID().replace(/-/g,"").slice(0,18);let join_url="https://meet.jit.si/"+room;let {error}=await db.from("community_meetings").insert({host_id:currentUser.id,title,description,scheduled_at:new Date(scheduled_at).toISOString(),capacity,room_name:room,join_url});if(error)return alert("Meeting could not be saved. Run the SQL setup file. "+error.message);el("meetingTitle").value="";el("meetingDescription").value="";await loadMeetings();alert("Meeting created. Share the join link with participants. The public Jitsi service does not guarantee 200-person capacity; use a provider/plan that supports your expected attendance.");}
+async function loadMeetings(){let box=el("meetingsFeed");if(!box)return;let {data,error}=await db.from("community_meetings").select("*").order("scheduled_at",{ascending:true}).limit(100);if(error){box.innerHTML="<p>Meeting setup needed. Run jfriendschat_marketplace_setup.sql in Supabase.</p>";return;}let ms=(data||[]).filter(m=>new Date(m.scheduled_at)>new Date()||m.host_id===currentUser.id);if(!ms.length){box.innerHTML="<p>No meetings scheduled yet.</p>";return;}let ids=[...new Set(ms.map(m=>m.host_id))],pr=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);pr=r.data||[];}box.innerHTML=ms.map(m=>`<article class="post"><h3>${esc(m.title)}</h3><p>${esc(m.description||"")}</p><p>🗓 ${esc(new Date(m.scheduled_at).toLocaleString())}</p><p>👥 Capacity: ${Number(m.capacity)} people · Host: ${esc(nameOf(pr.find(p=>p.id===m.host_id)))}</p><button class="primary" onclick="window.open('${esc(m.join_url)}','_blank','noopener')">🎥 Join Meeting</button> <button class="secondary" onclick="copyMeetingLink('${esc(m.join_url)}')">Copy Link</button>${m.host_id===currentUser.id?` <button class="danger" onclick="deleteMeeting('${m.id}')">Delete</button>`:""}</article>`).join("");}
 async function copyMeetingLink(url){try{await navigator.clipboard.writeText(url);alert("Meeting link copied.");}catch(e){prompt("Copy meeting link:",url);}}
 async function deleteMeeting(id){if(!confirm("Delete this meeting?"))return;let {error}=await db.from("community_meetings").delete().eq("id",id).eq("host_id",currentUser.id);if(error)return alert(error.message);await loadMeetings();}
 async function openGroups(){hidePanels();setNav("groupsNav");el("groupsPanel").classList.remove("hidden");el("groupRoomPanel").classList.add("hidden");await loadGroups();}
-async function createGroup(){let name=el("groupName").value.trim(),description=el("groupDescription").value.trim();if(!name)return alert("Enter a group name.");let {data,error}=await db.from("community_groups").insert({name,description,created_by:currentUser.id}).select().single();if(error)return alert("Group could not be created: "+error.message);let r=await db.from("community_group_members").insert({group_id:data.id,user_id:currentUser.id});if(r.error)return alert("Group created, but membership failed: "+r.error.message);el("groupName").value="";el("groupDescription").value="";await loadGroups();await openGroupRoom(data.id,data.name);}
-async function loadGroups(){let box=el("groupsFeed");let {data:mine,error}=await db.from("community_group_members").select("group_id").eq("user_id",currentUser.id);if(error){box.innerHTML="<p>Group setup may be needed: "+esc(error.message)+"</p>";return;}let ids=(mine||[]).map(x=>x.group_id);if(!ids.length){box.innerHTML="<p>You have not joined any groups yet. Create one above.</p>";return;}let {data,error:e}=await db.from("community_groups").select("*").in("id",ids).order("created_at",{ascending:false});if(e){box.textContent=e.message;return;}box.innerHTML=(data||[]).map(g=>`<div class="row"><div class="flexinfo"><strong>${esc(g.name)}</strong><div class="muted">${esc(g.description||"Group chat")}</div></div><button class="primary" onclick="openGroupRoom('${g.id}',${JSON.stringify(g.name).replace(/</g,"\\u003c")})">Open Chat</button></div>`).join("")||"<p>No groups yet.</p>";}
+async function createGroup(){let name=el("groupName").value.trim(),description=el("groupDescription").value.trim();if(!name)return alert("Enter a group name.");let {data,error}=await db.from("community_groups").insert({name,description,created_by:currentUser.id}).select().single();if(error)return alert("Group could not be created. Run the SQL setup file. "+error.message);let r=await db.from("community_group_members").insert({group_id:data.id,user_id:currentUser.id});if(r.error)return alert("Group created, but membership failed: "+r.error.message);el("groupName").value="";el("groupDescription").value="";await loadGroups();await openGroupRoom(data.id,data.name);}
+async function loadGroups(){let box=el("groupsFeed");let {data:mine,error}=await db.from("community_group_members").select("group_id").eq("user_id",currentUser.id);if(error){box.innerHTML="<p>Group setup needed. Run jfriendschat_marketplace_setup.sql in Supabase.</p>";return;}let ids=(mine||[]).map(x=>x.group_id);if(!ids.length){box.innerHTML="<p>You have not joined any groups yet. Create one below.</p>";return;}let {data,error:e}=await db.from("community_groups").select("*").in("id",ids).order("created_at",{ascending:false});if(e){box.textContent=e.message;return;}box.innerHTML=(data||[]).map(g=>`<div class="row"><div class="flexinfo"><strong>${esc(g.name)}</strong><div class="muted">${esc(g.description||"Group chat")}</div></div><button class="primary" onclick="openGroupRoom('${g.id}','${esc(g.name).replace(/'/g,"&#39;")}')">Open Chat</button></div>`).join("")||"<p>No groups yet.</p>";}
 async function openGroupRoom(id,name){window.activeGroupId=id;el("groupRoomTitle").textContent=name;el("groupRoomPanel").classList.remove("hidden");await loadGroupMessages();}
 async function loadGroupMessages(){if(!window.activeGroupId)return;let {data,error}=await db.from("community_group_messages").select("*").eq("group_id",window.activeGroupId).order("created_at",{ascending:true}).limit(300);if(error){el("groupMessages").textContent=error.message;return;}let ids=[...new Set((data||[]).map(m=>m.user_id))],pr=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);pr=r.data||[];}el("groupMessages").innerHTML=(data||[]).map(m=>`<div class="message ${m.user_id===currentUser.id?"mine":""}"><strong>${esc(nameOf(pr.find(p=>p.id===m.user_id)))}</strong><div>${esc(m.content)}</div><small>${esc(timeOf(m.created_at))}</small></div>`).join("")||"<p>No messages yet. Say hello!</p>";el("groupMessages").scrollTop=el("groupMessages").scrollHeight;}
 async function sendGroupMessage(){let content=el("groupMessageInput").value.trim();if(!content||!window.activeGroupId)return;let {error}=await db.from("community_group_messages").insert({group_id:window.activeGroupId,user_id:currentUser.id,content});if(error)return alert(error.message);el("groupMessageInput").value="";await loadGroupMessages();}
-
-/* Founder tools call server-side Supabase functions; browser UI is not the security boundary. */
-let founderUsersCache=[];
-async function openFounder(){
- if(!isFounder()){alert("Founder access only.");return;}
- hidePanels();setNav("founderNav");el("founderPanel").classList.remove("hidden");
- await loadFounderStats();
-}
-async function founderRpc(name,args={}){
- const {data,error}=await db.rpc(name,args);
- if(error)throw new Error(error.message);
- return data;
-}
-async function loadFounderStats(){
- if(!isFounder()){alert("Founder access only.");return;}
- el("founderStatus").textContent="Loading statistics...";
- try{
-  const d=await founderRpc("jf_founder_stats");
-  el("founderUsers").textContent=Number(d.total_users||0).toLocaleString();
-  el("founderDAU").textContent=Number(d.daily_active_users||0).toLocaleString();
-  el("founderRevenue").textContent=Number(d.revenue_total||0).toLocaleString("en-NG",{style:"currency",currency:"NGN",maximumFractionDigits:2});
-  el("founderPendingShops").textContent=Number(d.pending_businesses||0).toLocaleString();
-  el("founderPosts").textContent=Number(d.total_posts||0).toLocaleString();
-  el("founderProducts").textContent=Number(d.total_products||0).toLocaleString();
-  el("founderMeetings").textContent=Number(d.total_meetings||0).toLocaleString();
-  el("founderAdmins").textContent=Number(d.total_admins||0).toLocaleString();
-  el("founderBanned").textContent=Number(d.total_banned_users||0).toLocaleString();
-  el("founderActive").textContent=Number(d.recent_signins_24h||0).toLocaleString();
-  el("founderStatus").textContent="Statistics refreshed at "+new Date().toLocaleTimeString()+".";
- }catch(e){el("founderStatus").textContent="Could not load statistics: "+e.message+". Run the matching Founder Dashboard SQL in Supabase first.";}
-}
-async function loadFounderUsers(){
- if(!isFounder())return alert("Founder access only.");
- el("founderUsersSection").classList.remove("hidden");el("founderPostsSection").classList.add("hidden");
- el("founderUsersList").textContent="Loading users...";
- try{founderUsersCache=await founderRpc("jf_list_users");renderFounderUsers();}
- catch(e){el("founderUsersList").textContent="Could not load users: "+e.message+". Run the matching SQL first.";}
-}
-function renderFounderUsers(){
- const box=el("founderUsersList");if(!box)return;box.replaceChildren();
- const term=(el("founderUserSearch")?.value||"").toLowerCase();
- const rows=(founderUsersCache||[]).filter(u=>String(u.email||"").toLowerCase().includes(term)||String(u.username||"").toLowerCase().includes(term));
- if(!rows.length){box.textContent="No matching users.";return;}
- for(const u of rows){
-  const row=document.createElement("div");row.className="row";
-  const info=document.createElement("div");info.className="flexinfo";
-  const title=document.createElement("strong");title.textContent=(u.username||"User")+" — "+(u.email||"no email");
-  const meta=document.createElement("div");meta.className="muted";meta.textContent="Joined: "+(u.created_at?new Date(u.created_at).toLocaleDateString():"unknown")+" · "+(u.is_admin?"Administrator":"Member")+" · "+(u.is_banned?"BANNED":"Active record");info.append(title,meta);row.append(info);
-  if(u.email!==FOUNDER_EMAIL){
-   const admin=document.createElement("button");admin.className="secondary";admin.textContent=u.is_admin?"Remove admin":"Make admin";admin.onclick=async()=>{if(!confirm((u.is_admin?"Remove administrator role from ":"Make ")+u.email+"?"))return;try{await founderRpc("jf_set_admin",{target_user:u.id,make_admin:!u.is_admin});await loadFounderUsers();await loadFounderStats();}catch(e){alert(e.message);}};row.append(admin);
-   const ban=document.createElement("button");ban.className=u.is_banned?"secondary":"danger";ban.textContent=u.is_banned?"Unban":"Ban";ban.onclick=async()=>{let reason=null;if(!u.is_banned){reason=prompt("Reason for banning this user (optional):")||null;if(!confirm("Record a ban for "+u.email+"?"))return;}try{await founderRpc("jf_set_banned",{target_user:u.id,should_ban:!u.is_banned,ban_reason:reason});await loadFounderUsers();await loadFounderStats();}catch(e){alert(e.message);}};row.append(ban);
-   const del=document.createElement("button");del.className="danger";del.textContent="Delete account";del.onclick=async()=>{if(!confirm("Permanently delete "+u.email+"? This cannot easily be undone."))return;try{await founderRpc("jf_delete_user",{target_user:u.id});alert("Account deleted.");await loadFounderUsers();await loadFounderStats();}catch(e){alert("Account deletion failed: "+e.message);}};row.append(del);
-  }
-  box.append(row);
- }
-}
-async function loadFounderPosts(){
- if(!isFounder())return alert("Founder access only.");
- el("founderPostsSection").classList.remove("hidden");el("founderUsersSection").classList.add("hidden");el("founderPostsList").textContent="Loading posts...";
- try{const posts=await founderRpc("jf_list_posts");const box=el("founderPostsList");box.replaceChildren();if(!posts.length){box.textContent="No posts found.";return;}
-  for(const p of posts){const row=document.createElement("div");row.className="row";const info=document.createElement("div");info.className="flexinfo";const content=document.createElement("div");content.textContent=String(p.content||"[Post]").slice(0,350);const meta=document.createElement("div");meta.className="muted";meta.textContent="Post ID: "+p.id+" · "+(p.created_at?new Date(p.created_at).toLocaleString():"");info.append(content,meta);const del=document.createElement("button");del.className="danger";del.textContent="Delete post";del.onclick=async()=>{if(!confirm("Delete this post permanently?"))return;try{await founderRpc("jf_delete_post",{target_post:String(p.id)});await loadFounderPosts();await loadFounderStats();}catch(e){alert(e.message);}};row.append(info,del);box.append(row);}
- }catch(e){el("founderPostsList").textContent="Could not load posts: "+e.message+". Run the matching SQL first.";}
-}
-
-function hideFounderSubsections(){["founderUsersSection","founderPostsSection","founderBusinessesSection","founderAnnouncementsSection","founderHealthSection","founderMonetizationSection"].forEach(id=>el(id)?.classList.add("hidden"));}
-async function founderSection(id){if(!isFounder())throw new Error("Founder access only.");hideFounderSubsections();el(id).classList.remove("hidden");}
-async function loadFounderBusinesses(){try{await founderSection("founderBusinessesSection");const box=el("founderBusinessesList");box.textContent="Loading business profiles...";const rows=await founderRpc("jf_list_businesses");box.replaceChildren();if(!rows?.length){box.textContent="No business profiles found.";return;}for(const b of rows){const row=document.createElement("div");row.className="row";const info=document.createElement("div");info.className="flexinfo";const title=document.createElement("strong");title.textContent=(b.business_name||"Business")+(b.is_verified?" ✓ VERIFIED":"");const meta=document.createElement("div");meta.className="muted";meta.textContent=(b.location||"No location")+" · Owner: "+(b.email||b.user_id||"Unknown")+" · Status: "+(b.is_verified?"Verified":"Pending review");info.append(title,meta);row.append(info);const btn=document.createElement("button");btn.className=b.is_verified?"secondary":"primary";btn.textContent=b.is_verified?"Revoke verification":"Verify shop";btn.onclick=async()=>{if(!confirm((b.is_verified?"Revoke verification for ":"Verify ")+(b.business_name||"this shop")+"?"))return;try{await founderRpc("jf_set_business_verified",{target_user:b.user_id,should_verify:!b.is_verified});await loadFounderBusinesses();await loadFounderStats();}catch(e){alert(e.message);}};row.append(btn);box.append(row);}}catch(e){el("founderBusinessesList").textContent="Could not load businesses: "+e.message+". Run the dashboard SQL extension.";}}
-async function sendFounderAnnouncement(){if(!isFounder())return alert("Founder access only.");const title=el("announcementTitle").value.trim(),body=el("announcementBody").value.trim();if(!title||!body)return alert("Enter both an announcement title and message.");if(!confirm("Publish this announcement for all signed-in JFriendsChat users?"))return;try{await founderRpc("jf_broadcast_announcement",{announcement_title:title,announcement_body:body});el("announcementTitle").value="";el("announcementBody").value="";alert("Announcement published.");await loadFounderAnnouncements();}catch(e){alert("Could not publish announcement: "+e.message+". Run the dashboard SQL extension first.");}}
-async function loadFounderAnnouncements(){try{await founderSection("founderAnnouncementsSection");const box=el("founderAnnouncementsList");box.textContent="Loading announcements...";const rows=await founderRpc("jf_list_announcements");box.replaceChildren();if(!rows?.length){box.textContent="No announcements published yet.";return;}for(const a of rows){const card=document.createElement("article");card.className="post";const h=document.createElement("h4");h.textContent=a.title||"Announcement";const p=document.createElement("p");p.textContent=a.body||"";const meta=document.createElement("div");meta.className="muted";meta.textContent=a.created_at?new Date(a.created_at).toLocaleString():"";card.append(h,p,meta);box.append(card);}}catch(e){el("founderAnnouncementsList").textContent="Could not load announcements: "+e.message+". Run the dashboard SQL extension first.";}}
-async function showLatestBroadcast(){if(!currentUser)return;const {data,error}=await db.from("jf_announcements").select("id,title,body,created_at").order("created_at",{ascending:false}).limit(1).maybeSingle();if(error||!data)return;const key="jf_seen_announcement_"+currentUser.id;if(localStorage.getItem(key)===data.id)return;localStorage.setItem(key,data.id);alert("📢 JFriendsChat announcement\n\n"+(data.title||"")+"\n\n"+(data.body||""));}
-async function loadFounderHealth(){try{await founderSection("founderHealthSection");const box=el("founderHealthList");box.textContent="Checking database setup...";const result=await founderRpc("jf_system_health");box.replaceChildren();for(const item of (result.checks||[])){const row=document.createElement("div");row.className="row";const info=document.createElement("div");info.className="flexinfo";const title=document.createElement("strong");title.textContent=item.name||"Check";const meta=document.createElement("div");meta.className="muted";meta.textContent=item.detail||"";info.append(title,meta);const status=document.createElement("span");status.textContent=item.ok?"✅ Ready":"❌ Missing";status.style.fontWeight="700";row.append(info,status);box.append(row);}const summary=document.createElement("p");summary.className="muted";summary.textContent="Checked at "+new Date().toLocaleString()+". "+(result.ok?"Required checks passed.":"Some setup items need attention.");box.prepend(summary);}catch(e){el("founderHealthList").textContent="Health check failed: "+e.message+". Run the dashboard SQL extension first.";}}
-async function loadFounderMonetization(){try{await founderSection("founderMonetizationSection");const box=el("founderMonetizationList");box.textContent="Loading monetization overview...";const d=await founderRpc("jf_monetization_overview");box.replaceChildren();const rows=[["Recorded gross revenue",Number(d.revenue_total||0).toLocaleString("en-NG",{style:"currency",currency:"NGN"})],["Transactions",Number(d.transaction_count||0).toLocaleString()],["Successful transactions",Number(d.successful_transactions||0).toLocaleString()],["Pending transactions",Number(d.pending_transactions||0).toLocaleString()],["Revenue today",Number(d.revenue_today||0).toLocaleString("en-NG",{style:"currency",currency:"NGN"})]];for(const [label,value] of rows){const row=document.createElement("div");row.className="row";const info=document.createElement("div");info.className="flexinfo";info.textContent=label;const strong=document.createElement("strong");strong.textContent=value;row.append(info,strong);box.append(row);}const note=document.createElement("p");note.className="muted";note.textContent="These figures come from recorded payment events only. They will remain zero until a payment provider or trusted server process records real transactions.";box.append(note);}catch(e){el("founderMonetizationList").textContent="Could not load monetization data: "+e.message+". Run the dashboard SQL extension first.";}}
 
 db.auth.getSession().then(async({data,error})=>{if(error){showAuthStatus(error.message);return;}if(data.session?.user)await startApp(data.session.user);});
 db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"){currentUser=null;currentProfile=null;}});
