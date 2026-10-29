@@ -115,17 +115,23 @@ nav{top:82px;width:220px}#appPanel{padding-left:235px}
 #chatHeading{font-size:26px;margin:0 0 18px;color:#102b57;letter-spacing:-.5px}
 .chat-search-wrap{display:flex;align-items:center;gap:9px;padding:5px 12px;background:#eef5ff;border:1px solid #e3edfc;border-radius:30px;margin-bottom:20px}.chat-search-wrap>span{font-size:26px;color:#42658e}.chat-search-wrap input{border:0!important;background:transparent!important;box-shadow:none!important;margin:0;min-width:0;padding:12px 2px}.filter-button{background:transparent;color:#315887;font-size:22px;padding:5px 8px}.online-friends-heading{display:flex;align-items:center;justify-content:space-between;font-weight:700;color:#152d54;margin:7px 2px 12px}.online-friends-heading span{display:flex;align-items:center;gap:7px}.online-friends-heading i{width:10px;height:10px;border-radius:50%;background:#16c784;display:inline-block}.online-friends-heading small{font-weight:500;color:#71829a}.online-friends-heading button{background:transparent;color:#7285a1;padding:4px;font-size:12px}.online-friends{display:flex;gap:17px;overflow-x:auto;padding:4px 1px 17px;margin-bottom:2px}.online-friend{flex:0 0 65px;text-align:center;cursor:pointer;color:#243a5e;font-size:12px}.online-friend .avatar{width:58px;height:58px;margin:0 auto 7px;border:3px solid #e8f2ff;position:relative}.online-friend .avatar:after{content:"";position:absolute;right:-1px;bottom:0;width:12px;height:12px;background:#12c987;border:2px solid white;border-radius:50%}.online-friend .online-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chat-list-row{padding:13px 7px;border-bottom:1px solid #edf2f8;min-height:88px;border-radius:13px;transition:background .18s}.chat-list-row:hover{background:#f0f6ff}.chat-list-row .avatar{width:60px;height:60px;min-width:60px;border:2px solid #edf4ff}.chat-list-name{font-size:15px;color:#102b57}.chat-list-time{color:#7b8ba3;font-size:12px}.chat-list-preview{font-size:13px;color:#71829c}.chat-list-status{font-size:0;width:10px;height:10px;background:#14c889;border-radius:50%}
-.conversation-top{display:flex;align-items:center;gap:10px;margin:-5px -4px 14px;padding:0 0 12px;border-bottom:1px solid #eaf0f8}.back-chat{background:#eef5ff;color:#135bbd;font-size:27px;padding:4px 12px}.conversation-avatar{width:43px;height:43px;border-radius:50%;background:#d9e9ff;color:#1469df;display:grid;place-items:center;flex-shrink:0}.conversation-title{flex:1;min-width:0}.conversation-title h3{margin:0;font-size:17px}.conversation-title .muted{margin-top:3px;font-size:12px}.conversation-tools{color:#1769e0;font-size:18px;white-space:nowrap}
+.conversation-top{display:flex;align-items:center;gap:10px;margin:-5px -4px 14px;padding:0 0 12px;border-bottom:1px solid #eaf0f8}.back-chat{background:#eef5ff;color:#135bbd;font-size:27px;padding:4px 12px}.conversation-avatar{width:43px;height:43px;border-radius:50%;background:#d9e9ff;color:#1469df;display:grid;place-items:center;flex-shrink:0}.conversation-title{flex:1;min-width:0}.conversation-title h3{margin:0;font-size:17px}.conversation-title .muted{margin-top:3px;font-size:12px}.conversation-tools{display:flex;align-items:center;gap:5px;flex-shrink:0}.call-icon{width:38px;height:38px;padding:0;border-radius:50%;display:grid;place-items:center;font-size:18px;box-shadow:0 2px 7px #1769e01a}.audio-call,.video-call{background:#e8f2ff;color:#075fd2}.more-call{background:#f2f5fa;color:#35577e}.conversation-top{position:relative;z-index:2;flex-shrink:0;background:#fff}.call-overlay{position:fixed;inset:0;background:#07172be8;z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;color:white}.call-card{width:min(100%,430px);background:#112746;border:1px solid #ffffff30;border-radius:24px;padding:22px;text-align:center;box-shadow:0 18px 60px #0005}.call-card h2{margin:8px 0}.call-avatar{width:82px;height:82px;border-radius:50%;margin:12px auto;background:#d9e9ff;color:#1769e0;display:grid;place-items:center;font-size:35px;overflow:hidden}.call-avatar img{width:100%;height:100%;object-fit:cover}.call-video-stage{position:relative;background:#07111f;border-radius:16px;overflow:hidden;min-height:190px;margin:14px 0}.call-video-stage video{width:100%;max-height:52vh;object-fit:cover}.call-video-stage #localVideo{position:absolute;right:8px;bottom:8px;width:92px;height:130px;border:2px solid white;border-radius:12px}.call-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px}.call-actions button{min-width:112px;border-radius:24px}.answer-call{background:#16a765;color:#fff}.decline-call{background:#e53945;color:#fff}.end-call{background:#e53945;color:#fff}.call-note{color:#c8d8ef;font-size:13px;line-height:1.45}.call-status{margin:8px 0;color:#d9e8ff}
 #messages{height:calc(100dvh - 300px);min-height:280px;max-height:650px;background-color:#f0f6ff;background-image:radial-gradient(#dce9fa 0.7px,transparent .7px);background-size:17px 17px;border:0;border-radius:18px;padding:16px;gap:12px}.message{max-width:82%;padding:12px 14px;border-radius:18px 18px 18px 5px;box-shadow:0 2px 5px #123b700d;line-height:1.45}.message.mine{background:#d6eaff;border-color:#c9e0ff;border-radius:18px 18px 5px 18px}.message small{font-size:10px;color:#7287a2}.message-composer{position:sticky;bottom:72px;background:white;border:1px solid #e5edf8;border-radius:30px;padding:5px;margin-top:12px;box-shadow:0 3px 12px #153b7110}.message-composer input{border:0!important;box-shadow:none!important;background:transparent!important;padding:11px 5px}.attach-button{display:grid;place-items:center;min-width:39px;height:39px;border-radius:50%;background:#0875ed;color:white;font-size:26px;cursor:pointer}.send-button{width:42px;height:42px;border-radius:50%;padding:0;background:#0868e8;color:white;font-size:21px}.media-picker{display:flex;justify-content:flex-end;margin-top:6px}.media-picker label{font-size:12px;color:#1769e0;background:#edf5ff;padding:7px 12px;border-radius:16px;cursor:pointer}.media-picker input{display:none}
-@media(max-width:760px){header{height:82px;padding:0 14px}.brand-mark{width:48px;height:48px}.brand-copy h2{font-size:22px}.brand-tagline{font-size:11px;max-width:225px}#appPanel{padding-left:0;padding-bottom:78px}nav{top:auto;bottom:0;left:0;right:0;width:100%;height:72px;padding:5px 4px;gap:2px;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;border-top:1px solid #e5edf8;box-shadow:0 -5px 18px #123b700c;background:#fff}nav button{flex:0 0 78px;width:78px;min-width:78px;height:60px;min-height:58px;padding:6px 2px;font-size:10px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}nav button.active{background:#e8f2ff;box-shadow:inset 0 -3px 0 #0875ed;color:#0875ed}#chatPanel{margin:10px 0 12px;padding:16px 13px;border-radius:24px 24px 0 0;min-height:calc(100dvh - 164px)}#chatHeading{font-size:24px}.online-friends{gap:12px}.online-friend{flex-basis:58px}.online-friend .avatar{width:54px;height:54px}.chat-list-row .avatar{width:54px;height:54px;min-width:54px}#messages{height:calc(100dvh - 320px);min-height:220px;max-height:none}.message-composer{bottom:77px}.conversation-tools{font-size:15px}}
+@media(max-width:760px){header{height:82px;padding:0 14px}.brand-mark{width:48px;height:48px}.brand-copy h2{font-size:22px}.brand-tagline{font-size:11px;max-width:225px}#appPanel{padding-left:0;padding-bottom:78px}nav{top:auto;bottom:0;left:0;right:0;width:100%;height:72px;padding:5px 4px;gap:2px;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;border-top:1px solid #e5edf8;box-shadow:0 -5px 18px #123b700c;background:#fff}nav button{flex:0 0 78px;width:78px;min-width:78px;height:60px;min-height:58px;padding:6px 2px;font-size:10px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}nav button.active{background:#e8f2ff;box-shadow:inset 0 -3px 0 #0875ed;color:#0875ed}#chatPanel{margin:10px 0 12px;padding:16px 13px;border-radius:24px 24px 0 0;min-height:calc(100dvh - 164px)}#chatHeading{font-size:24px}.online-friends{gap:12px}.online-friend{flex-basis:58px}.online-friend .avatar{width:54px;height:54px}.chat-list-row .avatar{width:54px;height:54px;min-width:54px}#messages{height:calc(100dvh - 320px);min-height:220px;max-height:none}.message-composer{bottom:77px}.conversation-tools{font-size:15px}.call-icon{width:34px;height:34px;font-size:16px}}
 @media(max-width:380px){.brand-copy h2{font-size:19px}.brand-tagline{max-width:175px}.header-actions{gap:3px}.profile-pill{padding:9px}.online-friend{flex-basis:53px}.online-friend .avatar{width:49px;height:49px}}
 
+
+/* While a private conversation is open, hide every main navigation tab until Back is pressed. */
+body.chat-open nav{display:none!important;}
 
 /* Full-screen conversation layout for mobile: keep the chat between header and bottom navigation. */
 @media(max-width:760px){
   body:has(#conversationView:not(.hidden)){overflow:hidden}
+  /* In an open conversation, hide the bottom tabs so the friend's header and messages get the full screen. */
+  body.chat-open nav{display:none!important}
+  body.chat-open #chatPanel{bottom:0!important}
   #chatPanel:has(#conversationView:not(.hidden)){
-    position:fixed!important;left:0!important;right:0!important;top:82px!important;bottom:72px!important;
+    position:fixed!important;left:0!important;right:0!important;top:82px!important;bottom:0!important;
     width:100%!important;max-width:none!important;height:auto!important;min-height:0!important;
     margin:0!important;padding:10px 12px 8px!important;border-radius:0!important;
     display:flex!important;flex-direction:column!important;overflow:hidden!important;z-index:90!important;
@@ -155,6 +161,11 @@ nav{top:82px;width:220px}#appPanel{padding-left:235px}
   #conversationView:not(.hidden){display:flex;flex-direction:column}
   #messages{height:calc(100vh - 285px);max-height:none}
 }
+
+
+/* Hide the large "Your Chats" title so the search bar sits directly beneath the fixed profile header. */
+#chatHeading{display:none!important;}
+#chatPanel{padding-top:14px;}
 
 </style>
 </head>
@@ -190,7 +201,7 @@ nav{top:82px;width:220px}#appPanel{padding-left:235px}
 <h3 id="chatHeading">Your Chats</h3>
 <div id="chatListView"><div class="chat-search-wrap"><span>⌕</span><input id="chatSearch" placeholder="Search chats or friends..." oninput="renderChatList()"><button class="filter-button" onclick="refreshChatList()" aria-label="Refresh chats">☷</button></div><div class="online-friends-heading"><span><i></i> Online Friends <small id="onlineFriendsCount">(0)</small></span><button onclick="renderOnlineFriends()">See all ›</button></div><div id="onlineFriends" class="online-friends"></div><div id="chatList"></div></div>
 <div id="conversationView" class="hidden">
-<div class="conversation-top"><button class="back-chat" onclick="backToChatList()" aria-label="Back to chats">‹</button><div id="conversationAvatar" class="conversation-avatar">●</div><div class="conversation-title"><h3 id="conversationName">Conversation</h3><div id="conversationStatus" class="muted">○ Offline</div></div><span class="conversation-tools">☎　▣　⋮</span></div><div id="messages"></div>
+<div class="conversation-top"><button class="back-chat" onclick="backToChatList()" aria-label="Back to chats">‹</button><div id="conversationAvatar" class="conversation-avatar">●</div><div class="conversation-title"><h3 id="conversationName">Conversation</h3><div id="conversationStatus" class="muted">○ Offline</div></div><div class="conversation-tools"><button class="call-icon audio-call" onclick="startCall('audio')" aria-label="Voice call" title="Voice call">📞</button><button class="call-icon video-call" onclick="startCall('video')" aria-label="Video call" title="Video call">📹</button><button class="call-icon more-call" onclick="showChatOptions()" aria-label="Chat options" title="Chat options">⋮</button></div></div><div id="messages"></div>
 <div class="composer message-composer"><label class="attach-button" for="chatMediaInput" title="Choose photo or video">＋</label><input id="messageInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()"><button class="send-button" onclick="sendMessage()" aria-label="Send message">➤</button></div><div class="media-picker"><label for="chatMediaInput">▧ Photo / Video</label><input type="file" id="chatMediaInput" accept="image/*,video/*" onchange="if(this.files.length)sendChatMedia()"></div>
 </div></section>
 
@@ -242,6 +253,7 @@ const SUPABASE_KEY="sb_publishable__uU2wBTvE8tWoAFoRSWVEA_AgJvZOqg";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const POST_BUCKET="social-posts";
 let currentUser=null,currentProfile=null,chatFriends=[],activeFriend=null;
+let callChannel=null,callPc=null,callLocalStream=null,callFriend=null,callMode="audio",incomingCallPayload=null,callPendingCandidates=[],ringAudioContext=null,ringTimer=null;
 let messageChannel=null,presenceChannel=null,knownOnlineUsers=new Set(),renderedMessages=new Set(),refreshTimer=null;
 const el=id=>document.getElementById(id);
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
@@ -256,7 +268,7 @@ function avatar(p){
  return `<div class="avatar">${esc(initials(nameOf(p)))}</div>`;
 }
 function timeOf(v){if(!v)return "";let d=new Date(v);if(isNaN(d))return "";return d.toDateString()===new Date().toDateString()?d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):d.toLocaleDateString([],{month:"short",day:"numeric"});}
-function hidePanels(){["chatPanel","friendsMenuPanel","friendsPanel","requestsPanel","searchPanel","postsPanel","accountPanel","businessPanel","connectPanel","groupsPanel","schoolPanel","companyPanel"].forEach(id=>el(id).classList.add("hidden"));}
+function hidePanels(){document.body.classList.remove("chat-open");["chatPanel","friendsMenuPanel","friendsPanel","requestsPanel","searchPanel","postsPanel","accountPanel","businessPanel","connectPanel","groupsPanel","schoolPanel","companyPanel"].forEach(id=>el(id).classList.add("hidden"));}
 function setNav(which){["chatNav","friendsNav","postsNav","businessNav","connectNav","groupsNav","companyNav","schoolNav"].forEach(id=>{const node=el(id);if(node)node.classList.toggle("active",id===which);});}
 // School Management frontend: uses the RPC functions created by the successful SQL setup.
 let activeSchoolId=null,schoolMembershipRows=[];
@@ -357,6 +369,7 @@ async function signOut(){
  if(refreshTimer)clearInterval(refreshTimer);
  if(presenceChannel)await db.removeChannel(presenceChannel);
  if(messageChannel)await db.removeChannel(messageChannel);
+ if(callChannel)await db.removeChannel(callChannel);callChannel=null;await endCall(true);
  await db.auth.signOut();currentUser=null;currentProfile=null;activeFriend=null;
  el("appPanel").classList.add("hidden");el("authPanel").classList.remove("hidden");
  el("accountButton").classList.add("hidden");showAuthStatus("Logged out.");
@@ -364,7 +377,7 @@ async function signOut(){
 async function startApp(user){
  currentUser=user;el("authPanel").classList.add("hidden");el("appPanel").classList.remove("hidden");el("accountButton").classList.remove("hidden");
  db.rpc("jf_record_activity").then(()=>{}).catch(()=>{});
- await ensureProfile();await loadChatFriends();openChatHome();await loadPresence();subscribeToMessages();await startPresence();
+ await ensureProfile();await loadChatFriends();openChatHome();await loadPresence();subscribeToMessages();await startPresence();await subscribeToCalls();
  if(refreshTimer)clearInterval(refreshTimer);
  refreshTimer=setInterval(async()=>{if(!currentUser)return;await loadChatFriends();if(!activeFriend)await renderChatList();if(!el("postsPanel").classList.contains("hidden"))await loadPosts();if(!el("businessPanel").classList.contains("hidden"))await loadProducts();if(!el("connectPanel").classList.contains("hidden"))await loadMeetings();if(!el("groupsPanel").classList.contains("hidden")&&window.activeGroupId&&!el("groupRoomPanel").classList.contains("hidden"))await loadGroupMessages();if(!el("schoolPanel").classList.contains("hidden"))await loadSchoolWorkspace();if(!el("companyPanel").classList.contains("hidden"))await loadCompany();},20000);
 }
@@ -378,10 +391,10 @@ async function ensureProfile(){
 }
 function toggleAccount(){hidePanels();setNav(null);el("accountPanel").classList.remove("hidden");el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile);}
 async function updateUsername(){let username=el("newUsername").value.trim();if(!username)return alert("Enter a username.");let {data,error}=await db.from("profiles").update({username}).eq("id",currentUser.id).select().single();if(error)return alert(error.message);currentProfile=data;el("newUsername").value="";el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile);alert("Username updated.");}
-async function openChatHome(){hidePanels();setNav("chatNav");el("chatPanel").classList.remove("hidden");el("chatListView").classList.remove("hidden");el("conversationView").classList.add("hidden");el("chatHeading").textContent="Your Chats";activeFriend=null;await loadChatFriends();await renderChatList();}
+async function openChatHome(){document.body.classList.remove("chat-open");hidePanels();setNav("chatNav");el("chatPanel").classList.remove("hidden");el("chatListView").classList.remove("hidden");el("conversationView").classList.add("hidden");el("chatHeading").textContent="Your Chats";activeFriend=null;await loadChatFriends();await renderChatList();}
 function openFriendsMenu(){hidePanels();setNav("friendsNav");el("friendsMenuPanel").classList.remove("hidden");}
 async function openPosts(){hidePanels();setNav("postsNav");el("postsPanel").classList.remove("hidden");await loadPosts();}
-function backToChatList(){activeFriend=null;el("conversationView").classList.add("hidden");el("chatListView").classList.remove("hidden");el("chatHeading").textContent="Your Chats";renderChatList();}
+function backToChatList(){document.body.classList.remove("chat-open");activeFriend=null;el("conversationView").classList.add("hidden");el("chatListView").classList.remove("hidden");el("chatHeading").textContent="Your Chats";renderChatList();}
 async function openFriendsList(){hidePanels();setNav("friendsNav");el("friendsPanel").classList.remove("hidden");await loadFriendsList();}
 async function openRequests(){hidePanels();setNav("friendsNav");el("requestsPanel").classList.remove("hidden");await loadRequests();}
 async function openFindFriends(){hidePanels();setNav("friendsNav");el("searchPanel").classList.remove("hidden");await searchFriends();}
@@ -423,7 +436,7 @@ async function renderChatList(){
  box.innerHTML=rows.length?rows.map(({f,m})=>`<div class="chat-list-row" onclick="openConversation('${f.id}')">${avatar(f)}<div class="chat-list-main"><div class="chat-list-top"><div class="chat-list-name">${esc(nameOf(f))}</div><span class="chat-list-time">${esc(timeOf(m?.created_at))}</span></div><div class="chat-list-bottom"><div class="chat-list-preview">${esc(m?preview(m):(knownOnlineUsers.has(f.id)?"● Online":"Tap to chat"))}</div>${knownOnlineUsers.has(f.id)?'<span class="chat-list-status">Online</span>':''}</div></div></div>`).join(""):"<p>No matching chats.</p>";
 }
 async function refreshChatList(){await loadChatFriends();await renderChatList();}
-async function openConversation(id){await loadChatFriends();activeFriend=chatFriends.find(p=>p.id===id);if(!activeFriend)return alert("This user is not an accepted friend.");el("chatListView").classList.add("hidden");el("conversationView").classList.remove("hidden");el("conversationName").textContent=nameOf(activeFriend);el("conversationAvatar").innerHTML=avatar(activeFriend);updateConversationStatus();await loadMessages();}
+async function openConversation(id){await loadChatFriends();activeFriend=chatFriends.find(p=>p.id===id);if(!activeFriend)return alert("This user is not an accepted friend.");hidePanels();setNav("chatNav");el("chatPanel").classList.remove("hidden");document.body.classList.add("chat-open");el("chatListView").classList.add("hidden");el("conversationView").classList.remove("hidden");el("conversationName").textContent=nameOf(activeFriend);el("conversationAvatar").innerHTML=avatar(activeFriend);updateConversationStatus();await loadMessages();}
 function updateConversationStatus(){if(activeFriend)el("conversationStatus").textContent=knownOnlineUsers.has(activeFriend.id)?"● Online":"○ Offline";}
 async function mediaURL(path){if(!path)return null;let r=await db.storage.from("chat-media").createSignedUrl(path,3600);if(!r.error&&r.data?.signedUrl)return r.data.signedUrl;let pub=db.storage.from("chat-media").getPublicUrl(path);return pub.data?.publicUrl||null;}
 async function loadMessages(){
@@ -512,6 +525,82 @@ async function loadGroups(){let box=el("groupsFeed");let {data:mine,error}=await
 async function openGroupRoom(id,name){window.activeGroupId=id;el("groupRoomTitle").textContent=name;el("groupRoomPanel").classList.remove("hidden");await loadGroupMessages();}
 async function loadGroupMessages(){if(!window.activeGroupId)return;let {data,error}=await db.from("community_group_messages").select("*").eq("group_id",window.activeGroupId).order("created_at",{ascending:true}).limit(300);if(error){el("groupMessages").textContent=error.message;return;}let ids=[...new Set((data||[]).map(m=>m.user_id))],pr=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);pr=r.data||[];}el("groupMessages").innerHTML=(data||[]).map(m=>`<div class="message ${m.user_id===currentUser.id?"mine":""}"><strong>${esc(nameOf(pr.find(p=>p.id===m.user_id)))}</strong><div>${esc(m.content)}</div><small>${esc(timeOf(m.created_at))}</small></div>`).join("")||"<p>No messages yet. Say hello!</p>";el("groupMessages").scrollTop=el("groupMessages").scrollHeight;}
 async function sendGroupMessage(){let content=el("groupMessageInput").value.trim();if(!content||!window.activeGroupId)return;let {error}=await db.from("community_group_messages").insert({group_id:window.activeGroupId,user_id:currentUser.id,content});if(error)return alert(error.message);el("groupMessageInput").value="";await loadGroupMessages();}
+
+// Voice/video calling uses Supabase Realtime Broadcast for signaling and WebRTC for media.
+// The recipient must be signed in with this page open; closed-app ringing requires push notifications/native app support.
+async function subscribeToCalls(){
+ if(!currentUser)return;
+ if(callChannel)await db.removeChannel(callChannel);
+ callChannel=db.channel("jfc-call-"+currentUser.id,{config:{broadcast:{self:false}}});
+ callChannel.on("broadcast",{event:"signal"},async({payload})=>{if(!payload||payload.to!==currentUser.id)return;await handleCallSignal(payload);});
+ callChannel.subscribe(status=>{if(status==="SUBSCRIBED")console.log("Call signaling ready");});
+}
+async function sendCallSignal(to,kind,data={}){
+ const channel=db.channel("jfc-call-"+to,{config:{broadcast:{self:false}}});
+ await new Promise(resolve=>{let done=false;const timer=setTimeout(()=>{if(!done){done=true;resolve();}},2500);channel.subscribe(status=>{if(status==="SUBSCRIBED"&&!done){done=true;clearTimeout(timer);resolve();}});});
+ const result=await channel.send({type:"broadcast",event:"signal",payload:{to,from:currentUser.id,fromName:nameOf(currentProfile),kind,...data}});
+ setTimeout(()=>{try{db.removeChannel(channel)}catch(e){}},1500);return result;
+}
+function showCallOverlay(){el("callOverlay").classList.remove("hidden");}
+function startIncomingRingtone(){stopIncomingRingtone();try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;ringAudioContext=new AC();const beep=()=>{if(!ringAudioContext)return;try{const osc=ringAudioContext.createOscillator(),gain=ringAudioContext.createGain();osc.type="sine";osc.frequency.value=880;gain.gain.setValueAtTime(0.0001,ringAudioContext.currentTime);gain.gain.exponentialRampToValueAtTime(0.11,ringAudioContext.currentTime+0.03);gain.gain.setValueAtTime(0.11,ringAudioContext.currentTime+0.22);gain.gain.exponentialRampToValueAtTime(0.0001,ringAudioContext.currentTime+0.28);osc.connect(gain);gain.connect(ringAudioContext.destination);osc.start();osc.stop(ringAudioContext.currentTime+0.3);}catch(e){}};beep();ringTimer=setInterval(beep,850);}catch(e){}try{navigator.vibrate?.([300,150,300,500,300,150,300]);}catch(e){}}
+function stopIncomingRingtone(){if(ringTimer){clearInterval(ringTimer);ringTimer=null;}if(ringAudioContext){ringAudioContext.close().catch(()=>{});ringAudioContext=null;}try{navigator.vibrate?.(0);}catch(e){}}
+function setCallStatus(s){el("callStatus").textContent=s;}
+function resetCallUI(){el("incomingCallActions").classList.add("hidden");el("activeCallActions").classList.add("hidden");el("callVideoStage").classList.add("hidden");el("remoteVideo").srcObject=null;el("localVideo").srcObject=null;el("remoteAudio").srcObject=null;el("toggleCameraBtn").classList.add("hidden");}
+async function startCall(mode){
+ if(!currentUser||!activeFriend)return alert("Open a friend's chat before calling.");
+ if(!navigator.mediaDevices?.getUserMedia||!window.RTCPeerConnection)return alert("Voice/video calls need a supported browser and HTTPS. Open your published GitHub Pages site in Chrome.");
+ if(!callChannel)await subscribeToCalls();
+ callFriend=activeFriend;callMode=mode;incomingCallPayload=null;showCallOverlay();resetCallUI();
+ el("callKindLabel").textContent=mode==="video"?"📹 Video call":"📞 Voice call";el("callPeerName").textContent=nameOf(callFriend);el("callAvatar").innerHTML=el("conversationAvatar").innerHTML;setCallStatus("Calling… waiting for your friend");el("activeCallActions").classList.remove("hidden");
+ try{
+  callLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:mode==="video"});
+  if(mode==="video"){el("callVideoStage").classList.remove("hidden");el("localVideo").srcObject=callLocalStream;el("toggleCameraBtn").classList.remove("hidden");}
+  callPc=makeCallPeer();callLocalStream.getTracks().forEach(t=>callPc.addTrack(t,callLocalStream));
+  const offer=await callPc.createOffer();await callPc.setLocalDescription(offer);
+  await sendCallSignal(callFriend.id,"offer",{mode,description:offer});
+ }catch(e){setCallStatus("Call could not start: "+e.message);el("activeCallActions").classList.remove("hidden");}
+}
+function makeCallPeer(){
+ const pc=new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]});
+ pc.onicecandidate=e=>{if(e.candidate&&callFriend)sendCallSignal(callFriend.id,"ice",{candidate:e.candidate.toJSON()}).catch(()=>{});};
+ pc.ontrack=e=>{const stream=e.streams?.[0];if(!stream)return;if(callMode==="video"){el("remoteVideo").srcObject=stream;el("callVideoStage").classList.remove("hidden");}else el("remoteAudio").srcObject=stream;setCallStatus("Connected");};
+ pc.onconnectionstatechange=()=>{if(pc.connectionState==="connected")setCallStatus("Connected");else if(pc.connectionState==="failed")setCallStatus("Could not connect. Your network may require a TURN relay.");else if(pc.connectionState==="disconnected")setCallStatus("Connection interrupted…");};return pc;
+}
+async function handleCallSignal(p){
+ if(p.kind==="ice"&&!callFriend&&p.candidate){callPendingCandidates.push({from:p.from,candidate:p.candidate});return;}
+ if(p.kind==="offer"){
+  if(callFriend||!activeFriend&&el("callOverlay")&&!el("callOverlay").classList.contains("hidden")){await sendCallSignal(p.from,"busy");return;}
+  callFriend={id:p.from,username:p.fromName,full_name:p.fromName};callMode=p.mode||"audio";startIncomingRingtone();callPendingCandidates=callPendingCandidates.filter(x=>{if(x&&x.from===p.from)return true;return false;}).map(x=>x.candidate);incomingCallPayload=p;showCallOverlay();resetCallUI();el("callKindLabel").textContent=callMode==="video"?"📹 Incoming video call":"📞 Incoming voice call";el("callPeerName").textContent=p.fromName||"Your friend";el("callAvatar").textContent=callMode==="video"?"📹":"☎";setCallStatus("Incoming call…");el("incomingCallActions").classList.remove("hidden");return;
+ }
+ if(!callFriend||p.from!==callFriend.id)return;
+ if(p.kind==="answer"&&callPc){await callPc.setRemoteDescription(new RTCSessionDescription(p.description));for(const c of callPendingCandidates.splice(0)){try{await callPc.addIceCandidate(new RTCIceCandidate(c));}catch(e){}}setCallStatus("Connecting…");}
+ else if(p.kind==="ice"&&p.candidate&&callPc){if(callPc.remoteDescription)try{await callPc.addIceCandidate(new RTCIceCandidate(p.candidate));}catch(e){}else callPendingCandidates.push(p.candidate);}
+ else if(p.kind==="decline"){setCallStatus("Your friend declined the call.");setTimeout(()=>endCall(true),1800);}
+ else if(p.kind==="hangup"){setCallStatus("Call ended.");setTimeout(()=>endCall(true),900);}
+ else if(p.kind==="busy"){setCallStatus("Your friend is on another call.");setTimeout(()=>endCall(true),1800);}
+}
+async function acceptIncomingCall(){
+ if(!incomingCallPayload||!callFriend)return;stopIncomingRingtone();
+ el("incomingCallActions").classList.add("hidden");el("activeCallActions").classList.remove("hidden");setCallStatus("Connecting…");
+ try{
+  callLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:callMode==="video"});
+  if(callMode==="video"){el("callVideoStage").classList.remove("hidden");el("localVideo").srcObject=callLocalStream;el("toggleCameraBtn").classList.remove("hidden");}
+  callPc=makeCallPeer();callLocalStream.getTracks().forEach(t=>callPc.addTrack(t,callLocalStream));
+  await callPc.setRemoteDescription(new RTCSessionDescription(incomingCallPayload.description));
+  for(const c of callPendingCandidates.splice(0)){try{await callPc.addIceCandidate(new RTCIceCandidate(c));}catch(e){}}
+  const answer=await callPc.createAnswer();await callPc.setLocalDescription(answer);await sendCallSignal(callFriend.id,"answer",{description:answer});incomingCallPayload=null;
+ }catch(e){setCallStatus("Could not answer: "+e.message);}
+}
+async function declineIncomingCall(){stopIncomingRingtone();if(callFriend)await sendCallSignal(callFriend.id,"decline");await endCall(true);}
+async function endCall(silent=false){
+ stopIncomingRingtone();const friend=callFriend;if(!silent&&friend)await sendCallSignal(friend.id,"hangup").catch(()=>{});
+ if(callPc){callPc.ontrack=null;callPc.onicecandidate=null;callPc.close();callPc=null;}
+ if(callLocalStream){callLocalStream.getTracks().forEach(t=>t.stop());callLocalStream=null;}
+ callFriend=null;incomingCallPayload=null;callPendingCandidates=[];resetCallUI();el("callOverlay").classList.add("hidden");
+}
+function toggleCallMute(){if(!callLocalStream)return;const track=callLocalStream.getAudioTracks()[0];if(!track)return;track.enabled=!track.enabled;el("toggleMuteBtn").textContent=track.enabled?"🎙 Mute":"🔇 Unmute";}
+function toggleCallCamera(){if(!callLocalStream)return;const track=callLocalStream.getVideoTracks()[0];if(!track)return;track.enabled=!track.enabled;el("toggleCameraBtn").textContent=track.enabled?"📷 Camera off":"📷 Camera on";}
+function showChatOptions(){alert("JFriendsChat: use the call buttons for voice and video calls. Messages scroll inside the chat area while the friend header stays fixed.");}
 
 db.auth.getSession().then(async({data,error})=>{if(error){showAuthStatus(error.message);return;}if(data.session?.user)await startApp(data.session.user);});
 db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"){currentUser=null;currentProfile=null;}});
