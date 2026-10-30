@@ -230,6 +230,70 @@ body.chat-open nav{display:none!important;}
   body.chat-open .media-picker{flex:0 0 auto!important;margin:5px 0 0!important;}
 }
 
+
+
+/* JFriendsChat Facebook-inspired clean social layout */
+:root{--blue:#0866ff;--darkblue:#0756d8;--lightblue:#e7f3ff;--page:#f0f2f5;--text:#1c1e21;--muted:#65676b;--border:#e4e6eb;--green:#31a24c}
+html{background:#f0f2f5}
+body{background:#f0f2f5;color:#1c1e21;font-family:Arial,Helvetica,sans-serif}
+header{height:72px!important;padding:0 22px!important;background:#fff!important;color:#1c1e21!important;border-bottom:1px solid #dddfe2;box-shadow:0 1px 3px #00000012!important;z-index:120}
+header h2,.brand-copy h2{color:#0866ff!important;font-weight:800!important;letter-spacing:-.7px}
+.brand-mark{background:#0866ff!important;color:#fff!important;border:0!important;box-shadow:none!important}
+.brand-tagline{color:#65676b!important}
+.profile-pill{background:#e7f3ff!important;color:#0866ff!important;border-radius:24px!important}
+#appPanel{padding-left:235px!important;min-height:calc(100vh - 72px)!important}
+nav{top:72px!important;width:215px!important;background:#f0f2f5!important;border-right:1px solid #e4e6eb!important;padding:18px 12px!important;gap:5px!important}
+nav button{color:#303846!important;border-radius:10px!important;font-weight:650!important;min-height:46px!important}
+nav button:hover{background:#e4e6eb!important}
+nav button.active{background:#e7f3ff!important;color:#0866ff!important;box-shadow:inset 3px 0 #0866ff!important}
+.container{padding:18px 22px!important}
+#chatPanel,#friendsMenuPanel,#friendsPanel,#requestsPanel,#searchPanel,#accountPanel,#postsPanel,#businessPanel,#connectPanel,#groupsPanel{max-width:940px!important;margin-left:auto!important;margin-right:auto!important}
+.card,.post,#chatPanel{background:#fff!important;border:1px solid #e4e6eb!important;border-radius:12px!important;box-shadow:0 1px 2px #00000012!important}
+.card,.post{padding:18px!important;margin-bottom:14px!important}
+.card h3,.post h3,.card h4{color:#1c1e21!important}
+button{border-radius:8px!important;font-weight:650!important}
+button.primary,.primary{background:#0866ff!important;color:#fff!important}
+button.secondary,.secondary{background:#e4e6eb!important;color:#1c1e21!important}
+button.danger,.danger{background:#ffebe9!important;color:#b42318!important}
+input,textarea,select{border:1px solid #ccd0d5!important;border-radius:8px!important;background:#fff!important;color:#1c1e21!important}
+input:focus,textarea:focus,select:focus{border-color:#0866ff!important;box-shadow:0 0 0 2px #0866ff20!important}
+.chat-search-wrap{background:#f0f2f5!important;border:0!important;border-radius:22px!important}
+.online-friends-heading{color:#1c1e21!important}
+.online-friend{color:#1c1e21!important}
+.online-friend .avatar{border-color:#0866ff!important}
+.chat-list-row{border-radius:10px!important;border-bottom:1px solid #f0f2f5!important}
+.chat-list-row:hover{background:#f0f2f5!important}
+.chat-list-name{color:#1c1e21!important}
+.chat-list-preview,.muted{color:#65676b!important}
+.avatar{background:linear-gradient(145deg,#dbeafe,#93c5fd)!important;color:#0756d8!important}
+#messages,#groupMessages{background:#f0f2f5!important;border:0!important;border-radius:12px!important}
+.message{background:#e4e6eb!important;border:0!important;color:#1c1e21!important;box-shadow:none!important}
+.message.mine{background:#0866ff!important;color:#fff!important;border:0!important}
+.message.mine small{color:#e8f0ff!important}
+.post-actions button{background:#f0f2f5!important;color:#4b5563!important}
+.post-actions button.liked,.post-actions button:hover{background:#e7f3ff!important;color:#0866ff!important}
+.comment{background:#f0f2f5!important}
+.submenu button{background:#e7f3ff!important;color:#0866ff!important}
+.stat-box{background:#f7f8fa!important;border:1px solid #e4e6eb!important}
+.stat-box strong{color:#0866ff!important}
+.company-hero{background:linear-gradient(120deg,#0866ff,#3b82f6)!important;border-radius:14px!important}
+.company-section,.company-stat{border:1px solid #e4e6eb!important;border-radius:12px!important;box-shadow:0 1px 2px #0000000a!important}
+footer{color:#65676b!important}
+@media(max-width:760px){
+ header{height:72px!important;padding:0 12px!important}
+ .brand-mark{width:43px!important;height:43px!important;font-size:24px!important}
+ .brand-copy h2{font-size:20px!important}
+ .brand-tagline{max-width:175px!important;font-size:11px!important}
+ #appPanel{padding-left:0!important;padding-bottom:76px!important}
+ nav{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;height:66px!important;padding:5px 3px!important;background:#fff!important;border-top:1px solid #dddfe2!important;box-shadow:0 -1px 5px #00000010!important;z-index:130!important}
+ nav button{flex:0 0 82px!important;width:82px!important;min-width:82px!important;height:54px!important;min-height:50px!important;padding:6px 3px!important;font-size:10px!important;border-radius:8px!important}
+ nav button.active{background:#e7f3ff!important;box-shadow:inset 0 -3px #0866ff!important}
+ .container{padding:10px!important}
+ .card,.post{padding:14px!important;border-radius:10px!important}
+ #chatPanel{margin:8px 0 12px!important;padding:14px 12px!important;border-radius:12px!important;min-height:calc(100dvh - 160px)!important}
+ #chatPanel:has(#conversationView:not(.hidden)){border-radius:0!important}
+}
+
 </style>
 </head>
 <body>
@@ -290,6 +354,7 @@ body.chat-open nav{display:none!important;}
 <button id="friendsNav" onclick="openFriendsMenu()">👥 Friends</button>
 <button id="postsNav" onclick="openPosts()">📰 Posts</button>
 <button id="businessNav" onclick="openBusiness()">🏪 Business</button>
+<button id="companyNav" onclick="openCompany()">🏢 Company</button>
 <button id="connectNav" onclick="openConnect()">🎥 Connect</button>
 <button id="groupsNav" onclick="openGroups()">👥 My Groups</button>
 <button id="schoolNav" onclick="openSchool()">🏫 School</button>
@@ -340,9 +405,34 @@ body.chat-open nav{display:none!important;}
  <div class="company-section"><h3>🔒 Privacy note</h3><p class="muted">Worker names are labels only in this version; they do not receive separate logins or shared team access. Confirm financial totals against actual receipts and bank records.</p></div>
 </section>
 
-<section id="accountPanel" class="card hidden"><h3>My Profile</h3><div id="accountDetails"></div><input id="newUsername" placeholder="New username"><button class="primary" onclick="updateUsername()">Save Username</button><button class="danger" onclick="signOut()">Log Out</button></section>
+<section id="accountPanel" class="card hidden"><h3>My Profile</h3><div id="accountDetails"></div><input id="accountNewUsername" placeholder="New username"><button class="primary" onclick="updateUsername()">Save Username</button><button class="danger" onclick="signOut()">Log Out</button></section>
 
 </section></div>
+
+<div id="callOverlay" class="call-overlay hidden" role="dialog" aria-modal="true" aria-label="JFriendsChat call">
+  <div class="call-card">
+    <div id="callKindLabel">Voice call</div>
+    <div id="callAvatar" class="call-avatar">☎</div>
+    <h2 id="callPeerName">Friend</h2>
+    <div id="callStatus" class="call-status" aria-live="polite">Calling…</div>
+    <div id="callVideoStage" class="call-video-stage hidden">
+      <video id="remoteVideo" autoplay playsinline></video>
+      <video id="localVideo" autoplay muted playsinline></video>
+    </div>
+    <audio id="remoteAudio" autoplay></audio>
+    <div id="incomingCallActions" class="call-actions hidden">
+      <button class="answer-call" onclick="acceptIncomingCall()">Answer</button>
+      <button class="decline-call" onclick="declineIncomingCall()">Decline</button>
+    </div>
+    <div id="activeCallActions" class="call-actions hidden">
+      <button class="secondary" id="toggleMuteBtn" onclick="toggleCallMute()">🎙 Mute</button>
+      <button class="secondary hidden" id="toggleCameraBtn" onclick="toggleCallCamera()">📷 Camera off</button>
+      <button class="end-call" onclick="endCall()">End call</button>
+    </div>
+    <p class="call-note">Keep JFriendsChat open while calling. Your browser may ask for microphone or camera permission.</p>
+  </div>
+</div>
+
 <footer>JFriendsChat © 2026 · Connect with friends and relatives ❤️</footer>
 
 <script>
@@ -467,7 +557,7 @@ async function signUp(){
   return showAuthStatus("Please complete all required fields.");
  if(!/^[a-zA-Z0-9_.]{3,30}$/.test(username))
   return showAuthStatus("Username must be 3–30 characters and use only letters, numbers, dots or underscores.");
- if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email))
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
   return showAuthStatus("Enter a valid email address.");
  if(password.length<8)return showAuthStatus("Your password must be at least 8 characters.");
  if(password!==confirm)return showAuthStatus("The passwords do not match.");
@@ -543,7 +633,7 @@ async function ensureProfile(){
  if(r.error)setStatus("Profile setup failed: "+r.error.message);else currentProfile=r.data;
 }
 function toggleAccount(){hidePanels();setNav(null);el("accountPanel").classList.remove("hidden");el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile);}
-async function updateUsername(){let username=el("newUsername").value.trim();if(!username)return alert("Enter a username.");let {data,error}=await db.from("profiles").update({username}).eq("id",currentUser.id).select().single();if(error)return alert(error.message);currentProfile=data;el("newUsername").value="";el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile);alert("Username updated.");}
+async function updateUsername(){let username=el("accountNewUsername").value.trim();if(!username)return alert("Enter a username.");let {data,error}=await db.from("profiles").update({username}).eq("id",currentUser.id).select().single();if(error)return alert(error.message);currentProfile=data;el("accountNewUsername").value="";el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile);alert("Username updated.");}
 async function openChatHome(){document.body.classList.remove("chat-open");hidePanels();setNav("chatNav");el("chatPanel").classList.remove("hidden");el("chatListView").classList.remove("hidden");el("conversationView").classList.add("hidden");el("chatHeading").textContent="Your Chats";activeFriend=null;await loadChatFriends();await renderChatList();}
 function openFriendsMenu(){hidePanels();setNav("friendsNav");el("friendsMenuPanel").classList.remove("hidden");}
 async function openPosts(){hidePanels();setNav("postsNav");el("postsPanel").classList.remove("hidden");await loadPosts();}
