@@ -167,6 +167,69 @@ body.chat-open nav{display:none!important;}
 #chatHeading{display:none!important;}
 #chatPanel{padding-top:14px;}
 
+
+/* Facebook-inspired account entry: familiar two-step login and registration layout. */
+.auth-shell{max-width:980px;margin:38px auto 55px;display:grid;grid-template-columns:1fr 420px;gap:55px;align-items:center;padding:18px}
+.auth-intro{padding:20px 0}.auth-logo{width:66px;height:66px;border-radius:20px;background:#0875ed;color:white;display:grid;place-items:center;font-size:42px;font-weight:800;box-shadow:0 8px 22px #0875ed35}
+.auth-intro h1{font-size:42px;letter-spacing:-1.5px;color:#0866d9;margin:18px 0 8px}.auth-intro p{font-size:21px;line-height:1.45;color:#42536d;max-width:430px}
+.auth-card{background:#fff;border:1px solid #e5ebf3;border-radius:17px;padding:25px;box-shadow:0 8px 30px #18345b18}
+.auth-card h2{margin:0 0 5px;font-size:25px;color:#1c2c45}.auth-subtitle{margin:0 0 17px;color:#758197;font-size:14px}
+.auth-card label{display:block;font-size:13px;font-weight:700;color:#34445d;margin-top:10px}
+.auth-card input,.auth-card select{margin:5px 0 3px;padding:13px;border-radius:9px}.auth-name-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.password-wrap{position:relative}.password-wrap input{padding-right:65px}.password-toggle{position:absolute;right:5px;top:9px;padding:8px;background:transparent;color:#1769e0}
+.auth-submit{width:100%;padding:13px;font-size:16px;margin-top:14px!important}
+.auth-link{display:block;width:100%;background:transparent;color:#1769e0;margin:7px auto 0}
+.auth-divider{display:flex;align-items:center;gap:12px;color:#8994a5;font-size:12px;margin:14px 0}.auth-divider:before,.auth-divider:after{content:"";height:1px;background:#e6ebf2;flex:1}
+.create-account-button{display:block;margin:0 auto;background:#1baf68;color:#fff;padding:13px 18px;font-size:15px}
+.auth-terms{font-size:11px;line-height:1.45;color:#778399;margin:12px 0 2px}
+#authStatus{min-height:20px;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:760px){.auth-shell{grid-template-columns:1fr;gap:15px;margin:15px auto 35px;padding:8px;max-width:470px}.auth-intro{text-align:center;padding:8px 8px 0}.auth-logo{margin:auto;width:52px;height:52px;font-size:33px;border-radius:16px}.auth-intro h1{font-size:32px;margin:10px 0 4px}.auth-intro p{font-size:15px;margin:0 auto;max-width:350px}.auth-card{padding:20px}.auth-name-row{gap:7px}}
+
+/* Tighten the open-chat layout: remove the unused space below the message composer. */
+@media(max-width:760px){
+  body.chat-open footer{display:none!important;}
+  body.chat-open #chatPanel:has(#conversationView:not(.hidden)){
+    position:fixed!important;top:82px!important;bottom:0!important;left:0!important;right:0!important;
+    height:auto!important;min-height:0!important;margin:0!important;padding:8px 12px 10px!important;
+    display:flex!important;flex-direction:column!important;overflow:hidden!important;
+  }
+  body.chat-open #conversationView:not(.hidden){
+    display:flex!important;flex:1 1 auto!important;min-height:0!important;
+    flex-direction:column!important;overflow:hidden!important;
+  }
+  body.chat-open #messages{flex:1 1 auto!important;min-height:0!important;}
+  body.chat-open .message-composer{flex:0 0 auto!important;margin:8px 0 0!important;}
+  body.chat-open .media-picker{flex:0 0 auto!important;margin:4px 0 0!important;}
+}
+
+/* Final mobile conversation sizing: give message history the full available area,
+   and keep the composer pinned at the bottom without shrinking the history. */
+@media (max-width:760px){
+  html:has(body.chat-open), body.chat-open{height:100%;min-height:100%;overflow:hidden!important;}
+  body.chat-open #chatPanel{
+    position:fixed!important;top:82px!important;left:0!important;right:0!important;bottom:0!important;
+    width:100%!important;height:auto!important;min-height:0!important;max-width:none!important;
+    margin:0!important;padding:8px 12px max(10px, env(safe-area-inset-bottom))!important;
+    display:flex!important;flex-direction:column!important;overflow:hidden!important;
+    border-radius:0!important;z-index:90!important;
+  }
+  body.chat-open #conversationView:not(.hidden){
+    display:flex!important;flex:1 1 0!important;min-height:0!important;height:100%!important;
+    flex-direction:column!important;overflow:hidden!important;
+  }
+  body.chat-open .conversation-top{flex:0 0 auto!important;}
+  body.chat-open #messages{
+    display:flex!important;flex:1 1 0!important;min-height:0!important;height:0!important;max-height:none!important;
+    overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;
+    margin:0!important;
+  }
+  body.chat-open .message-composer{
+    position:relative!important;flex:0 0 auto!important;bottom:auto!important;
+    margin:8px 0 0!important;width:100%!important;
+  }
+  body.chat-open .media-picker{flex:0 0 auto!important;margin:5px 0 0!important;}
+}
+
 </style>
 </head>
 <body>
@@ -175,15 +238,50 @@ body.chat-open nav{display:none!important;}
 <div class="header-actions"><button id="accountButton" class="profile-pill hidden" onclick="toggleAccount()">👤 Profile</button></div>
 </header>
 <div class="container">
-<section id="authPanel" class="card">
-<h3>Welcome to JFriendsChat 💙</h3>
-<p>Connect with friends and relatives.</p>
-<input id="email" type="email" placeholder="Email address" autocomplete="email">
-<input id="password" type="password" placeholder="Password" autocomplete="current-password">
-<input id="username" placeholder="Username (new accounts)">
-<button class="primary" onclick="signIn()">Log In</button>
-<button class="secondary" onclick="signUp()">Create Account</button>
-<div id="authStatus"></div>
+<section id="authPanel" class="auth-shell">
+  <div class="auth-intro">
+    <div class="auth-logo">J</div>
+    <h1>JFriendsChat</h1>
+    <p>Connect with friends and relatives. Share moments and stay in touch.</p>
+  </div>
+  <div class="auth-card">
+    <div id="loginForm">
+      <h2>Welcome back</h2>
+      <p class="auth-subtitle">Log in to continue to your account.</p>
+      <label for="email">Email address</label>
+      <input id="email" type="email" placeholder="Email address" autocomplete="username">
+      <label for="password">Password</label>
+      <div class="password-wrap"><input id="password" type="password" placeholder="Password" autocomplete="current-password"><button type="button" class="password-toggle" onclick="togglePassword('password',this)">Show</button></div>
+      <button class="primary auth-submit" onclick="signIn()">Log In</button>
+      <button type="button" class="auth-link" onclick="resetPassword()">Forgot password?</button>
+      <div class="auth-divider"><span>or</span></div>
+      <button type="button" class="create-account-button" onclick="showCreateAccount()">Create new account</button>
+    </div>
+    <div id="signupForm" class="hidden">
+      <h2>Create a new account</h2>
+      <p class="auth-subtitle">It’s quick and easy.</p>
+      <div class="auth-name-row">
+        <div><label for="firstName">First name</label><input id="firstName" placeholder="First name" autocomplete="given-name" maxlength="60"></div>
+        <div><label for="lastName">Last name</label><input id="lastName" placeholder="Last name" autocomplete="family-name" maxlength="60"></div>
+      </div>
+      <label for="newUsername">Username</label>
+      <input id="newUsername" placeholder="Choose a username" autocomplete="username" maxlength="30">
+      <label for="signupEmail">Email address</label>
+      <input id="signupEmail" type="email" placeholder="Enter your email" autocomplete="email">
+      <label for="signupPassword">New password</label>
+      <div class="password-wrap"><input id="signupPassword" type="password" placeholder="At least 8 characters" autocomplete="new-password"><button type="button" class="password-toggle" onclick="togglePassword('signupPassword',this)">Show</button></div>
+      <label for="confirmPassword">Confirm password</label>
+      <input id="confirmPassword" type="password" placeholder="Enter password again" autocomplete="new-password">
+      <label for="birthDate">Date of birth</label>
+      <input id="birthDate" type="date" autocomplete="bday">
+      <label for="gender">Gender (optional)</label>
+      <select id="gender"><option value="">Select gender</option><option value="Female">Female</option><option value="Male">Male</option><option value="Custom">Custom</option><option value="Prefer not to say">Prefer not to say</option></select>
+      <p class="auth-terms">By creating an account, you agree to use JFriendsChat respectfully and keep your login details private.</p>
+      <button class="primary auth-submit" onclick="signUp()">Create Account</button>
+      <button type="button" class="auth-link" onclick="showLogin()">Already have an account? Log in</button>
+    </div>
+    <div id="authStatus" role="status" aria-live="polite"></div>
+  </div>
 </section>
 
 <section id="appPanel" class="hidden">
@@ -348,31 +446,86 @@ async function loadCompanyTasks(){let box=el("companyTasks");if(!activeCompanyId
 async function setCompanyTaskStatus(id,status){let {error}=await db.from("company_tasks").update({status}).eq("id",id).eq("created_by",currentUser.id);if(error)return alert(error.message);await loadCompanyTasks();}
 async function deleteCompanyTask(id){if(!confirm("Delete this duty?"))return;let {error}=await db.from("company_tasks").delete().eq("id",id).eq("created_by",currentUser.id);if(error)return alert(error.message);await loadCompanyTasks();}
 
+function showCreateAccount(){
+ el("loginForm").classList.add("hidden");el("signupForm").classList.remove("hidden");
+ showAuthStatus("");window.scrollTo({top:0,behavior:"smooth"});
+}
+function showLogin(){
+ el("signupForm").classList.add("hidden");el("loginForm").classList.remove("hidden");
+ showAuthStatus("");window.scrollTo({top:0,behavior:"smooth"});
+}
+function togglePassword(id,button){
+ const field=el(id);field.type=field.type==="password"?"text":"password";
+ button.textContent=field.type==="password"?"Show":"Hide";
+}
 async function signUp(){
- let email=el("email").value.trim(),password=el("password").value,username=el("username").value.trim();
- if(!email||!password||!username)return showAuthStatus("Enter your email, password and username.");
- if(password.length<6)return showAuthStatus("Password must be at least 6 characters.");
- showAuthStatus("Creating account...");
- let {data,error}=await db.auth.signUp({email,password,options:{data:{username}}});
+ const first=el("firstName").value.trim(),last=el("lastName").value.trim();
+ const fullName=(first+" "+last).trim(),username=el("newUsername").value.trim();
+ const email=el("signupEmail").value.trim().toLowerCase(),password=el("signupPassword").value;
+ const confirm=el("confirmPassword").value,birthDate=el("birthDate").value,gender=el("gender").value;
+ if(!first||!last||!username||!email||!password||!confirm||!birthDate)
+  return showAuthStatus("Please complete all required fields.");
+ if(!/^[a-zA-Z0-9_.]{3,30}$/.test(username))
+  return showAuthStatus("Username must be 3–30 characters and use only letters, numbers, dots or underscores.");
+ if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email))
+  return showAuthStatus("Enter a valid email address.");
+ if(password.length<8)return showAuthStatus("Your password must be at least 8 characters.");
+ if(password!==confirm)return showAuthStatus("The passwords do not match.");
+ const age=(Date.now()-new Date(birthDate+"T00:00:00").getTime())/31557600000;
+ if(!Number.isFinite(age)||age<13)return showAuthStatus("You must be at least 13 years old to create an account.");
+ showAuthStatus("Creating your JFriendsChat account…");
+ const {data,error}=await db.auth.signUp({email,password,options:{data:{username,full_name:fullName,birth_date:birthDate,gender}}});
  if(error)return showAuthStatus(error.message);
- if(data.session)await startApp(data.user);else showAuthStatus("Account created. Confirm your email if required, then log in.");
+ if(data.session&&data.user){await startApp(data.user);return;}
+ showLogin();el("email").value=email;
+ showAuthStatus("Your account has been created. Check your email for the confirmation link, confirm it, then return here and log in.");
 }
 async function signIn(){
- let email=el("email").value.trim(),password=el("password").value;
- if(!email||!password)return showAuthStatus("Enter your email and password.");
- showAuthStatus("Logging in...");
- let {data,error}=await db.auth.signInWithPassword({email,password});
- if(error)return showAuthStatus(error.message);
+ const email=el("email").value.trim().toLowerCase(),password=el("password").value;
+ if(!email||!password)return showAuthStatus("Enter your email address and password.");
+ showAuthStatus("Logging in…");
+ const {data,error}=await db.auth.signInWithPassword({email,password});
+ if(error)return showAuthStatus(error.message==="Invalid login credentials"?"The email or password is incorrect. If you just registered, confirm your email first.":error.message);
  await startApp(data.user);
 }
+async function resetPassword(){
+ const email=el("email").value.trim().toLowerCase();
+ if(!email)return showAuthStatus("Enter your email address first, then choose Forgot password.");
+ showAuthStatus("Sending password reset email…");
+ const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+window.location.pathname});
+ if(error)return showAuthStatus(error.message);
+ showAuthStatus("Password reset instructions have been sent if this email belongs to an account. Check your inbox and spam folder.");
+}
+let logoutInProgress=false;
 async function signOut(){
- if(refreshTimer)clearInterval(refreshTimer);
- if(presenceChannel)await db.removeChannel(presenceChannel);
- if(messageChannel)await db.removeChannel(messageChannel);
- if(callChannel)await db.removeChannel(callChannel);callChannel=null;await endCall(true);
- await db.auth.signOut();currentUser=null;currentProfile=null;activeFriend=null;
- el("appPanel").classList.add("hidden");el("authPanel").classList.remove("hidden");
- el("accountButton").classList.add("hidden");showAuthStatus("Logged out.");
+ if(logoutInProgress)return;
+ logoutInProgress=true;
+ const logoutButton=document.querySelector('#accountPanel button.danger');
+ if(logoutButton){logoutButton.disabled=true;logoutButton.textContent='Logging out…';}
+ showAuthStatus('Logging out…');
+ // Stop background refresh immediately so it cannot reload account data during logout.
+ try{if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null;}}catch(e){console.warn('Refresh cleanup:',e);}
+ // Ask Supabase to clear this device's session BEFORE optional call/channel cleanup.
+ let authError=null;
+ try{
+   const {error}=await db.auth.signOut({scope:'local'});
+   authError=error||null;
+ }catch(e){authError=e;console.error('Supabase sign-out failed:',e);}
+ // Always reset the local app view, even if a realtime channel or call cleanup fails.
+ currentUser=null;currentProfile=null;activeFriend=null;chatFriends=[];
+ document.body.classList.remove('chat-open');
+ try{el('appPanel').classList.add('hidden');el('authPanel').classList.remove('hidden');el('accountButton').classList.add('hidden');hidePanels();}catch(e){console.warn('Screen cleanup:',e);}
+ // Best-effort cleanup only; these failures must never block the logout screen.
+ for(const channel of [presenceChannel,messageChannel,callChannel]){
+   if(channel){try{await db.removeChannel(channel);}catch(e){console.warn('Channel cleanup:',e);}}
+ }
+ presenceChannel=null;messageChannel=null;callChannel=null;
+ try{await endCall(true);}catch(e){console.warn('Call cleanup:',e);}
+ showAuthStatus(authError
+   ?'You have been logged out on this device. Supabase cleanup warning: '+(authError.message||String(authError))
+   :'You have logged out successfully.');
+ if(logoutButton){logoutButton.disabled=false;logoutButton.textContent='Log Out';}
+ logoutInProgress=false;
 }
 async function startApp(user){
  currentUser=user;el("authPanel").classList.add("hidden");el("appPanel").classList.remove("hidden");el("accountButton").classList.remove("hidden");
