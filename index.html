@@ -484,10 +484,10 @@ footer{color:#65676b!important}
 <div class="composer message-composer"><label class="attach-button" for="chatMediaInput" title="Choose photo or video">＋</label><input id="messageInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()"><button class="send-button" onclick="sendMessage()" aria-label="Send message">➤</button></div><div class="media-picker"><label for="chatMediaInput">▧ Photo / Video</label><input type="file" id="chatMediaInput" accept="image/*,video/*" onchange="if(this.files.length)sendChatMedia()"></div>
 </div></section>
 
-<section id="friendsMenuPanel" class="card hidden"><h3>👥 Friends</h3><div class="submenu"><button onclick="openFriendsList()">👥 My Friends</button><button onclick="openRequests()">📨 Friend Requests</button><button onclick="openFindFriends()">🔍 Find Friends</button></div></section>
+<section id="friendsMenuPanel" class="card hidden"><h3>👥 Friends</h3><div class="submenu"><button onclick="openFriendsList()">👥 My Friends</button><button onclick="openRequests()">📨 Friend Requests</button><button onclick="openFindFriends()">🔍 All Users · Add Friends</button></div></section>
 <section id="friendsPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>My Friends</h3><div id="friendsList"></div></section>
 <section id="requestsPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>Friend Requests</h3><h4>Incoming</h4><div id="incomingRequests"></div><h4>Sent</h4><div id="outgoingRequests"></div></section>
-<section id="searchPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>Find Friends</h3><input id="friendSearch" placeholder="Search by username..." oninput="searchFriends()"><div id="searchResults"></div></section>
+<section id="searchPanel" class="card hidden"><h3>👥 New Friends</h3><h4>1. All Users</h4><p class="muted">All registered members appear here. Use Add Friend to connect, or Accept Request when someone has requested to be your friend.</p><input id="friendSearch" placeholder="Search by username..." oninput="searchFriends()"><div id="searchResults"></div></section>
 
 <section id="postsPanel" class="hidden moments360">
  <div class="moments360-hero">
@@ -703,7 +703,7 @@ const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const POST_BUCKET="social-posts";
 let currentUser=null,currentProfile=null,chatFriends=[],activeFriend=null;
 let callChannel=null,callPc=null,callLocalStream=null,callFriend=null,callMode="audio",incomingCallPayload=null,callPendingCandidates=[],ringAudioContext=null,ringTimer=null;
-let messageChannel=null,presenceChannel=null,knownOnlineUsers=new Set(),renderedMessages=new Set(),refreshTimer=null;
+let messageChannel=null,presenceChannel=null,knownOnlineUsers=new Set(),renderedMessages=new Set();
 const el=id=>document.getElementById(id);
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
 function setStatus(t){el("status").textContent=t||""}
@@ -947,8 +947,6 @@ async function signOut(){
  const logoutButton=document.querySelector('#accountPanel button.danger');
  if(logoutButton){logoutButton.disabled=true;logoutButton.textContent='Logging out…';}
  showAuthStatus('Logging out…');
- // Stop background refresh immediately so it cannot reload account data during logout.
- try{if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null;}}catch(e){console.warn('Refresh cleanup:',e);}
  // Ask Supabase to clear this device's session BEFORE optional call/channel cleanup.
  let authError=null;
  try{
@@ -975,8 +973,9 @@ async function startApp(user){
  currentUser=user;el("authPanel").classList.add("hidden");el("appPanel").classList.remove("hidden");el("accountButton").classList.remove("hidden");
  db.rpc("jf_record_activity").then(()=>{}).catch(()=>{});
  await ensureProfile();await checkMarketAdmin();await loadChatFriends();openChatHome();await loadPresence();subscribeToMessages();await startPresence();await subscribeToCalls();
- if(refreshTimer)clearInterval(refreshTimer);
- refreshTimer=setInterval(async()=>{if(!currentUser)return;await loadChatFriends();if(!activeFriend)await renderChatList();if(!el("postsPanel").classList.contains("hidden"))await loadPosts();if(!el("businessPanel").classList.contains("hidden"))await loadProducts();if(!el("connectPanel").classList.contains("hidden"))await loadMeetings();if(!el("groupsPanel").classList.contains("hidden")&&window.activeGroupId&&!el("groupRoomPanel").classList.contains("hidden"))await loadGroupMessages();if(!el("schoolPanel").classList.contains("hidden"))await loadSchoolWorkspace();if(!el("companyPanel").classList.contains("hidden")&&!el("companyShowcaseTab").classList.contains("hidden"))await loadPublicCompanyProducts();if(!el("adsPanel").classList.contains("hidden")){await loadMyAdCampaigns();await loadApprovedAdPreview();}},20000);
+ // No periodic data polling: data loads when a section is opened, while chat
+ // messages and online presence use the existing Supabase Realtime channels.
+ // This avoids repeated full-app database requests in idle sessions.
 }
 async function ensureProfile(){
  let {data,error}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
@@ -989,7 +988,7 @@ async function ensureProfile(){
 function toggleAccount(){hidePanels();setNav(null);el("accountPanel").classList.remove("hidden");el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile);}
 async function updateUsername(){let username=el("accountNewUsername").value.trim();if(!username)return alert("Enter a username.");let {data,error}=await db.from("profiles").update({username}).eq("id",currentUser.id).select().single();if(error)return alert(error.message);currentProfile=data;el("accountNewUsername").value="";el("accountDetails").textContent="Email: "+(currentUser?.email||"")+" | Username: "+nameOf(currentProfile);alert("Username updated.");}
 async function openChatHome(){document.body.classList.remove("chat-open");hidePanels();setNav("chatNav");el("chatPanel").classList.remove("hidden");el("chatListView").classList.remove("hidden");el("conversationView").classList.add("hidden");el("chatHeading").textContent="Your Chats";activeFriend=null;await loadChatFriends();await renderChatList();}
-function openFriendsMenu(){hidePanels();setNav("friendsNav");el("friendsMenuPanel").classList.remove("hidden");}
+function openFriendsMenu(){openFindFriends();}
 async function openPosts(){hidePanels();setNav("postsNav");el("postsPanel").classList.remove("hidden");await loadPosts();}
 function backToChatList(){document.body.classList.remove("chat-open");activeFriend=null;el("conversationView").classList.add("hidden");el("chatListView").classList.remove("hidden");el("chatHeading").textContent="Your Chats";renderChatList();}
 async function openFriendsList(){hidePanels();setNav("friendsNav");el("friendsPanel").classList.remove("hidden");await loadFriendsList();}
@@ -1003,13 +1002,41 @@ async function loadChatFriends(){
 }
 async function loadFriendsList(){await loadChatFriends();el("friendsList").innerHTML=chatFriends.length?chatFriends.map(p=>`<div class="row">${avatar(p)}<div class="flexinfo"><strong>${esc(nameOf(p))}</strong><div class="muted">${knownOnlineUsers.has(p.id)?"● Online":"○ Offline"}</div></div><button class="primary" onclick="openConversation('${p.id}')">Chat</button></div>`).join(""):"<p>No friends yet. Find friends to get started.</p>";}
 async function searchFriends(){
- if(!currentUser)return;let q=el("friendSearch").value.trim(),box=el("searchResults");if(q.length<2){box.innerHTML="<p>Type at least two characters.</p>";return;}box.textContent="Searching...";
- let {data,error}=await db.rpc("search_friends",{search_term:q});if(error){box.textContent="Search error: "+error.message;return;}
- let people=(data||[]).filter(p=>p.id!==currentUser.id);if(!people.length){box.innerHTML="<p>No users found.</p>";return;}
- let req=await db.from("friend_requests").select("*").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
- box.innerHTML=people.map(p=>{let r=(req.data||[]).find(x=>(x.sender_id===currentUser.id&&x.receiver_id===p.id)||(x.receiver_id===currentUser.id&&x.sender_id===p.id));let b=r?.status==="accepted"?`<button class="secondary" onclick="openConversation('${p.id}')">Chat</button>`:r?.status==="pending"?`<button class="secondary" disabled>Pending</button>`:`<button class="primary" onclick="sendFriendRequest('${p.id}')">Add Friend</button>`;return `<div class="row">${avatar(p)}<div class="flexinfo"><strong>${esc(nameOf(p))}</strong></div>${b}</div>`;}).join("");
+ if(!currentUser)return;
+ const q=(el("friendSearch").value||"").trim(),box=el("searchResults");
+ box.innerHTML=q.length===1?"<p>Type one more character to search, or clear the box to browse all members.</p>":"<p>Loading members...</p>";
+ let peopleResult;
+ if(q.length>=2){
+   peopleResult=await db.rpc("search_friends",{search_term:q});
+ }else{
+   // With an empty search box, show a first page of members instead of a blank screen.
+   peopleResult=await db.from("profiles").select("*").neq("id",currentUser.id).limit(50);
+ }
+ if(peopleResult.error){box.innerHTML="<p>Could not load members: "+esc(peopleResult.error.message)+". Check that signed-in users are allowed to view public profile fields.</p>";return;}
+ const people=(peopleResult.data||[]).filter(p=>p.id!==currentUser.id);
+ if(!people.length){box.innerHTML="<p>No other members found yet.</p>";return;}
+ const req=await db.from("friend_requests").select("*").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
+ if(req.error){box.innerHTML="<p>Could not check friend requests: "+esc(req.error.message)+"</p>";return;}
+ const relations=req.data||[];
+ box.innerHTML=people.map(p=>{
+   const r=relations.find(x=>(x.sender_id===currentUser.id&&x.receiver_id===p.id)||(x.receiver_id===currentUser.id&&x.sender_id===p.id));
+   let action;
+   if(r?.status==="accepted") action='<span class="muted">Already Friends</span>';
+   else if(r?.status==="pending"&&r.receiver_id===currentUser.id) action=`<button class="primary" onclick="acceptRequest('${r.id}')">Accept Request</button><button class="secondary" onclick="declineRequest('${r.id}')">Decline</button>`;
+   else if(r?.status==="pending") action='<button class="secondary" disabled>Request Sent</button>';
+   else action=`<button class="primary" onclick="sendFriendRequest('${p.id}')">＋ Add Friend</button>`;
+   return `<div class="row">${avatar(p)}<div class="flexinfo"><strong>${esc(nameOf(p))}</strong><div class="muted">JFriendsChat member</div></div>${action}</div>`;
+ }).join("");
 }
-async function sendFriendRequest(id){let {error}=await db.from("friend_requests").insert({sender_id:currentUser.id,receiver_id:id,status:"pending"});if(error)return alert(error.message);alert("Friend request sent.");await searchFriends();}
+async function sendFriendRequest(id){
+ if(!currentUser||!id||id===currentUser.id)return;
+ const {data:existing,error:checkError}=await db.from("friend_requests").select("id,status").or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${id}),and(sender_id.eq.${id},receiver_id.eq.${currentUser.id})`).limit(1);
+ if(checkError)return alert("Could not check existing request: "+checkError.message);
+ if(existing?.length){alert(existing[0].status==="accepted"?"You are already friends.":"A friend request already exists.");return searchFriends();}
+ const {error}=await db.from("friend_requests").insert({sender_id:currentUser.id,receiver_id:id,status:"pending"});
+ if(error)return alert("Could not send friend request: "+error.message);
+ alert("Friend request sent successfully.");await searchFriends();
+}
 async function loadRequests(){
  let {data,error}=await db.from("friend_requests").select("*").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);if(error){el("incomingRequests").textContent=error.message;return;}
  let rs=data||[],inc=rs.filter(r=>r.receiver_id===currentUser.id&&r.status==="pending"),out=rs.filter(r=>r.sender_id===currentUser.id&&r.status==="pending"),ids=[...new Set(rs.map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id))],pr=[];
@@ -1017,8 +1044,8 @@ async function loadRequests(){
  el("incomingRequests").innerHTML=inc.length?inc.map(r=>`<div class="row">${avatar(find(r.sender_id))}<div class="flexinfo"><strong>${esc(nameOf(find(r.sender_id)))}</strong></div><button class="primary" onclick="acceptRequest('${r.id}')">Accept</button><button class="secondary" onclick="declineRequest('${r.id}')">Decline</button></div>`).join(""):"<p>No incoming requests.</p>";
  el("outgoingRequests").innerHTML=out.length?out.map(r=>`<div class="row">${avatar(find(r.receiver_id))}<div class="flexinfo">${esc(nameOf(find(r.receiver_id)))}</div><span class="muted">Pending</span></div>`).join(""):"<p>No sent requests waiting.</p>";
 }
-async function acceptRequest(id){let {error}=await db.from("friend_requests").update({status:"accepted"}).eq("id",id);if(error)return alert(error.message);await loadChatFriends();await loadRequests();alert("Friend accepted and added to Chat.");}
-async function declineRequest(id){let {error}=await db.from("friend_requests").delete().eq("id",id);if(error)return alert(error.message);await loadRequests();}
+async function acceptRequest(id){let {error}=await db.from("friend_requests").update({status:"accepted"}).eq("id",id);if(error)return alert(error.message);await loadChatFriends();await searchFriends();alert("Friend request accepted successfully.");}
+async function declineRequest(id){let {error}=await db.from("friend_requests").delete().eq("id",id);if(error)return alert(error.message);await searchFriends();}
 async function lastMessage(friendId){let filter=`and(sender_id.eq.${currentUser.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${currentUser.id})`;let {data,error}=await db.from("messages").select("*").or(filter).order("created_at",{ascending:false}).limit(1);return error?null:(data?.[0]||null);}
 function messageText(m){return m?.message_text||""}
 function preview(m){if(!m)return "No messages yet. Tap to chat.";let t=messageText(m);if(m.media_path&&!t)t="📎 Media";if(m.sender_id===currentUser.id)t="You: "+t;return t;}
