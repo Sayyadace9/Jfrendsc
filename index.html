@@ -303,6 +303,111 @@ footer{color:#65676b!important}
 /* Market administration dashboard */
 .admin-market{max-width:1200px;margin:12px auto}.admin-market .admin-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.admin-market .admin-toolbar button{background:#e8f1ff;color:#0756d8}.admin-market .admin-table{width:100%;border-collapse:collapse;font-size:13px}.admin-market .admin-table th,.admin-market .admin-table td{padding:10px 8px;text-align:left;border-bottom:1px solid #e8edf4;vertical-align:top}.admin-market .admin-table th{background:#f5f8fd;color:#42536d}.admin-market .admin-scroll{overflow-x:auto}.admin-market .admin-table select{min-width:120px;margin:0;padding:8px}.admin-market .admin-stat{background:#f1f6ff;border:1px solid #e0eaff;border-radius:13px;padding:14px}.admin-market .admin-stat strong{display:block;font-size:23px;color:#0756bd;margin-top:5px}
 @media(max-width:760px){.admin-market .admin-table{min-width:720px}}
+
+/* JFriendsChat Living Canvas post experience */
+#postsPanel{max-width:920px;margin:14px auto 30px;padding:0 8px}
+.living-hero{position:relative;overflow:hidden;border-radius:25px;padding:24px 22px;margin-bottom:16px;color:#fff;background:radial-gradient(circle at 90% 10%,#75d8ff66,transparent 32%),linear-gradient(125deg,#102b57,#1769e0 58%,#8a5cf6);box-shadow:0 14px 35px #174a9024}
+.living-hero:after{content:'✦';position:absolute;right:24px;bottom:-30px;font-size:130px;color:#ffffff18;transform:rotate(-15deg)}
+.living-hero .eyebrow{font-size:11px;letter-spacing:2px;font-weight:800;opacity:.8}.living-hero h2{font-size:27px;margin:8px 0}.living-hero p{margin:0;color:#e6f2ff;max-width:520px;line-height:1.5}
+.living-composer{background:linear-gradient(145deg,#fff,#f5f9ff);border:1px solid #e1eafa;border-radius:23px;padding:17px;box-shadow:0 8px 26px #153d7010;margin-bottom:18px}
+.living-composer-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}.living-composer-top .avatar{width:48px;height:48px;border:3px solid white;box-shadow:0 3px 10px #164b8b20}.living-composer-top strong{display:block;color:#15345f}.living-composer-top small{display:block;color:#8291a7;margin-top:3px}
+.living-composer textarea{min-height:112px;border:0!important;background:#f0f5fd!important;border-radius:17px!important;padding:16px!important;font-size:16px!important;box-shadow:none!important;line-height:1.5}
+.living-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:9px 0}.living-tool{display:inline-flex;align-items:center;gap:7px;background:#edf4ff;color:#24578f;padding:10px 13px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer}.living-tool input{display:none}.living-controls{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.living-controls select{margin:0;background:#f7faff;border-radius:13px}.living-publish{border-radius:14px;padding:13px 22px;background:linear-gradient(110deg,#0868e8,#6956e8);box-shadow:0 5px 13px #1769e033}
+.living-feed-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 2px 10px}.living-feed-head h3{margin:0;color:#18345e}.living-feed-head button{border-radius:20px}
+#postsFeed .post{position:relative;overflow:hidden;border:1px solid #e8eef8;border-radius:22px;padding:18px;margin:14px 0;background:linear-gradient(180deg,#fff,#fcfdff);box-shadow:0 8px 25px #183e7010}
+#postsFeed .post:before{content:'';position:absolute;left:0;top:0;right:0;height:4px;background:linear-gradient(90deg,#0875ed,#43c6e8,#9272f5)}
+#postsFeed .post-head{padding-top:2px}.living-author-meta{min-width:0;flex:1}.living-author-meta strong{font-size:15px;color:#17345e}.living-author-meta .muted{font-size:12px}
+#postsFeed .post-body{font-size:16px;line-height:1.75;color:#263b59;margin:17px 0;padding:16px 17px;border-radius:17px;background:linear-gradient(135deg,#f0f6ff,#f8f4ff);white-space:pre-wrap;overflow-wrap:anywhere}
+#postsFeed .post-media{max-height:560px;object-fit:cover;border-radius:17px;margin:12px 0;background:#edf3fb}
+#postsFeed .post-actions{border-top:1px solid #edf1f8;gap:7px}#postsFeed .post-actions button{border-radius:20px;padding:10px 14px}
+#postsFeed .comment{background:#f2f6fc;border-radius:14px;padding:11px 13px}
+#postsFeed .composer{background:#f7f9fd;border:1px solid #e9eef6;border-radius:18px;padding:5px 7px}#postsFeed .composer input{border:0;background:transparent;box-shadow:none}
+@media(max-width:600px){#postsPanel{padding:0 2px}.living-hero{padding:20px 17px;border-radius:20px}.living-hero h2{font-size:23px}.living-composer{padding:13px;border-radius:19px}.living-controls{grid-template-columns:1fr}.living-publish{width:100%}#postsFeed .post{padding:14px;border-radius:18px}#postsFeed .post-media{max-height:420px}}
+
+
+/* MOMENTS 360 — post section only */
+#postsPanel.moments360{max-width:980px;margin:16px auto 36px;padding:0 10px;color:#17243d}
+.moments360-hero{position:relative;isolation:isolate;overflow:hidden;min-height:245px;padding:30px 30px 25px;border-radius:28px;color:#fff;background:radial-gradient(ellipse at 82% 18%,#ff72c866 0,transparent 32%),radial-gradient(ellipse at 15% 95%,#29e0d366 0,transparent 35%),linear-gradient(118deg,#10152f 0%,#24245c 48%,#542d82 100%);box-shadow:0 20px 50px #27215b30}
+.moments360-hero:before{content:"";position:absolute;z-index:-1;width:260px;height:260px;right:8%;top:-125px;border:1px solid #ffffff35;border-radius:50%;box-shadow:0 0 0 25px #ffffff09,0 0 0 55px #ffffff07}
+.moments360-orbit{position:absolute;z-index:-1;border:1px solid #ffffff30;border-radius:50%;transform:rotate(-28deg)}
+.moments360-orbit.orbit-one{width:320px;height:105px;right:-35px;bottom:14px}
+.moments360-orbit.orbit-two{width:260px;height:80px;right:0;bottom:27px;transform:rotate(28deg)}
+.moments360-kicker,.moments360-section-kicker{font-size:10px;font-weight:900;letter-spacing:2px;opacity:.78}
+.moments360-hero h2{font-size:clamp(31px,5vw,46px);line-height:1.02;letter-spacing:-1.8px;margin:13px 0 10px;font-weight:900}
+.moments360-hero h2 span{background:linear-gradient(90deg,#8deaff,#f6a6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.moments360-hero p{max-width:440px;color:#e2e3ff;line-height:1.55;margin:0;font-size:14px}
+.moments360-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:19px}.moments360-badges span{font-size:11px;font-weight:750;padding:7px 11px;border:1px solid #ffffff35;background:#ffffff13;border-radius:30px;backdrop-filter:blur(8px)}
+.moments360-composer{margin:16px 0 22px;padding:18px;border-radius:24px;background:linear-gradient(145deg,#fff,#f7f5ff);border:1px solid #e8e4fa;box-shadow:0 12px 35px #28215b10}
+.moments360-compose-head{display:flex;align-items:center;gap:11px;margin-bottom:13px}.moments360-create-icon{width:44px;height:44px;display:grid;place-items:center;border-radius:15px;color:#fff;font-size:24px;background:linear-gradient(140deg,#5c58ed,#c15ce8);box-shadow:0 7px 17px #765be83d}
+.moments360-compose-head strong{display:block;color:#20254b;font-size:15px}.moments360-compose-head small{display:block;color:#8587a3;font-size:11px;margin-top:3px}
+.moments360-composer textarea{width:100%;min-height:112px;padding:16px!important;border:1px solid #e9e8f5!important;border-radius:17px!important;background:#fff!important;box-shadow:none!important;font-size:15px!important;line-height:1.6;resize:vertical}
+.moments360-tools{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.moments360-tool{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:13px;background:#efedff;color:#4941a5;font-size:12px;cursor:pointer}
+.moments360-tool span{font-size:17px}.moments360-tool input{display:none}.moments360-tool b{font-size:11px}
+.moments360-publish-row{display:flex;gap:10px;align-items:center}.moments360-publish-row select{flex:1;min-width:0;margin:0;padding:12px;border:1px solid #e8e6f4;border-radius:13px;background:#fff}
+.moments360-publish{border:0;border-radius:13px;padding:13px 18px;color:#fff;font-weight:800;background:linear-gradient(105deg,#5755e8,#a34ed5);box-shadow:0 7px 18px #7754d333;cursor:pointer}
+.moments360-publish span{margin-left:8px;font-size:16px}
+.moments360-feedbar{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:25px 2px 10px}.moments360-feedbar h3{font-size:22px;letter-spacing:-.6px;margin:4px 0;color:#20254b}.moments360-feedbar h3 span{color:#a354d9}
+.moments360-section-kicker{color:#8d70c5;font-size:9px}.moments360-refresh{border:1px solid #e7e4f4;background:#fff;color:#6257a5;border-radius:30px;padding:9px 13px;font-size:12px;font-weight:750}
+.moments360-view-switch{display:flex;gap:6px;padding:5px;background:#eeedf7;border-radius:14px;width:max-content;max-width:100%;margin:12px 0 15px}
+.moments360-view-switch button{border:0;background:transparent;color:#77758f;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:800;cursor:pointer}
+.moments360-view-switch button.active{background:#fff;color:#5146b6;box-shadow:0 3px 10px #29205b14}
+#postsFeed.moments360-flow{display:block}
+#postsFeed .post{position:relative;overflow:hidden;margin:15px 0;padding:18px;border:1px solid #e9e6f4;border-radius:23px;background:#fff;box-shadow:0 10px 28px #28215b0d}
+#postsFeed .post:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#6b63f1,#d56ad8,#57cbd5)}
+#postsFeed .post-head{display:flex;align-items:center;gap:10px;padding:0 0 5px}.living-author-meta strong{color:#25254c;font-size:14px}.living-author-meta .muted{font-size:11px;color:#9291a8}
+#postsFeed .post-body{margin:13px 0;padding:15px;border-radius:16px;background:linear-gradient(135deg,#f5f4ff,#f1fbff);color:#303452;font-size:15px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+#postsFeed .post-media{display:block;width:100%;max-height:620px;object-fit:cover;margin:12px 0;border-radius:18px;background:#17172b}
+#postsFeed .post-actions{display:flex;gap:7px;flex-wrap:wrap;border-top:1px solid #f0eef7;padding-top:12px;margin-top:12px}
+#postsFeed .post-actions button{border:1px solid #e9e6f3;border-radius:30px;background:#faf9ff;color:#57517c;padding:9px 13px;font-size:12px}
+#postsFeed .post-actions button.liked{background:#fff0f5;color:#d83c77;border-color:#ffd6e5}
+#postsFeed .comment{margin:8px 0;padding:10px 12px;border-radius:13px;background:#f6f5fb;color:#42435e;font-size:12px}
+#postsFeed .composer{display:flex;gap:6px;margin-top:12px;padding:5px;border:1px solid #ece9f5;border-radius:14px;background:#fff}
+#postsFeed .composer input{min-width:0;flex:1;border:0;background:transparent;box-shadow:none;margin:0}
+#postsFeed .composer button{border-radius:10px}
+#postsFeed.moments360-mosaic{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:start}
+#postsFeed.moments360-mosaic .post{margin:0;padding:14px;border-radius:19px}
+#postsFeed.moments360-mosaic .post-media{max-height:270px}
+#postsFeed.moments360-mosaic .post-body{font-size:13px;max-height:130px;overflow:hidden}
+#postsFeed.moments360-focus .post{max-width:760px;margin:18px auto;padding:22px;border-radius:26px;box-shadow:0 15px 42px #28215b18}
+#postsFeed.moments360-focus .post-media{max-height:760px;object-fit:contain;background:#111326}
+@media(max-width:620px){
+ #postsPanel.moments360{padding:0 3px;margin-top:8px}
+ .moments360-hero{min-height:225px;padding:23px 19px;border-radius:22px}
+ .moments360-hero h2{font-size:34px}
+ .moments360-composer{padding:13px;border-radius:19px}
+ .moments360-tool.moments360-tip{display:none}
+ .moments360-publish-row{display:grid;grid-template-columns:1fr}
+ .moments360-publish{width:100%}
+ .moments360-feedbar h3{font-size:19px}
+ .moments360-view-switch{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}
+ .moments360-view-switch button{padding:9px 4px}
+ #postsFeed.moments360-mosaic{grid-template-columns:1fr}
+ #postsFeed .post{padding:14px;border-radius:18px}
+ #postsFeed .post-media{max-height:480px}
+}
+
+
+.company-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.company-light-btn{background:#ffffff20;color:#fff;border:1px solid #ffffff55}.company-notice{padding:12px 15px;background:#eaf3ff;border:1px solid #d4e5ff;border-radius:12px;margin:12px 0;color:#174b8c}.company-tab{margin-top:12px}.company-departments{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.company-departments button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:7px;padding:15px;background:#f4f8ff;border:1px solid #e0eaff;color:#1c3d69;min-height:120px}.company-departments button span{font-size:25px}.company-departments button small{font-size:11px;color:#718096;font-weight:400}.company-invite-code{font-size:24px;font-weight:800;letter-spacing:3px;padding:15px;background:#f1f6ff;border:1px dashed #8bb6f4;border-radius:12px;margin:12px 0;overflow-wrap:anywhere}.company-directory-card{padding:13px;border:1px solid #e4eaf2;border-radius:12px;margin:9px 0;background:#fff}.company-directory-card h4{margin:0 0 6px}.company-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.company-inline button{margin:3px}.company-section input[type=checkbox]{width:auto}.company-stat strong{font-size:18px}@media(max-width:850px){.company-departments{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.company-departments{grid-template-columns:repeat(2,minmax(0,1fr))}.company-actions button{flex:1;min-width:120px}}
+
+
+.ads-hero{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:25px;border-radius:20px;color:#fff;background:linear-gradient(120deg,#10264c,#1767d5 65%,#7c3aed);margin:12px 0}.ads-hero h2{margin:8px 0}.ads-hero p{margin:0;opacity:.9}.ads-kicker{font-size:11px;letter-spacing:2px;font-weight:800;opacity:.85}.ads-hero-mark{font-size:45px;font-weight:900;position:relative}.ads-hero-mark span{color:#ffe08a}.ads-info-strip{display:flex;gap:12px;flex-wrap:wrap;padding:13px 16px;border:1px solid #dce8fb;background:#f2f7ff;border-radius:13px;color:#31527f;font-size:13px;margin:12px 0}.ads-info-strip strong{color:#17365f}.ads-columns{display:grid;grid-template-columns:1.2fr .8fr;gap:13px}.ads-card{background:#fff;border:1px solid #e4eaf2;border-radius:17px;padding:17px;margin:12px 0;min-width:0}.ads-card h3{margin-top:0}.ads-card label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}.ads-card input,.ads-card textarea,.ads-card select{width:100%;box-sizing:border-box;border:1px solid #d9e1ec;border-radius:10px;padding:12px;font:inherit}.ads-card textarea{min-height:100px;resize:vertical}.ads-disclaimer{background:#fff8e8;border:1px solid #f5dfaa;color:#795315;padding:11px;border-radius:10px;font-size:12px;margin:12px 0}.ads-benefit{display:flex;flex-direction:column;gap:4px;padding:14px 0;border-bottom:1px solid #edf0f5}.ads-benefit span,.ads-small{font-size:13px;color:#748094}.ads-small{line-height:1.5;margin-top:16px}.ads-list-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.ad-campaign-row{border:1px solid #e7edf5;border-radius:13px;padding:13px;margin:10px 0}.ad-campaign-row h4{margin:0 0 6px}.ad-status{display:inline-block;border-radius:30px;padding:4px 9px;font-size:11px;font-weight:800;background:#fff1cf;color:#875500}.ad-status.approved{background:#ddf8e8;color:#176b3b}.ad-status.paused{background:#e8edf5;color:#4c5a70}.ad-status.rejected{background:#ffe3e3;color:#a12b2b}.ad-preview-card{display:grid;grid-template-columns:110px 1fr;gap:12px;border:1px solid #e6ebf2;border-radius:13px;padding:10px;margin:10px 0}.ad-preview-card img{width:110px;height:90px;object-fit:cover;border-radius:9px}.ad-preview-card h4{margin:2px 0 6px}.ad-preview-card p{margin:4px 0;font-size:13px}.ad-preview-card a{font-size:13px;font-weight:700}.ads-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.ads-actions button{padding:7px 10px}@media(max-width:700px){.ads-columns{grid-template-columns:1fr}.ads-hero-mark{font-size:32px}.ad-preview-card{grid-template-columns:80px 1fr}.ad-preview-card img{width:80px;height:80px}}
+
+
+/* Company product showcase */
+.company-product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:14px}
+.company-product-card{border:1px solid #e2e8f0;border-radius:15px;overflow:hidden;background:#fff;box-shadow:0 3px 12px #0f172a0a}
+.company-product-card img{width:100%;height:175px;object-fit:cover;background:#f1f5f9;display:block}
+.company-product-card .product-body{padding:13px}
+.company-product-card h4{margin:4px 0 7px}
+.company-product-price{font-size:19px;font-weight:800;color:#1767d5;margin:8px 0}
+.company-product-meta{font-size:12px;color:#718096}
+.company-product-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.company-product-actions button{flex:1}
+.company-product-form input,.company-product-form textarea,.company-product-form select{width:100%;margin:5px 0 10px}
+.company-product-image{border:1px dashed #9bb8df;background:#f7faff;border-radius:12px;padding:12px}
+@media(max-width:520px){.company-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.company-product-card img{height:125px}.company-product-card .product-body{padding:9px}}
+
 </style>
 </head>
 <body>
@@ -365,6 +470,7 @@ footer{color:#65676b!important}
 <button id="businessNav" onclick="openBusiness()">🏬 Market</button>
 <button id="marketAdminNav" class="hidden" onclick="openMarketAdmin()">🛡️ Market Admin</button>
 <button id="companyNav" onclick="openCompany()">🏢 Company</button>
+<button id="adsNav" onclick="openAds()">📢 Advertise</button>
 <button id="connectNav" onclick="openConnect()">🎥 Connect</button>
 <button id="groupsNav" onclick="openGroups()">👥 My Groups</button>
 <button id="schoolNav" onclick="openSchool()">🏫 School</button>
@@ -383,7 +489,32 @@ footer{color:#65676b!important}
 <section id="requestsPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>Friend Requests</h3><h4>Incoming</h4><div id="incomingRequests"></div><h4>Sent</h4><div id="outgoingRequests"></div></section>
 <section id="searchPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>Find Friends</h3><input id="friendSearch" placeholder="Search by username..." oninput="searchFriends()"><div id="searchResults"></div></section>
 
-<section id="postsPanel" class="hidden"><div class="card"><h3>📰 Create a post</h3><textarea id="postText" placeholder="What's on your mind?"></textarea><label for="postMedia"><strong>Add picture or video</strong></label><input id="postMedia" type="file" accept="image/*,video/*"><label for="postVisibility">Who can see this post?</label><select id="postVisibility"><option value="public">🌍 Public</option><option value="private">🔒 Private — only me</option></select><button class="primary" onclick="createPost()">Publish Post</button></div><div class="card"><h3>Posts Feed</h3><button class="secondary" onclick="loadPosts()">🔄 Refresh feed</button><div id="postsFeed"></div></div></section>
+<section id="postsPanel" class="hidden moments360">
+ <div class="moments360-hero">
+  <div class="moments360-orbit orbit-one"></div><div class="moments360-orbit orbit-two"></div>
+  <div class="moments360-kicker">JFRIENDSCHAT PRESENTS · MOMENTS 360</div>
+  <h2>Your world.<br><span>Your moment.</span></h2>
+  <p>A living space for the photos, videos, ideas and memories worth sharing.</p>
+  <div class="moments360-badges"><span>✦ Create</span><span>◉ Experience</span><span>♡ Connect</span></div>
+ </div>
+ <div class="moments360-composer">
+  <div class="moments360-compose-head"><div class="moments360-create-icon">✧</div><div><strong>Make a moment</strong><small>Every post deserves its own spotlight.</small></div></div>
+  <textarea id="postText" placeholder="What is happening in your world today? ✨"></textarea>
+  <div class="moments360-tools">
+   <label class="moments360-tool" for="postMedia"><span>▧</span><b>Photo or video</b><input id="postMedia" type="file" accept="image/*,video/*"></label>
+   <span class="moments360-tool moments360-tip"><span>✎</span><b>Your words matter</b></span>
+   <span class="moments360-tool moments360-tip"><span>✦</span><b>Make it memorable</b></span>
+  </div>
+  <div class="moments360-publish-row"><select id="postVisibility" aria-label="Post audience"><option value="public">🌍 Everyone</option><option value="private">🔒 Only me</option></select><button class="moments360-publish" onclick="createPost()">Publish your moment <span>↗</span></button></div>
+ </div>
+ <div class="moments360-feedbar"><div><span class="moments360-section-kicker">THE COMMUNITY</span><h3>Discover moments <span>✦</span></h3></div><button class="moments360-refresh" onclick="loadPosts()">↻ Refresh</button></div>
+ <div class="moments360-view-switch" aria-label="Post viewing style">
+  <button type="button" class="active" data-post-view="flow" onclick="setPostView('flow',this)">◉ Flow</button>
+  <button type="button" data-post-view="mosaic" onclick="setPostView('mosaic',this)">▦ Mosaic</button>
+  <button type="button" data-post-view="focus" onclick="setPostView('focus',this)">▣ Focus</button>
+ </div>
+ <div id="postsFeed" class="moments360-flow"></div>
+</section>
 
 <section id="businessPanel" class="market-shell hidden">
   <div class="market-hero"><div><span class="market-kicker">JFRIENDSCHAT MARKET</span><h1>Shop your local market</h1><p>Discover nearby shops, compare products and order directly from shop owners.</p></div><div class="market-hero-icon">🏬</div></div>
@@ -430,15 +561,111 @@ footer{color:#65676b!important}
 
 
 <section id="companyPanel" class="hidden">
- <div class="company-hero"><h2>🏢 My Company</h2><p>Manage your company workspace, daily income and expenses, and worker duties. Your records are private to your signed-in account.</p></div>
- <div class="company-grid"><div class="company-stat"><span>📋 Duties</span><strong id="companyTaskCount">0</strong></div><div class="company-stat"><span>💰 Income</span><strong id="companyIncomeTotal">₦0</strong></div><div class="company-stat"><span>🧾 Expenses</span><strong id="companyExpenseTotal">₦0</strong></div><div class="company-stat"><span>🏦 Balance</span><strong id="companyNetTotal">₦0</strong></div></div>
- <div class="company-columns"><div class="company-section"><h3>⚙️ Company Profile</h3><label for="companyName">Company name</label><input id="companyName" placeholder="e.g. JFriendsChat Technologies"><label for="companyRole">Your role</label><select id="companyRole"><option>Manager</option><option>Officer</option><option>Worker</option><option>Self-employed</option></select><button class="primary" onclick="saveCompany()">💾 Save Company Details</button><p id="companyStatus" class="muted"></p></div><div class="company-section"><h3>📌 Daily Checklist</h3><p>☑️ Review yesterday's records</p><p>👥 Check worker duties</p><p>💳 Confirm income and expenses</p><p>📝 Prepare today's report</p><p>📅 Plan tomorrow's activities</p></div></div>
- <div class="company-columns"><div class="company-section"><h3>📒 Daily Business Record</h3><label for="recordDate">Date</label><input id="recordDate" type="date"><label for="recordTitle">Record title</label><input id="recordTitle" placeholder="Daily sales report"><label for="recordIncome">Money received (₦)</label><input id="recordIncome" type="number" min="0" step="0.01" placeholder="0"><label for="recordExpense">Money spent (₦)</label><input id="recordExpense" type="number" min="0" step="0.01" placeholder="0"><label for="recordDetails">Details / activities</label><textarea id="recordDetails" placeholder="Sales, expenses, customers served, activities..."></textarea><button class="primary" onclick="addCompanyRecord()">＋ Save Daily Record</button></div>
- <div class="company-section"><h3>✅ Assign Duties</h3><label for="taskTitle">Duty / task</label><input id="taskTitle" placeholder="e.g. Contact 10 customers"><label for="taskAssignee">Worker or officer</label><input id="taskAssignee" placeholder="Name or job position"><label for="taskDue">Due date</label><input id="taskDue" type="date"><label for="taskPriority">Priority</label><select id="taskPriority"><option>Normal</option><option>High</option><option>Urgent</option></select><label for="taskNotes">Instructions</label><textarea id="taskNotes" placeholder="Expected result or instructions"></textarea><button class="primary" onclick="addCompanyTask()">＋ Assign Duty</button></div></div>
- <div class="company-columns"><div class="company-section"><h3>🗂️ Recent Daily Records</h3><div id="companyRecords"><p class="company-empty">Save your company details to begin.</p></div></div><div class="company-section"><h3>📋 Duties & Tasks</h3><div id="companyTasks"><p class="company-empty">Save your company details to assign duties.</p></div></div></div>
- <div class="company-section"><h3>🔒 Privacy note</h3><p class="muted">Worker names are labels only in this version; they do not receive separate logins or shared team access. Confirm financial totals against actual receipts and bank records.</p></div>
-</section>
+ <div class="company-hero">
+  <h2>🏢 JFRIENDS BUSINESS HUB</h2>
+  <p>One workspace for your company: people, departments, daily operations and business records.</p>
+  <div class="company-actions"><button class="company-light-btn" onclick="companyTab('overview')">Overview</button><button class="company-light-btn" onclick="companyTab('register')">Register company</button><button class="company-light-btn" onclick="companyTab('directory')">Company directory</button><button class="company-light-btn" onclick="companyTab('team')">Team & invitations</button><button class="company-light-btn" onclick="companyTab('products')">🛍️ My Products</button><button class="company-light-btn" onclick="companyTab('showcase')">🌍 Discover Products</button></div>
+ </div>
+ <div id="companyHubNotice" class="company-notice">Register your company or join an existing company using its invitation code.</div>
+ <div id="companyOverviewTab" class="company-tab">
+  <div class="company-grid">
+   <div class="company-stat"><span>🏢 My company</span><strong id="companyNameStat">—</strong></div>
+   <div class="company-stat"><span>👥 Team members</span><strong id="companyMemberCount">0</strong></div>
+   <div class="company-stat"><span>📋 Duties</span><strong id="companyTaskCount">0</strong></div>
+   <div class="company-stat"><span>💰 Net balance</span><strong id="companyNetTotal">₦0</strong></div><span id="companyIncomeTotal" class="hidden"></span><span id="companyExpenseTotal" class="hidden"></span>
+  </div>
+  <div class="company-section"><h3>Choose a management department</h3><p class="muted">These departments organize the work your company can manage in JFriendsChat. The current version includes the company profile, team invitations, daily records and task tracking. More detailed department tools can be connected in later stages.</p>
+   <div class="company-departments">
+    <button onclick="companyDepartment('HR')"><span>👥</span><b>Human Resources</b><small>Staff, roles and attendance</small></button>
+    <button onclick="companyDepartment('Finance')"><span>💳</span><b>Finance</b><small>Income, expenses and budgets</small></button>
+    <button onclick="companyDepartment('Operations')"><span>⚙️</span><b>Operations</b><small>Tasks and daily activities</small></button>
+    <button onclick="companyDepartment('Marketing')"><span>📣</span><b>Marketing</b><small>Announcements and customers</small></button>
+    <button onclick="companyDepartment('Administration')"><span>📊</span><b>Administration</b><small>Management and reports</small></button>
+   </div>
+   <p id="companyDepartmentInfo" class="company-empty">Select a department to see what it manages.</p>
+  </div>
+  <div class="company-columns">
+   <div class="company-section"><h3>📒 Daily business record</h3><label for="recordDate">Date</label><input id="recordDate" type="date"><label for="recordTitle">Record title</label><input id="recordTitle" placeholder="e.g. Daily sales report"><label for="recordIncome">Money received (₦)</label><input id="recordIncome" type="number" min="0" step="0.01" placeholder="0"><label for="recordExpense">Money spent (₦)</label><input id="recordExpense" type="number" min="0" step="0.01" placeholder="0"><label for="recordDetails">Details</label><textarea id="recordDetails" placeholder="Sales, expenses, customers served..."></textarea><button class="primary" onclick="addCompanyRecord()">＋ Save daily record</button></div>
+   <div class="company-section"><h3>✅ Assign a duty</h3><label for="taskTitle">Duty / task</label><input id="taskTitle" placeholder="e.g. Contact 10 customers"><label for="taskAssignee">Responsible person / position</label><input id="taskAssignee" placeholder="Name or job position"><label for="taskDue">Due date</label><input id="taskDue" type="date"><label for="taskPriority">Priority</label><select id="taskPriority"><option>Normal</option><option>High</option><option>Urgent</option></select><label for="taskNotes">Instructions</label><textarea id="taskNotes" placeholder="Expected result or instructions"></textarea><button class="primary" onclick="addCompanyTask()">＋ Assign duty</button></div>
+  </div>
+  <div class="company-columns"><div class="company-section"><h3>🗂️ Recent records</h3><div id="companyRecords"><p class="company-empty">Register a company to begin.</p></div></div><div class="company-section"><h3>📋 Duties & tasks</h3><div id="companyTasks"><p class="company-empty">Register a company to assign duties.</p></div></div></div>
+ </div>
+ <div id="companyRegisterTab" class="company-tab hidden">
+  <div class="company-section"><h3>🏢 Register your company</h3><p class="muted">Create a company workspace. Your company will appear in the public directory only if you choose to make it public.</p>
+   <div class="company-columns"><div><label>Company name *</label><input id="companyName" placeholder="Registered or trading name"><label>Industry</label><select id="companyIndustry"><option value="">Choose industry</option><option>Technology</option><option>Education</option><option>Retail</option><option>Health</option><option>Construction</option><option>Agriculture</option><option>Transport</option><option>Finance</option><option>Hospitality</option><option>Professional services</option><option>Other</option></select><label>Company type</label><select id="companyType"><option>Private business</option><option>Public company</option><option>Non-profit</option><option>Partnership</option><option>Sole proprietorship</option><option>Other</option></select></div><div><label>Business email</label><input id="companyEmail" type="email" placeholder="company@example.com"><label>Phone number</label><input id="companyPhone" placeholder="+234..."><label>Business address / city</label><input id="companyAddress" placeholder="City, state"><label>Company description</label><textarea id="companyDescription" placeholder="What does your company do?"></textarea></div></div>
+   <label><input id="companyPublic" type="checkbox" style="width:auto;margin-right:8px">Show my company in the JFriendsChat Company Directory</label><button class="primary" onclick="saveCompany()">💾 Register / update company</button><p id="companyStatus" class="muted"></p>
+  </div>
+ </div>
+ <div id="companyDirectoryTab" class="company-tab hidden">
+  <div class="company-section"><h3>🌍 Company directory</h3><p class="muted">Discover businesses that have chosen to be listed on JFriendsChat.</p><div class="composer"><input id="companySearch" placeholder="Search company or industry"><button class="primary" onclick="searchCompanyDirectory()">Search</button></div><div id="companyDirectoryResults"><p class="company-empty">Search to discover companies.</p></div></div>
+ </div>
+ <div id="companyTeamTab" class="company-tab hidden">
+  <div class="company-columns"><div class="company-section"><h3>🔑 Invite employees</h3><p class="muted">Share this private invitation code with a person who already has a JFriendsChat account. They can request to join your company.</p><div id="companyInviteCode" class="company-invite-code">Register your company first.</div><button class="secondary" onclick="copyCompanyInvite()">Copy invitation code</button></div><div class="company-section"><h3>🤝 Join a company</h3><label>Invitation code</label><input id="companyJoinCode" placeholder="Enter company invitation code"><button class="primary" onclick="joinCompanyByCode()">Request to join</button><p id="companyJoinStatus" class="muted"></p></div></div>
+  <div class="company-section"><h3>👥 Team requests & members</h3><p class="muted">Company owners can approve or reject requests. Employees must sign in with their own JFriendsChat account.</p><div id="companyMembers"><p class="company-empty">Register or select your company first.</p></div></div>
+ </div>
 
+ <div id="companyProductsTab" class="company-tab hidden">
+  <div class="company-section">
+   <h3>🛍️ Advertise your company's products</h3>
+   <p class="muted">Add products or services from your registered company. Published products can be discovered by all JFriendsChat users in the shared product showcase.</p>
+   <div class="company-columns company-product-form">
+    <div>
+     <label for="companyProductName">Product / service name *</label><input id="companyProductName" maxlength="120" placeholder="e.g. Premium leather shoes">
+     <label for="companyProductCategory">Category</label><select id="companyProductCategory"><option value="Other">Choose category</option><option>Fashion</option><option>Electronics</option><option>Food & groceries</option><option>Beauty & personal care</option><option>Home & furniture</option><option>Health</option><option>Education</option><option>Vehicles</option><option>Professional services</option><option>Other</option></select>
+     <label for="companyProductPrice">Price (₦) — enter 0 if price is negotiable</label><input id="companyProductPrice" type="number" min="0" step="0.01" placeholder="e.g. 25000">
+    </div>
+    <div>
+     <label for="companyProductDescription">Product description *</label><textarea id="companyProductDescription" maxlength="1500" placeholder="Describe the product, condition, features or service..."></textarea>
+     <label for="companyProductContact">Website / WhatsApp / contact link</label><input id="companyProductContact" type="url" maxlength="1000" placeholder="https://wa.me/234... or https://yourwebsite.com">
+     <label for="companyProductImage">Product picture</label><div class="company-product-image"><input id="companyProductImage" type="file" accept="image/jpeg,image/png,image/webp"><small class="muted">JPG, PNG or WEBP. Maximum 4 MB.</small></div>
+    </div>
+   </div>
+   <button class="primary" onclick="publishCompanyProduct()">🚀 Publish product advertisement</button>
+   <p id="companyProductStatus" class="muted" role="status"></p>
+  </div>
+  <div class="company-section"><div class="ads-list-heading"><div><h3>📦 My company's product adverts</h3><p class="muted">Manage products published by your company.</p></div><button class="secondary" onclick="loadMyCompanyProducts()">↻ Refresh</button></div><div id="myCompanyProducts"><p class="muted">Your products will appear here.</p></div></div>
+ </div>
+ <div id="companyShowcaseTab" class="company-tab hidden">
+  <div class="company-section">
+   <h3>🌍 JFriendsChat Product Showcase</h3>
+   <p class="muted">Discover products and services advertised by companies across JFriendsChat.</p>
+   <div class="composer"><input id="companyProductSearch" placeholder="Search products, companies or categories..." onkeydown="if(event.key==='Enter')loadPublicCompanyProducts()"><button class="primary" onclick="loadPublicCompanyProducts()">Search</button></div>
+   <div id="publicCompanyProducts"><p class="muted">Loading company products…</p></div>
+  </div>
+ </div>
+ <div class="company-section"><h3>🔐 Company privacy</h3><p class="muted">Company records are not public. Only approved company members should access company information. Do not store bank passwords, card PINs or other secrets here. Complete the SQL setup below before inviting employees.</p></div>
+</section><section id="adsPanel" class="hidden">
+ <div class="ads-hero">
+  <div><span class="ads-kicker">JFRIENDSCHAT BUSINESS GROWTH</span><h2>📢 JFRIENDS ADVERTISEMENTS</h2><p>Promote your company, products and services to people using JFriendsChat.</p></div>
+  <div class="ads-hero-mark">AD<span>+</span></div>
+ </div>
+ <div class="ads-info-strip"><strong>How it works</strong><span>1. Create a campaign</span><span>2. Submit for review</span><span>3. Get approved before it is displayed</span></div>
+ <div class="ads-columns">
+  <div class="ads-card">
+   <h3>✨ Create an advertisement</h3>
+   <p class="muted">Write a clear advert. Your campaign starts as Pending and must be approved by the JFriendsChat advertising administrator before public display.</p>
+   <label for="adBusinessName">Business / advertiser name *</label><input id="adBusinessName" maxlength="120" placeholder="Your company or business name">
+   <label for="adHeadline">Advertisement headline *</label><input id="adHeadline" maxlength="90" placeholder="A short, attractive headline">
+   <label for="adDescription">Description *</label><textarea id="adDescription" maxlength="600" placeholder="Describe what you offer and why people should choose you."></textarea>
+   <label for="adImageUrl">Image URL (optional)</label><input id="adImageUrl" type="url" maxlength="1000" placeholder="https://example.com/your-ad-image.jpg">
+   <label for="adDestination">Website / contact link *</label><input id="adDestination" type="url" maxlength="1000" placeholder="https://yourwebsite.com">
+   <label for="adPlacement">Preferred advert placement</label><select id="adPlacement"><option value="JFriendsChat promotions">JFriendsChat promotions</option><option value="Market promotions">Market promotions</option><option value="Company directory promotions">Company directory promotions</option></select>
+   <label for="adBudget">Daily budget (₦) — planned budget only</label><input id="adBudget" type="number" min="0" step="100" placeholder="e.g. 2000">
+   <div class="ads-disclaimer">Submitting an advert does not charge you or guarantee placement. Payment collection, campaign scheduling and performance analytics will be connected after the advertising review system is configured.</div>
+   <button class="primary" onclick="submitAdCampaign()">Submit advertisement for review</button><p id="adSubmitStatus" class="muted" role="status"></p>
+  </div>
+  <div class="ads-card ads-how">
+   <h3>🚀 Reach more customers</h3>
+   <div class="ads-benefit"><b>🏪 Promote your business</b><span>Help people discover your company and services.</span></div>
+   <div class="ads-benefit"><b>🛍️ Promote marketplace products</b><span>Bring attention to products and offers in your JFriendsChat Market.</span></div>
+   <div class="ads-benefit"><b>🌍 Build your audience</b><span>Use a direct website or contact link so interested people can learn more.</span></div>
+   <div class="ads-benefit"><b>🛡️ Reviewed advertisements</b><span>Campaigns remain pending until the platform administrator approves them.</span></div>
+   <p class="ads-small">Advertisers must have permission to use submitted images, logos and claims. Misleading, illegal or harmful adverts may be rejected.</p>
+  </div>
+ </div>
+ <div class="ads-card"><div class="ads-list-heading"><div><h3>📊 My advertisement campaigns</h3><p class="muted">Check your submitted adverts and their review status.</p></div><button class="secondary" onclick="loadMyAdCampaigns()">↻ Refresh</button></div><div id="myAdCampaigns"><p class="muted">Your campaigns will appear here.</p></div></div>
+ <div class="ads-card"><h3>📣 Advertisements currently approved</h3><p class="muted">This is a preview of campaigns approved for the JFriendsChat promotions area.</p><div id="approvedAdPreview"><p class="muted">Loading approved advertisements…</p></div></div>
+</section>
 <section id="accountPanel" class="card hidden"><h3>My Profile</h3><div id="accountDetails"></div><input id="accountNewUsername" placeholder="New username"><button class="primary" onclick="updateUsername()">Save Username</button><button class="danger" onclick="signOut()">Log Out</button></section>
 
 </section></div>
@@ -490,8 +717,8 @@ function avatar(p){
  return `<div class="avatar">${esc(initials(nameOf(p)))}</div>`;
 }
 function timeOf(v){if(!v)return "";let d=new Date(v);if(isNaN(d))return "";return d.toDateString()===new Date().toDateString()?d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):d.toLocaleDateString([],{month:"short",day:"numeric"});}
-function hidePanels(){document.body.classList.remove("chat-open");["chatPanel","friendsMenuPanel","friendsPanel","requestsPanel","searchPanel","postsPanel","accountPanel","businessPanel","connectPanel","groupsPanel","schoolPanel","companyPanel","marketAdminPanel"].forEach(id=>el(id).classList.add("hidden"));}
-function setNav(which){["chatNav","friendsNav","postsNav","businessNav","connectNav","groupsNav","companyNav","schoolNav","marketAdminNav"].forEach(id=>{const node=el(id);if(node)node.classList.toggle("active",id===which);});}
+function hidePanels(){document.body.classList.remove("chat-open");["chatPanel","friendsMenuPanel","friendsPanel","requestsPanel","searchPanel","postsPanel","accountPanel","businessPanel","connectPanel","groupsPanel","schoolPanel","companyPanel","adsPanel","marketAdminPanel"].forEach(id=>el(id).classList.add("hidden"));}
+function setNav(which){["chatNav","friendsNav","postsNav","businessNav","connectNav","groupsNav","companyNav","adsNav","schoolNav","marketAdminNav"].forEach(id=>{const node=el(id);if(node)node.classList.toggle("active",id===which);});}
 // School Management frontend: uses the RPC functions created by the successful SQL setup.
 let activeSchoolId=null,schoolMembershipRows=[];
 const schoolPositions={
@@ -559,16 +786,109 @@ async function reviewSchoolReport(id,decision){const note=el('schoolReviewNote_'
 
 
 let activeCompanyId=null;
+let activeCompanyInviteCode="";
+let activeCompanyOwner=false,activeCompanyName="",activeCompanyPhone="",editingCompanyProductId=null;
 async function openCompany(){hidePanels();setNav("companyNav");el("companyPanel").classList.remove("hidden");el("recordDate").value ||= new Date().toISOString().slice(0,10);el("taskDue").value ||= new Date().toISOString().slice(0,10);await loadCompany();}
-async function loadCompany(){if(!currentUser)return;let st=el("companyStatus");let {data:co,error}=await db.from("company_workspaces").select("*").eq("owner_id",currentUser.id).maybeSingle();if(error){st.textContent="Company setup error: "+error.message;return;}if(co){activeCompanyId=co.id;el("companyName").value=co.name||"";el("companyRole").value=co.role||"Manager";st.textContent="Workspace saved: "+co.name;}else{activeCompanyId=null;st.textContent="Create your company workspace to begin.";}await loadCompanyRecords();await loadCompanyTasks();}
-async function saveCompany(){let name=el("companyName").value.trim(),role=el("companyRole").value;if(!name)return alert("Enter your company name.");let q=activeCompanyId?db.from("company_workspaces").update({name,role}).eq("id",activeCompanyId).eq("owner_id",currentUser.id).select().single():db.from("company_workspaces").insert({name,role,owner_id:currentUser.id}).select().single();let {data,error}=await q;if(error)return alert("Could not save company: "+error.message);activeCompanyId=data.id;el("companyStatus").textContent="Company saved: "+data.name;await loadCompany();}
-async function addCompanyRecord(){if(!activeCompanyId)return alert("Save your company details first.");let title=el("recordTitle").value.trim(),record_date=el("recordDate").value||new Date().toISOString().slice(0,10),income=Number(el("recordIncome").value||0),expense=Number(el("recordExpense").value||0),details=el("recordDetails").value.trim();if(!title)return alert("Enter a record title.");if(income<0||expense<0)return alert("Amounts cannot be negative.");let {error}=await db.from("company_daily_records").insert({company_id:activeCompanyId,user_id:currentUser.id,record_date,title,income,expense,details});if(error)return alert("Record could not be saved: "+error.message);["recordTitle","recordIncome","recordExpense","recordDetails"].forEach(id=>el(id).value="");await loadCompanyRecords();}
-async function loadCompanyRecords(){let box=el("companyRecords");if(!activeCompanyId){box.innerHTML="<p class='company-empty'>Save company details to start recording daily activity.</p>";return;}let {data,error}=await db.from("company_daily_records").select("*").eq("company_id",activeCompanyId).order("record_date",{ascending:false}).limit(100);if(error){box.textContent="Could not load records: "+error.message;return;}let rows=data||[],income=rows.reduce((n,r)=>n+Number(r.income||0),0),expense=rows.reduce((n,r)=>n+Number(r.expense||0),0);el("companyIncomeTotal").textContent="₦"+income.toLocaleString("en-NG");el("companyExpenseTotal").textContent="₦"+expense.toLocaleString("en-NG");el("companyNetTotal").textContent="₦"+(income-expense).toLocaleString("en-NG");box.innerHTML=rows.length?rows.map(r=>`<article class="post"><strong>${esc(r.title)}</strong><p class="muted">${esc(r.record_date)}</p><p>Received: ₦${Number(r.income||0).toLocaleString("en-NG")} · Spent: ₦${Number(r.expense||0).toLocaleString("en-NG")}</p><p>${esc(r.details||"")}</p><button class="danger" onclick="deleteCompanyRecord('${r.id}')">Delete</button></article>`).join(""):"<p>No daily records yet.</p>";}
+function companyTab(tab){["overview","register","directory","team","products","showcase"].forEach(k=>el("company"+k.charAt(0).toUpperCase()+k.slice(1)+"Tab").classList.toggle("hidden",k!==tab));if(tab==="products")loadMyCompanyProducts();if(tab==="showcase")loadPublicCompanyProducts();}
+function companyNotice(msg){el("companyHubNotice").textContent=msg;}
+function companyDepartment(name){const descriptions={HR:"Human Resources: organize staff profiles, roles, attendance, leave and recruitment. Staff access is controlled by company membership.",Finance:"Finance: track income, expenses, budgets, invoices and financial reports. Keep sensitive banking credentials outside the app.",Operations:"Operations: assign work, set deadlines, monitor task progress and record daily activities.",Marketing:"Marketing: plan campaigns, publish company announcements and manage customer outreach.",Administration:"Administration: manage company information, departments, permissions, approvals and management reports."};el("companyDepartmentInfo").innerHTML="<strong>"+esc(name)+"</strong><br>"+esc(descriptions[name]);}
+async function loadCompany(){if(!currentUser)return;let st=el("companyStatus");let {data:co,error}=await db.from("company_workspaces").select("*").eq("owner_id",currentUser.id).maybeSingle();if(error){st.textContent="Company setup error: "+error.message+" — run the Company Hub SQL setup first.";return;}if(co){activeCompanyId=co.id;activeCompanyOwner=true;activeCompanyName=co.name||"";activeCompanyPhone=co.phone||"";el("companyName").value=co.name||"";el("companyNameStat").textContent=co.name||"My company";el("companyIndustry").value=co.industry||"";el("companyType").value=co.company_type||"Private business";el("companyEmail").value=co.contact_email||"";el("companyPhone").value=co.phone||"";el("companyAddress").value=co.address||"";el("companyDescription").value=co.description||"";el("companyPublic").checked=!!co.is_public;activeCompanyInviteCode=co.invite_code||"";el("companyInviteCode").textContent=activeCompanyInviteCode||"No code yet";st.textContent="Company workspace ready: "+co.name;companyNotice("Your company is registered. Invite your team and use the departments below.");}else{activeCompanyId=null;activeCompanyOwner=false;activeCompanyName="";activeCompanyPhone="";activeCompanyInviteCode="";el("companyNameStat").textContent="Not registered";el("companyInviteCode").textContent="Register your company first.";st.textContent="Register your company to activate Business Hub.";companyNotice("Welcome to JFriendsChat Business Hub. Register a company or join one with an invitation code.");}await loadCompanyRecords();await loadCompanyTasks();await loadCompanyMembers();}
+async function saveCompany(){let name=el("companyName").value.trim();if(!name)return alert("Enter your company name.");let values={name,industry:el("companyIndustry").value||null,company_type:el("companyType").value,contact_email:el("companyEmail").value.trim()||null,phone:el("companyPhone").value.trim()||null,address:el("companyAddress").value.trim()||null,description:el("companyDescription").value.trim()||null,is_public:el("companyPublic").checked,role:"Manager",owner_id:currentUser.id};if(!activeCompanyId){values.invite_code=Array.from(crypto.getRandomValues(new Uint8Array(6))).map(x=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[x%32]).join("");}let q=activeCompanyId?db.from("company_workspaces").update(values).eq("id",activeCompanyId).eq("owner_id",currentUser.id).select().single():db.from("company_workspaces").insert(values).select().single();let {data,error}=await q;if(error){el("companyStatus").textContent="Could not save company: "+error.message+" — check that you ran the Company Hub SQL setup.";return;}activeCompanyId=data.id;activeCompanyOwner=true;activeCompanyName=data.name||name;activeCompanyPhone=data.phone||"";activeCompanyInviteCode=data.invite_code||"";el("companyStatus").textContent="Company saved successfully: "+data.name;companyTab("overview");await loadCompany();}
+async function searchCompanyDirectory(){let q=el("companySearch").value.trim();let box=el("companyDirectoryResults");let req=db.from("company_workspaces").select("id,name,industry,company_type,address,description").eq("is_public",true).order("name").limit(50);if(q)req=req.or("name.ilike.%"+q+"%,industry.ilike.%"+q+"%,description.ilike.%"+q+"%");let {data,error}=await req;if(error){box.textContent="Directory could not load: "+error.message+" — run the Company Hub SQL setup.";return;}box.innerHTML=(data||[]).length?data.map(c=>`<div class="company-directory-card"><h4>🏢 ${esc(c.name)}</h4><p class="muted">${esc(c.industry||"Business")} · ${esc(c.company_type||"Company")} · ${esc(c.address||"")}</p><p>${esc(c.description||"")}</p></div>`).join(""):"<p class='company-empty'>No public companies found. Try another search.</p>";}
+async function joinCompanyByCode(){let code=el("companyJoinCode").value.trim().toUpperCase();if(!code)return alert("Enter an invitation code.");let {data,error}=await db.rpc("jf_company_join_by_code",{p_invite_code:code});if(error){el("companyJoinStatus").textContent="Could not send request: "+error.message;return;}el("companyJoinStatus").textContent="Request sent. The company owner must approve it.";el("companyJoinCode").value="";}
+async function loadCompanyMembers(){let box=el("companyMembers");if(!activeCompanyId){box.innerHTML="<p class='company-empty'>Register your company first.</p>";el("companyMemberCount").textContent="0";return;}let {data,error}=await db.from("company_memberships").select("id,user_id,role,status,created_at").eq("company_id",activeCompanyId).order("created_at",{ascending:false});if(error){box.textContent="Team list unavailable: "+error.message+" — run the Company Hub SQL setup.";return;}let rows=data||[];el("companyMemberCount").textContent=rows.filter(x=>x.status==="approved").length+1;box.innerHTML=rows.length?rows.map(m=>`<div class="row"><div class="flexinfo"><strong>${esc(m.user_id===currentUser.id?"You":("JFriendsChat member"))}</strong><div class="muted">${esc(m.role)} · ${esc(m.status)}</div></div>${activeCompanyOwner&&m.status==="pending"?`<button class="primary" onclick="reviewCompanyMember('${m.id}','approved')">Approve</button><button class="danger" onclick="reviewCompanyMember('${m.id}','rejected')">Reject</button>`:""}</div>`).join(""):"<p class='muted'>No employee join requests yet. Share your invitation code.</p>";}
+async function reviewCompanyMember(id,status){let {error}=await db.from("company_memberships").update({status}).eq("id",id).eq("company_id",activeCompanyId);if(error)return alert("Could not update member: "+error.message);await loadCompanyMembers();}
+async function copyCompanyInvite(){if(!activeCompanyInviteCode)return alert("Register your company first.");try{await navigator.clipboard.writeText(activeCompanyInviteCode);alert("Invitation code copied.");}catch(e){prompt("Copy this invitation code:",activeCompanyInviteCode);}}
+async function addCompanyRecord(){if(!activeCompanyId||!activeCompanyOwner)return alert("Register a company as its owner before adding financial records.");let title=el("recordTitle").value.trim(),record_date=el("recordDate").value||new Date().toISOString().slice(0,10),income=Number(el("recordIncome").value||0),expense=Number(el("recordExpense").value||0),details=el("recordDetails").value.trim();if(!title)return alert("Enter a record title.");if(income<0||expense<0)return alert("Amounts cannot be negative.");let {error}=await db.from("company_daily_records").insert({company_id:activeCompanyId,user_id:currentUser.id,record_date,title,income,expense,details});if(error)return alert("Record could not be saved: "+error.message);["recordTitle","recordIncome","recordExpense","recordDetails"].forEach(id=>el(id).value="");await loadCompanyRecords();}
+async function loadCompanyRecords(){let box=el("companyRecords");if(!activeCompanyId){box.innerHTML="<p class='company-empty'>Register a company to start recording daily activity.</p>";return;}let {data,error}=await db.from("company_daily_records").select("*").eq("company_id",activeCompanyId).order("record_date",{ascending:false}).limit(100);if(error){box.textContent="Could not load records: "+error.message;return;}let rows=data||[],income=rows.reduce((n,r)=>n+Number(r.income||0),0),expense=rows.reduce((n,r)=>n+Number(r.expense||0),0);el("companyIncomeTotal").textContent="₦"+income.toLocaleString("en-NG");el("companyExpenseTotal").textContent="₦"+expense.toLocaleString("en-NG");el("companyNetTotal").textContent="₦"+(income-expense).toLocaleString("en-NG");box.innerHTML=rows.length?rows.map(r=>`<article class="post"><strong>${esc(r.title)}</strong><p class="muted">${esc(r.record_date)}</p><p>Received: ₦${Number(r.income||0).toLocaleString("en-NG")} · Spent: ₦${Number(r.expense||0).toLocaleString("en-NG")}</p><p>${esc(r.details||"")}</p><button class="danger" onclick="deleteCompanyRecord('${r.id}')">Delete</button></article>`).join(""):"<p>No daily records yet.</p>";}
 async function deleteCompanyRecord(id){if(!confirm("Delete this daily record?"))return;let {error}=await db.from("company_daily_records").delete().eq("id",id).eq("user_id",currentUser.id);if(error)return alert(error.message);await loadCompanyRecords();}
-async function addCompanyTask(){if(!activeCompanyId)return alert("Save your company details first.");let title=el("taskTitle").value.trim(),assignee=el("taskAssignee").value.trim(),due_date=el("taskDue").value||null,priority=el("taskPriority").value,notes=el("taskNotes").value.trim();if(!title||!assignee)return alert("Enter a task and responsible worker/officer.");let {error}=await db.from("company_tasks").insert({company_id:activeCompanyId,created_by:currentUser.id,title,assignee,due_date,priority,notes,status:"Pending"});if(error)return alert("Duty could not be saved: "+error.message);["taskTitle","taskAssignee","taskNotes"].forEach(id=>el(id).value="");await loadCompanyTasks();}
-async function loadCompanyTasks(){let box=el("companyTasks");if(!activeCompanyId){box.innerHTML="<p class='company-empty'>Save company details to assign duties.</p>";return;}let {data,error}=await db.from("company_tasks").select("*").eq("company_id",activeCompanyId).order("created_at",{ascending:false}).limit(100);if(error){box.textContent="Could not load duties: "+error.message;return;}let rows=data||[];el("companyTaskCount").textContent=rows.length;box.innerHTML=rows.length?rows.map(t=>`<article class="post"><strong>${esc(t.title)}</strong><p>Assigned to: ${esc(t.assignee)} · Priority: ${esc(t.priority)} · Status: ${esc(t.status)}</p><p class="muted">Due: ${esc(t.due_date||"No due date")}</p><p>${esc(t.notes||"")}</p><div class="post-actions"><button class="secondary" onclick="setCompanyTaskStatus('${t.id}','In progress')">In progress</button><button class="primary" onclick="setCompanyTaskStatus('${t.id}','Completed')">Completed</button><button class="danger" onclick="deleteCompanyTask('${t.id}')">Delete</button></div></article>`).join(""):"<p>No duties assigned yet.</p>";}
+async function addCompanyTask(){if(!activeCompanyId||!activeCompanyOwner)return alert("Register a company as its owner before assigning duties.");let title=el("taskTitle").value.trim(),assignee=el("taskAssignee").value.trim(),due_date=el("taskDue").value||null,priority=el("taskPriority").value,notes=el("taskNotes").value.trim();if(!title||!assignee)return alert("Enter a task and responsible worker/officer.");let {error}=await db.from("company_tasks").insert({company_id:activeCompanyId,created_by:currentUser.id,title,assignee,due_date,priority,notes,status:"Pending"});if(error)return alert("Duty could not be saved: "+error.message);["taskTitle","taskAssignee","taskNotes"].forEach(id=>el(id).value="");await loadCompanyTasks();}
+async function loadCompanyTasks(){let box=el("companyTasks");if(!activeCompanyId){box.innerHTML="<p class='company-empty'>Register a company to assign duties.</p>";return;}let {data,error}=await db.from("company_tasks").select("*").eq("company_id",activeCompanyId).order("created_at",{ascending:false}).limit(100);if(error){box.textContent="Could not load duties: "+error.message;return;}let rows=data||[];el("companyTaskCount").textContent=rows.length;box.innerHTML=rows.length?rows.map(t=>`<article class="post"><strong>${esc(t.title)}</strong><p>Assigned to: ${esc(t.assignee)} · Priority: ${esc(t.priority)} · Status: ${esc(t.status)}</p><p class="muted">Due: ${esc(t.due_date||"No due date")}</p><p>${esc(t.notes||"")}</p><div class="post-actions"><button class="secondary" onclick="setCompanyTaskStatus('${t.id}','In progress')">In progress</button><button class="primary" onclick="setCompanyTaskStatus('${t.id}','Completed')">Completed</button><button class="danger" onclick="deleteCompanyTask('${t.id}')">Delete</button></div></article>`).join(""):"<p>No duties assigned yet.</p>";}
 async function setCompanyTaskStatus(id,status){let {error}=await db.from("company_tasks").update({status}).eq("id",id).eq("created_by",currentUser.id);if(error)return alert(error.message);await loadCompanyTasks();}
 async function deleteCompanyTask(id){if(!confirm("Delete this duty?"))return;let {error}=await db.from("company_tasks").delete().eq("id",id).eq("created_by",currentUser.id);if(error)return alert(error.message);await loadCompanyTasks();}
+
+
+function companyProductMoney(value){const n=Number(value||0);return n===0?"Price on request":"₦"+n.toLocaleString("en-NG",{maximumFractionDigits:2});}
+function renderCompanyProductCards(rows,ownerView=false){
+ const box=el(ownerView?"myCompanyProducts":"publicCompanyProducts");
+ if(!rows||!rows.length){box.innerHTML="<p class='company-empty'>"+(ownerView?"Your company has not advertised any products yet.":"No published company products found. Try another search later.")+"</p>";return;}
+ box.innerHTML='<div class="company-product-grid">'+rows.map(p=>`<article class="company-product-card">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.product_name)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="ad-placeholder">🛍️</div>`}<div class="product-body"><div class="company-product-meta">${esc(p.category||"Other")} · ${esc(p.company_name||"JFriendsChat company")}</div><h4>${esc(p.product_name)}</h4><div class="company-product-price">${companyProductMoney(p.price)}</div><p>${esc(p.description||"")}</p><div class="company-product-meta">Advertised by ${esc(p.company_name||"Company")}</div><div class="company-product-actions">${p.contact_url?`<a class="primary" style="display:inline-block;text-align:center;padding:9px 12px;border-radius:9px;text-decoration:none" href="${esc(p.contact_url)}" target="_blank" rel="noopener noreferrer">Contact seller ↗</a>`:""}${ownerView?`<button class="secondary" onclick="editCompanyProduct('${p.id}')">Edit</button><button class="danger" onclick="deleteCompanyProduct('${p.id}')">Remove</button>`:""}</div></div></article>`).join("")+'</div>';
+}
+async function publishCompanyProduct(){
+ if(!currentUser)return alert("Please sign in first.");
+ if(!activeCompanyId||!activeCompanyOwner)return alert("Register your company first. Only the company owner can publish products in this version.");
+ const product_name=el("companyProductName").value.trim(),category=el("companyProductCategory").value,description=el("companyProductDescription").value.trim(),price=Number(el("companyProductPrice").value||0),contact_url=el("companyProductContact").value.trim();
+ if(!product_name||!description)return alert("Enter the product name and description.");
+ if(!Number.isFinite(price)||price<0)return alert("Enter a valid price.");
+ if(contact_url){try{const u=new URL(contact_url);if(!["http:","https:"].includes(u.protocol))throw new Error();}catch(e){return alert("Contact link must start with https:// or http://.");}}
+ const status=el("companyProductStatus");status.textContent="Publishing product…";
+ let image_url=null;if(editingCompanyProductId){const existing=await db.from("company_product_ads").select("image_url").eq("id",editingCompanyProductId).eq("owner_id",currentUser.id).single();if(!existing.error)image_url=existing.data.image_url||null;}const file=el("companyProductImage").files[0];
+ if(file){
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type))return status.textContent="Choose a JPG, PNG or WEBP image.";
+  if(file.size>4*1024*1024)return status.textContent="Image must be 4 MB or smaller.";
+  const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=currentUser.id+"/"+crypto.randomUUID()+"."+ext;
+  const up=await db.storage.from("company-products").upload(path,file,{contentType:file.type,upsert:false});
+  if(up.error)return status.textContent="Image upload failed: "+up.error.message+" — run the Product Advertisements SQL setup.";
+  image_url=db.storage.from("company-products").getPublicUrl(path).data.publicUrl;
+ }
+ const payload={company_id:activeCompanyId,owner_id:currentUser.id,company_name:activeCompanyName||el("companyName").value.trim(),contact_phone:activeCompanyPhone||null,product_name,category,description,price,image_url,contact_url:contact_url||null,status:"published"};
+ let saveQuery;
+ if(editingCompanyProductId){
+  saveQuery=db.from("company_product_ads").update(payload).eq("id",editingCompanyProductId).eq("owner_id",currentUser.id);
+ }else{
+  saveQuery=db.from("company_product_ads").insert(payload);
+ }
+ const {error}=await saveQuery;
+ if(error){status.textContent="Could not save product: "+error.message+" — run the Product Advertisements SQL setup first.";return;}
+ editingCompanyProductId=null;
+ ["companyProductName","companyProductPrice","companyProductDescription","companyProductContact"].forEach(id=>el(id).value="");el("companyProductImage").value="";
+ el("companyProductCategory").value="Other";
+ const publishButton=document.querySelector('#companyProductsTab button[onclick="publishCompanyProduct()"]');if(publishButton)publishButton.textContent="🚀 Publish product advertisement";
+ status.textContent="Your product advertisement has been saved in the shared JFriendsChat Product Showcase.";
+ await loadMyCompanyProducts();await loadPublicCompanyProducts();
+}
+async function loadMyCompanyProducts(){
+ const box=el("myCompanyProducts");if(!box)return;
+ if(!activeCompanyId||!activeCompanyOwner){box.innerHTML="<p class='company-empty'>Register a company to advertise products.</p>";return;}
+ const {data,error}=await db.from("company_product_ads").select("*").eq("company_id",activeCompanyId).eq("owner_id",currentUser.id).order("created_at",{ascending:false}).limit(100);
+ if(error){box.innerHTML="<p class='muted'>Could not load products: "+esc(error.message)+". Run the Product Advertisements SQL setup.</p>";return;}
+ renderCompanyProductCards(data||[],true);
+}
+async function loadPublicCompanyProducts(){
+ const box=el("publicCompanyProducts");if(!box)return;
+ const q=(el("companyProductSearch")?.value||"").trim();
+ let req=db.from("company_product_ads").select("id,company_name,product_name,category,description,price,image_url,contact_url,created_at").eq("status","published").order("created_at",{ascending:false}).limit(100);
+ if(q)req=req.or("product_name.ilike.%"+q+"%,company_name.ilike.%"+q+"%,category.ilike.%"+q+"%,description.ilike.%"+q+"%");
+ const {data,error}=await req;
+ if(error){box.innerHTML="<p class='muted'>Product showcase could not load: "+esc(error.message)+". Run the Product Advertisements SQL setup.</p>";return;}
+ renderCompanyProductCards(data||[],false);
+}
+async function editCompanyProduct(id){
+ const {data,error}=await db.from("company_product_ads").select("*").eq("id",id).eq("owner_id",currentUser.id).single();
+ if(error){alert("Could not open product for editing: "+error.message);return;}
+ editingCompanyProductId=id;
+ el("companyProductName").value=data.product_name||"";
+ el("companyProductCategory").value=data.category||"Other";
+ el("companyProductPrice").value=data.price||0;
+ el("companyProductDescription").value=data.description||"";
+ el("companyProductContact").value=data.contact_url||"";
+ el("companyProductImage").value="";
+ const b=document.querySelector('#companyProductsTab button[onclick="publishCompanyProduct()"]');if(b)b.textContent="💾 Save product changes";
+ el("companyProductStatus").textContent="Editing this product. Choose a new picture only if you want to replace its current picture.";
+ el("companyProductName").scrollIntoView({behavior:"smooth",block:"center"});
+}
+async function deleteCompanyProduct(id){
+ if(!confirm("Remove this product advertisement from the public showcase?"))return;
+ const {error}=await db.from("company_product_ads").delete().eq("id",id).eq("owner_id",currentUser.id);
+ if(error){alert("Could not remove product: "+error.message);return;}
+ await loadMyCompanyProducts();await loadPublicCompanyProducts();
+}
+
+async function openAds(){hidePanels();setNav("adsNav");el("adsPanel").classList.remove("hidden");await loadMyAdCampaigns();await loadApprovedAdPreview();}
+async function submitAdCampaign(){if(!currentUser)return alert("Please sign in first.");const business_name=el("adBusinessName").value.trim(),headline=el("adHeadline").value.trim(),description=el("adDescription").value.trim(),image_url=el("adImageUrl").value.trim(),destination_url=el("adDestination").value.trim(),placement=el("adPlacement").value,budget=Number(el("adBudget").value||0);if(!business_name||!headline||!description||!destination_url)return alert("Please complete the business name, headline, description and website/contact link.");try{const dest=new URL(destination_url);if(!["http:","https:"].includes(dest.protocol))throw new Error("Use a valid https:// or http:// link.");if(image_url){const img=new URL(image_url);if(!["http:","https:"].includes(img.protocol))throw new Error("Image URL must start with http:// or https://.");}}catch(e){return alert("Please enter valid website and image links. "+e.message);}if(budget<0)return alert("Daily budget cannot be negative.");const payload={advertiser_id:currentUser.id,business_name,headline,description,image_url:image_url||null,destination_url,placement,daily_budget:budget,status:"pending"};const {error}=await db.from("ad_campaigns").insert(payload);if(error){el("adSubmitStatus").textContent="Could not submit: "+error.message+" — run the Advertisements SQL setup first.";return;}el("adSubmitStatus").textContent="Your advertisement has been submitted for review. It will not display publicly until approved.";["adBusinessName","adHeadline","adDescription","adImageUrl","adDestination","adBudget"].forEach(id=>el(id).value="");await loadMyAdCampaigns();}
+async function loadMyAdCampaigns(){const box=el("myAdCampaigns");if(!box)return;const {data,error}=await db.from("ad_campaigns").select("id,business_name,headline,description,placement,daily_budget,status,created_at").eq("advertiser_id",currentUser.id).order("created_at",{ascending:false}).limit(50);if(error){box.innerHTML="<p class='muted'>Campaign list unavailable: "+esc(error.message)+". Run the Advertisements SQL setup.</p>";return;}const rows=data||[];box.innerHTML=rows.length?rows.map(a=>`<div class="ad-campaign-row"><h4>${esc(a.headline)}</h4><p>${esc(a.business_name)} · ${esc(a.placement)}</p><p>${esc(a.description)}</p><span class="ad-status ${esc(a.status)}">${esc(a.status.toUpperCase())}</span><p class="muted">Daily budget: ₦${Number(a.daily_budget||0).toLocaleString("en-NG")} · Submitted: ${new Date(a.created_at).toLocaleDateString()}</p>${["approved","pending"].includes(a.status)?`<div class="ads-actions"><button class="secondary" onclick="pauseAdCampaign('${a.id}')">Pause campaign</button></div>`:""}</div>`).join(""):"<p class='muted'>You have not submitted any advertisements yet.</p>";}
+async function pauseAdCampaign(id){const {error}=await db.from("ad_campaigns").update({status:"paused"}).eq("id",id).eq("advertiser_id",currentUser.id);if(error){alert("Could not pause campaign: "+error.message);return;}await loadMyAdCampaigns();await loadApprovedAdPreview();}
+async function loadApprovedAdPreview(){const box=el("approvedAdPreview");if(!box)return;const now=new Date().toISOString();const {data,error}=await db.from("ad_campaigns").select("business_name,headline,description,image_url,destination_url,placement").eq("status","approved").order("created_at",{ascending:false}).limit(12);if(error){box.innerHTML="<p class='muted'>Approved advert preview is not available yet: "+esc(error.message)+"</p>";return;}const rows=(data||[]);box.innerHTML=rows.length?rows.map(a=>`<article class="ad-preview-card">${a.image_url?`<img src="${esc(a.image_url)}" alt="" loading="lazy" onerror="this.style.display='none'">`:`<div class="ad-placeholder">📢</div>`}<div><span class="ad-status approved">SPONSORED</span><h4>${esc(a.headline)}</h4><p><b>${esc(a.business_name)}</b> · ${esc(a.placement)}</p><p>${esc(a.description)}</p><a href="${esc(a.destination_url)}" target="_blank" rel="noopener noreferrer">Learn more ↗</a></div></article>`).join(""):"<p class='muted'>There are no approved advertisements yet.</p>";}
 
 function showCreateAccount(){
  el("loginForm").classList.add("hidden");el("signupForm").classList.remove("hidden");
@@ -656,7 +976,7 @@ async function startApp(user){
  db.rpc("jf_record_activity").then(()=>{}).catch(()=>{});
  await ensureProfile();await checkMarketAdmin();await loadChatFriends();openChatHome();await loadPresence();subscribeToMessages();await startPresence();await subscribeToCalls();
  if(refreshTimer)clearInterval(refreshTimer);
- refreshTimer=setInterval(async()=>{if(!currentUser)return;await loadChatFriends();if(!activeFriend)await renderChatList();if(!el("postsPanel").classList.contains("hidden"))await loadPosts();if(!el("businessPanel").classList.contains("hidden"))await loadProducts();if(!el("connectPanel").classList.contains("hidden"))await loadMeetings();if(!el("groupsPanel").classList.contains("hidden")&&window.activeGroupId&&!el("groupRoomPanel").classList.contains("hidden"))await loadGroupMessages();if(!el("schoolPanel").classList.contains("hidden"))await loadSchoolWorkspace();if(!el("companyPanel").classList.contains("hidden"))await loadCompany();},20000);
+ refreshTimer=setInterval(async()=>{if(!currentUser)return;await loadChatFriends();if(!activeFriend)await renderChatList();if(!el("postsPanel").classList.contains("hidden"))await loadPosts();if(!el("businessPanel").classList.contains("hidden"))await loadProducts();if(!el("connectPanel").classList.contains("hidden"))await loadMeetings();if(!el("groupsPanel").classList.contains("hidden")&&window.activeGroupId&&!el("groupRoomPanel").classList.contains("hidden"))await loadGroupMessages();if(!el("schoolPanel").classList.contains("hidden"))await loadSchoolWorkspace();if(!el("companyPanel").classList.contains("hidden")&&!el("companyShowcaseTab").classList.contains("hidden"))await loadPublicCompanyProducts();if(!el("adsPanel").classList.contains("hidden")){await loadMyAdCampaigns();await loadApprovedAdPreview();}},20000);
 }
 async function ensureProfile(){
  let {data,error}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
@@ -771,13 +1091,23 @@ async function createPost(){
  setStatus("Publishing post...");let postId=crypto.randomUUID(),path=null;if(file){path=currentUser.id+"/"+postId+"/"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");let {error}=await db.storage.from(POST_BUCKET).upload(path,file,{upsert:false,contentType:file.type});if(error){setStatus("Upload failed: "+error.message);return;}}
  let {error}=await db.from("posts").insert({id:postId,user_id:currentUser.id,content:text,media_path:path,media_type:file?(file.type.startsWith("video/")?"video":"image"):null,visibility});if(error){setStatus("Post could not be saved: "+error.message);return;}el("postText").value="";el("postMedia").value="";setStatus("Post published.");await loadPosts();
 }
+function setPostView(mode,button){
+ const feed=el("postsFeed");if(!feed)return;
+ feed.classList.remove("moments360-flow","moments360-mosaic","moments360-focus");
+ feed.classList.add("moments360-"+mode);
+ document.querySelectorAll("#postsPanel [data-post-view]").forEach(b=>b.classList.toggle("active",b===button));
+ try{localStorage.setItem("jf_moments360_view",mode);}catch(e){}
+}
 async function loadPosts(){
  if(!currentUser)return;let box=el("postsFeed");box.innerHTML="<p>Loading posts...</p>";let {data:posts,error}=await db.from("posts").select("*").order("created_at",{ascending:false}).limit(100);if(error){box.innerHTML="<p>Could not load posts: "+esc(error.message)+"</p>";return;}posts=posts||[];if(!posts.length){box.innerHTML="<p>No posts yet. Be the first to publish something!</p>";return;}
  let ids=[...new Set(posts.map(p=>p.user_id))],profiles=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);profiles=r.data||[];}let {data:likes}=await db.from("post_likes").select("post_id,user_id").in("post_id",posts.map(p=>p.id));let {data:comments}=await db.from("post_comments").select("id,post_id,user_id,content,created_at").in("post_id",posts.map(p=>p.id)).order("created_at",{ascending:true});let commentUsers=[...new Set((comments||[]).map(c=>c.user_id))],commentProfiles=[];if(commentUsers.length){let r=await db.from("profiles").select("*").in("id",commentUsers);commentProfiles=r.data||[];}let getProfile=id=>profiles.find(p=>p.id===id)||commentProfiles.find(p=>p.id===id),html=[];
  for(let p of posts){let own=p.user_id===currentUser.id;if(p.visibility==="private"&&!own)continue;let author=getProfile(p.user_id),media="";if(p.media_path){let {data:sd,error:se}=await db.storage.from(POST_BUCKET).createSignedUrl(p.media_path,3600);if(!se&&sd?.signedUrl){let url=sd.signedUrl;media=p.media_type==="video"?`<video class="post-media" controls playsinline preload="metadata" src="${esc(url)}"></video>`:`<img class="post-media" src="${esc(url)}" alt="Post image">`;}}
  let pl=(likes||[]).filter(l=>l.post_id===p.id),pc=(comments||[]).filter(c=>c.post_id===p.id),liked=pl.some(l=>l.user_id===currentUser.id),commentHtml=pc.map(c=>`<div class="comment"><strong>${esc(nameOf(getProfile(c.user_id)))}</strong>${esc(c.content)}<div class="muted">${esc(timeOf(c.created_at))}</div></div>`).join("");
- html.push(`<article class="post"><div class="post-head">${avatar(author)}<div class="flexinfo"><strong>${esc(nameOf(author))}</strong><div class="muted">${esc(timeOf(p.created_at))} · ${p.visibility==="public"?"🌍 Public":"🔒 Private"}</div></div>${own?`<button class="secondary" onclick="deletePost('${p.id}')">Delete</button>`:""}</div>${p.content?`<div class="post-body">${esc(p.content)}</div>`:""}${media}<div class="post-actions"><button class="${liked?"liked":""}" onclick="toggleLike('${p.id}',${liked})">❤️ ${liked?"Liked":"Like"} · ${pl.length}</button><button onclick="focusComment('${p.id}')">💬 Comment · ${pc.length}</button><button onclick="sharePost('${p.id}')">↗️ Share</button></div><div id="comments-${p.id}">${commentHtml}</div><div class="composer"><input id="commentInput-${p.id}" placeholder="Write a comment..."><button class="primary" onclick="addComment('${p.id}')">Send</button></div></article>`);
+ html.push(`<article class="post"><div class="post-head">${avatar(author)}<div class="living-author-meta"><strong>${esc(nameOf(author))}</strong><div class="muted">${esc(timeOf(p.created_at))} · ${p.visibility==="public"?"🌍 Public":"🔒 Private"}</div></div>${own?`<button class="secondary" onclick="deletePost('${p.id}')">Delete</button>`:""}</div>${p.content?`<div class="post-body">${esc(p.content)}</div>`:""}${media}<div class="post-actions"><button class="${liked?"liked":""}" onclick="toggleLike('${p.id}',${liked})">❤️ ${liked?"Liked":"Like"} · ${pl.length}</button><button onclick="focusComment('${p.id}')">💬 Comment · ${pc.length}</button><button onclick="sharePost('${p.id}')">↗️ Share</button></div><div id="comments-${p.id}">${commentHtml}</div><div class="composer"><input id="commentInput-${p.id}" placeholder="Write a comment..."><button class="primary" onclick="addComment('${p.id}')">Send</button></div></article>`);
  }box.innerHTML=html.join("")||"<p>No posts visible to you.</p>";
+ let savedView="flow";try{savedView=localStorage.getItem("jf_moments360_view")||"flow";}catch(e){}
+ const viewButton=document.querySelector(`#postsPanel [data-post-view="${savedView}"]`)||document.querySelector('#postsPanel [data-post-view="flow"]');
+ setPostView(savedView,viewButton);
 }
 async function toggleLike(postId,alreadyLiked){if(alreadyLiked){let {error}=await db.from("post_likes").delete().eq("post_id",postId).eq("user_id",currentUser.id);if(error)return alert(error.message);}else{let {error}=await db.from("post_likes").insert({post_id:postId,user_id:currentUser.id});if(error)return alert(error.message);}await loadPosts();}
 function focusComment(id){el("commentInput-"+id)?.focus();}
