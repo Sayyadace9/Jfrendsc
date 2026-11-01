@@ -68,6 +68,19 @@ hr{border:0;border-top:1px solid var(--border);margin:22px 0}
 .post-actions button{background:#f0f5fc;color:#405776}
 .post-actions button:hover{background:#e2edff;color:#1769e0}
 .post-actions button.liked{background:#e2efff;color:#1769e0}
+
+/* Compact, icon-only social actions */
+.post-actions{display:flex;align-items:center;justify-content:space-around;gap:10px;margin-top:12px;padding:10px 2px;border-top:1px solid #edf0f5}
+.post-actions .social-action{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:8px 10px;border:0;border-radius:13px;background:transparent;color:#64748b;font-size:20px;font-weight:700;box-shadow:none}
+.post-actions .social-action .action-count{font-size:13px;font-weight:600;color:#64748b}
+.post-actions .social-action:hover{background:#eef5ff;color:#1769e0}
+.post-actions .social-action.liked{background:#fff0f4;color:#e04478}
+.post-actions .social-action.comment-action{color:#3975c8}
+.post-actions .social-action.share-action{color:#7b61c9}
+.post-comment-composer{display:none;align-items:center;gap:8px;margin:10px 0 4px;padding:9px;background:#f3f7ff;border:1px solid #e5edfb;border-radius:16px}
+.post-comment-composer.open{display:flex}
+.post-comment-composer input{flex:1;min-width:0;margin:0;border-radius:22px;background:#fff}
+.post-comment-composer button{flex-shrink:0;border-radius:22px;padding:10px 16px}
 .comment{padding:10px 12px;background:#f3f6fb;border-radius:10px;margin:8px 0;overflow-wrap:anywhere}
 .comment strong{margin-right:5px}
 #productsFeed,#meetingsFeed,#groupsFeed{margin-top:15px}
@@ -408,6 +421,215 @@ footer{color:#65676b!important}
 .company-product-image{border:1px dashed #9bb8df;background:#f7faff;border-radius:12px;padding:12px}
 @media(max-width:520px){.company-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.company-product-card img{height:125px}.company-product-card .product-body{padding:9px}}
 
+
+/* JFriendsChat member profile — original blue identity, not a Facebook clone */
+.member-profile{max-width:940px!important;margin:14px auto 30px!important;padding:0!important;overflow:hidden;border-radius:24px;background:#fff;border:1px solid #e2eaf6;box-shadow:0 12px 35px #16477f12}
+.member-cover{height:190px;background:radial-gradient(circle at 80% 20%,#8fc4ff 0 7%,transparent 7.5%),radial-gradient(circle at 70% 75%,#ffffff24 0 12%,transparent 12.5%),linear-gradient(125deg,#0755d9,#1685f8 55%,#a5d4ff);position:relative}
+.member-cover:after{content:"JFRIENDSCHAT · YOUR CIRCLE";position:absolute;right:18px;bottom:17px;color:#ffffffd9;font-size:11px;font-weight:800;letter-spacing:2px}
+.member-identity{padding:0 22px 18px;display:flex;align-items:flex-end;gap:15px;margin-top:-53px;position:relative}
+.member-avatar{width:112px;height:112px;border:5px solid #fff;border-radius:30px;background:#e5f1ff;box-shadow:0 5px 20px #0b4c9c25;overflow:hidden;display:grid;place-items:center;color:#1268db;font-size:40px;font-weight:800;flex-shrink:0}
+.member-avatar img{width:100%;height:100%;object-fit:cover}
+.member-title{padding:0 0 9px;min-width:0}.member-title h2{margin:0;color:#102b57;font-size:24px;overflow-wrap:anywhere}.member-title p{margin:5px 0 0;color:#71829a;font-size:13px}
+.member-actions{display:flex;gap:8px;flex-wrap:wrap;padding:0 22px 18px}.member-actions button{border-radius:13px}
+.member-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 22px 18px}.member-stat{background:#f1f6ff;border:1px solid #e3edfc;border-radius:15px;padding:13px;text-align:center}.member-stat strong{display:block;color:#075fd2;font-size:22px}.member-stat span{font-size:11px;color:#71829a;font-weight:700;letter-spacing:.5px}
+.member-tabs{display:flex;gap:7px;padding:0 22px 14px;border-bottom:1px solid #edf1f7;overflow:auto}.member-tabs button{background:#f1f6ff;color:#446287;border-radius:20px;padding:10px 17px;white-space:nowrap}.member-tabs button.active{background:#126be5;color:#fff}.member-content{padding:18px 22px 24px}.member-about{background:linear-gradient(135deg,#f5f9ff,#edf5ff);border:1px solid #e4eefc;border-radius:17px;padding:17px;margin-bottom:15px}.member-about h3{margin:0 0 10px;color:#174b91}.member-friend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}.member-friend-card{border:1px solid #e5edf8;border-radius:15px;padding:12px;background:#fff;cursor:pointer;text-align:center}.member-friend-card .avatar{width:58px;height:58px;margin:0 auto 8px}.member-friend-card strong{display:block;overflow-wrap:anywhere;font-size:13px}.member-clickable{cursor:pointer}.member-clickable:hover{color:#075fd2;text-decoration:underline}.member-profile .post{box-shadow:none;border-radius:16px}.member-empty{padding:20px;text-align:center;color:#71829a;background:#f6f9fe;border-radius:14px}
+@media(max-width:600px){.member-profile{margin:8px 0 20px!important;border-radius:19px}.member-cover{height:145px}.member-identity{padding:0 14px 13px;gap:11px;margin-top:-43px}.member-avatar{width:88px;height:88px;border-radius:24px;font-size:32px}.member-title h2{font-size:19px}.member-actions,.member-stats{padding-left:14px;padding-right:14px}.member-stats{gap:6px}.member-stat{padding:10px 5px}.member-stat strong{font-size:19px}.member-stat span{font-size:10px}.member-tabs{padding-left:14px;padding-right:14px}.member-content{padding:14px}.member-friend-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Message actions: tap or long-press your own message to reveal Delete. */
+.message{position:relative;cursor:pointer;-webkit-user-select:text;user-select:text}
+.message-action-menu{position:absolute;right:0;top:calc(100% + 5px);z-index:30;
+  padding:5px;background:#fff;border:1px solid #e1e7f0;border-radius:10px;
+  box-shadow:0 7px 22px #102b5730;min-width:112px}
+.message-action-menu button{width:100%;padding:9px 12px;text-align:left;
+  background:#fff0ef!important;color:#b42318!important;border-radius:7px!important}
+.message-action-menu button:active{background:#ffe1df!important}
+.message.deleted-pending{opacity:.55}
+
+
+/* Moments 360 Creator Studio */
+.moments360-creator{background:linear-gradient(145deg,#fff 0%,#f4f2ff 52%,#effbff 100%)}
+.moments360-type-row{display:flex;align-items:center;gap:10px;margin:10px 0}
+.moments360-type-row label,.moments360-ad-fields label{font-size:12px;font-weight:800;color:#4e4a79}
+.moments360-type-row select,.moments360-ad-fields input{flex:1;min-width:0;padding:11px 13px;border:1px solid #e4e0f4;border-radius:12px;background:#fff}
+.moments360-ad-fields{padding:13px;margin:10px 0;border:1px dashed #d7a64b;border-radius:15px;background:#fffaf0}
+.moments360-ad-fields label{display:block;margin-bottom:6px;color:#8a5b0b}
+.moments360-ad-fields input{width:100%;box-sizing:border-box}
+.moments360-ad-fields small{display:block;margin-top:7px;color:#8a6b35;font-size:11px;line-height:1.5}
+.moments360-tool{border:0;font-family:inherit}
+button.moments360-tool{cursor:pointer}
+.moments360-media-preview{margin:12px 0;padding:10px;border:1px solid #e6e2f5;border-radius:16px;background:#fff}
+.moments360-media-preview img,.moments360-media-preview video{display:block;max-width:100%;max-height:340px;margin:auto;border-radius:12px}
+.moments360-video-creator{margin:12px 0;padding:14px;border:1px solid #dcd8fa;border-radius:18px;background:#171735;color:#fff}
+.moments360-video-head,.moments360-record-actions{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}
+.moments360-video-creator p,.moments360-video-creator small{color:#d7d7ef;font-size:12px;line-height:1.5}
+.moments360-video-creator video{width:100%;max-height:340px;background:#080812;border-radius:13px;margin:10px 0;object-fit:contain}
+.moments360-record-actions button:disabled{opacity:.45;cursor:not-allowed}
+#postsFeed .post-promo-label{display:inline-flex;align-items:center;gap:5px;margin:8px 0 3px;padding:6px 10px;border-radius:30px;background:#fff4d9;color:#8a5a00;font-size:10px;font-weight:900;letter-spacing:.08em}
+#postsFeed .post-promo-headline{margin:8px 0;padding:13px 15px;border-radius:14px;background:linear-gradient(110deg,#fff5d9,#fff0e7);color:#774600;font-size:18px;font-weight:850}
+#postsFeed .post-media{object-fit:contain}
+@media(max-width:600px){.moments360-type-row{align-items:stretch;flex-direction:column}.moments360-type-row select{width:100%}.moments360-publish-row{flex-wrap:wrap}.moments360-publish-row select{flex-basis:100%}.moments360-publish{width:100%}}
+
+
+/* JFriendsChat modern light vertical discovery feed */
+#postsPanel.moments360{max-width:900px!important;margin:12px auto 90px!important;padding:0 12px!important;color:#18243b!important}
+.jfc-create-entry{background:#fff;border:1px solid #e4eaf7;border-radius:18px;padding:12px;margin:10px 0 16px;box-shadow:0 5px 18px #244b850c}
+.jfc-create-entry .moments360-compose-head{margin:0 0 14px}
+.jfc-create-entry .moments360-compose-head strong{font-size:17px;color:#17345f}
+.jfc-create-entry .moments360-compose-head small{font-size:12px;color:#71809a}
+.jfc-open-create{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:13px 16px;border-radius:15px;background:linear-gradient(105deg,#0866ff,#7b55e8);color:white;font-size:16px;font-weight:800;box-shadow:0 6px 16px #0866ff25}
+.jfc-open-create span{font-size:27px;line-height:20px}
+#jfcPostEditor.moments360-composer{margin:0 0 20px;padding:16px;border-radius:20px;background:#fff;border:1px solid #e4eaf5;box-shadow:0 8px 25px #244b8510}
+.jfc-editor-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:#17345f;font-size:17px}
+.jfc-editor-title button{padding:7px 12px;border-radius:20px}
+#jfcPostEditor textarea{min-height:100px;border-radius:15px!important;background:#fbfcff!important;border-color:#e2e9f5!important}
+.jfc-plus-picker{width:58px;height:58px;border-radius:17px;background:linear-gradient(140deg,#0866ff,#9b4fe2);color:#fff;font-size:42px;line-height:1;display:grid;place-items:center;box-shadow:0 7px 18px #0866ff2b;margin:12px 0}
+#jfcMediaOptions{display:flex;gap:8px;flex-wrap:wrap;padding:12px;background:#f6f8ff;border:1px solid #e8edfa;border-radius:15px}
+#jfcMediaOptions .moments360-tool{background:#eaf2ff;color:#145fc5;border:1px solid #dce9ff}
+.moments360-publish-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:14px}
+.moments360-publish-row select{min-width:0}
+.moments360-publish{background:linear-gradient(105deg,#0866ff,#7955e8)!important;box-shadow:0 5px 14px #0866ff20!important}
+.moments360-hero{display:none!important}
+.moments360-feedbar{margin:20px 2px 12px!important;align-items:center}
+.moments360-feedbar h3{color:#17345f!important;font-size:22px!important}
+.moments360-view-switch{display:none!important}
+#postsFeed.moments360-flow{display:flex!important;flex-direction:column!important;align-items:center!important;gap:18px!important}
+#postsFeed .post{width:min(100%,560px)!important;box-sizing:border-box!important;position:relative!important;margin:0!important;padding:15px!important;border:1px solid #e3eaf5!important;border-radius:22px!important;background:#fff!important;box-shadow:0 8px 28px #1e477a12!important;overflow:hidden!important}
+#postsFeed .post:before{display:none!important}
+#postsFeed .post-head{padding-bottom:10px!important}
+#postsFeed .post-body{background:transparent!important;padding:3px 2px!important;margin:7px 0 10px!important;color:#24344d!important;font-size:15px!important}
+#postsFeed .post-media{width:100%!important;max-height:min(68vh,680px)!important;aspect-ratio:9/14!important;object-fit:cover!important;background:#edf2fa!important;border-radius:17px!important;margin:8px 0!important}
+#postsFeed video.post-media{object-fit:contain!important;background:#f0f3f9!important}
+#postsFeed .post-actions{border:0!important;padding:8px 0 0!important;margin:7px 0 0!important;display:flex!important;gap:8px!important;flex-wrap:wrap!important}
+#postsFeed .post-actions button{background:#f0f5ff!important;color:#22518f!important;border:1px solid #e3ebf8!important;border-radius:25px!important;padding:10px 13px!important;font-weight:700!important}
+#postsFeed .post-actions button.liked{background:#fff0f4!important;color:#d63370!important;border-color:#ffd7e4!important}
+#postsFeed .comment{background:#f4f7fc!important;color:#33445d!important}
+#postsFeed .composer{background:#f8faff!important;border-color:#e5ebf5!important}
+#postsFeed .post-promo-label{display:inline-block;background:#fff3d9;color:#8a5a00;border-radius:20px;padding:5px 10px;font-size:11px;font-weight:800;margin:8px 0}
+#postsFeed .post-promo-headline{font-size:18px;font-weight:800;color:#17345f;margin:5px 0}
+@media(max-width:620px){#postsPanel.moments360{padding:0 7px!important}.jfc-create-entry{padding:14px;border-radius:19px}#jfcPostEditor.moments360-composer{padding:13px}.moments360-publish-row{grid-template-columns:1fr}.moments360-publish-row button{width:100%}#postsFeed .post{border-radius:18px!important;padding:12px!important}#postsFeed .post-media{max-height:66vh!important;aspect-ratio:9/14!important}}
+
+
+/* Facebook-style balanced post media: readable caption + visible photo/video */
+#postsFeed .post-body{font-size:15px!important;line-height:1.55!important;margin:5px 0 10px!important;padding:2px 1px!important;max-height:none!important;overflow:visible!important}
+#postsFeed .post-media{display:block!important;width:100%!important;height:auto!important;max-height:440px!important;aspect-ratio:auto!important;object-fit:contain!important;background:#f1f4f8!important;border-radius:13px!important;margin:8px 0!important}
+#postsFeed video.post-media{height:auto!important;max-height:380px!important;object-fit:contain!important;background:#101828!important}
+#postsFeed img.post-media{content-visibility:auto}
+#postsFeed video.post-media{preload:none}
+@media(max-width:620px){
+ #postsFeed .post{padding:12px!important}
+ #postsFeed .post-body{font-size:14px!important;line-height:1.5!important;margin:4px 0 9px!important}
+ #postsFeed .post-media{width:100%!important;height:auto!important;max-height:360px!important;aspect-ratio:auto!important;object-fit:contain!important;border-radius:12px!important}
+ #postsFeed video.post-media{max-height:300px!important;object-fit:contain!important}
+}
+
+
+/* Social actions: liked state is light blue, never red/pink. */
+#postsFeed .post-actions .social-action.liked,
+#postsFeed .post-actions button.liked,
+.post-actions .social-action.liked{
+ background:#e7f3ff!important;color:#0866ff!important;border-color:#cfe4ff!important;
+}
+#postsFeed .post-actions .social-action.liked .action-count{color:#0866ff!important}
+.post-share-modal{position:fixed;inset:0;z-index:10000;background:#10213b99;display:flex;align-items:center;justify-content:center;padding:16px}
+.post-share-modal.hidden{display:none!important}
+.post-share-card{width:min(480px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;padding:20px;box-shadow:0 18px 55px #0003}
+.post-share-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:15px}
+.post-share-head h3{margin:0;color:#17345e}.post-share-head p{margin:5px 0 0;color:#718096;font-size:13px}
+.post-share-close{background:#edf3fb;color:#345477;border-radius:50%;width:36px;height:36px;padding:0}
+.post-share-card label{display:block;margin:12px 0 5px;font-size:13px;font-weight:700;color:#34445d}
+.post-share-card select,.post-share-card textarea{width:100%;margin:0;border:1px solid #dce4ef;border-radius:10px;padding:12px;font:inherit}
+.post-share-card textarea{resize:vertical;min-height:75px}
+.post-share-send{width:100%;margin-top:10px}
+
+
+/* Facebook-inspired comment layout */
+#postsFeed .fb-comments-area{padding:0 14px;background:#fff;border-top:0}
+#postsFeed .fb-comments-list{padding:10px 0}
+#postsFeed .fb-comments-list:not(.hidden){border-top:1px solid #edf0f4}
+#postsFeed .fb-main-composer:not(.hidden){padding:10px 0}
+#postsFeed .fb-comments-list.hidden,#postsFeed .fb-main-composer.hidden{display:none!important}
+#postsFeed .fb-comments-heading{font-size:14px;font-weight:700;color:#606770;margin:0 0 12px}
+#postsFeed .fb-comment-row,#postsFeed .fb-reply-row{display:flex;align-items:flex-start;gap:8px;margin:10px 0}
+#postsFeed .fb-comment-row>.avatar,#postsFeed .fb-reply-row>.avatar{width:34px;height:34px;min-width:34px;border-radius:50%;overflow:hidden}
+#postsFeed .fb-comment-main{min-width:0;flex:1}
+#postsFeed .fb-comment-bubble{display:inline-block;max-width:100%;background:#f0f2f5;border-radius:18px;padding:9px 13px;color:#050505;overflow-wrap:anywhere}
+#postsFeed .fb-comment-bubble strong{display:block;font-size:13px;font-weight:700;margin-bottom:3px;color:#050505}
+#postsFeed .fb-comment-bubble div{font-size:14px;line-height:1.4;white-space:pre-wrap}
+#postsFeed .fb-comment-tools{display:flex;align-items:center;gap:14px;margin:3px 0 0 12px;font-size:11px;color:#65676b}
+#postsFeed .fb-comment-tools button{border:0;background:transparent;color:#65676b;font-size:11px;font-weight:700;padding:2px 0}
+#postsFeed .fb-replies{margin-left:12px;padding-left:12px;border-left:2px solid #e4e6eb}
+#postsFeed .fb-reply-composer{display:flex;gap:7px;margin:8px 0 5px 10px}
+#postsFeed .fb-reply-composer input{flex:1;min-width:0;border:0;border-radius:20px;background:#f0f2f5;padding:10px 13px}
+#postsFeed .fb-reply-composer button{border:0;border-radius:18px;background:#1877f2;color:white;padding:7px 13px;font-weight:700}
+#postsFeed .fb-main-composer{display:flex;align-items:center;gap:8px;margin:12px 0 0;padding:0;background:transparent;border:0}
+#postsFeed .fb-main-composer>.avatar{width:36px;height:36px;min-width:36px;border-radius:50%;overflow:hidden}
+#postsFeed .fb-main-composer input{flex:1;min-width:0;border:0!important;border-radius:22px!important;background:#f0f2f5!important;padding:11px 15px!important}
+#postsFeed .fb-main-composer button{border:0;border-radius:20px;background:#1877f2;padding:9px 15px}
+#postsFeed .fb-no-comments{font-size:13px;color:#65676b;padding:4px 0}
+
+</style>
+
+<style id="jfc-love-light-blue-final">
+/* Final Love button colour override */
+#postsFeed .post-actions button[aria-label="Like post"],
+#postsFeed .post-actions button[title="Like"] { color:#2584e8 !important; }
+#postsFeed .post-actions button[aria-label="Like post"].liked,
+#postsFeed .post-actions button[title="Like"].liked {
+  background:#e3f1ff !important; color:#0878e8 !important;
+  border:1px solid #b9dcff !important;
+}
+#postsFeed .post-actions button[aria-label="Like post"].liked span,
+#postsFeed .post-actions button[title="Like"].liked span { color:#0878e8 !important; }
+</style>
+
+<style id="jfc-love-light-blue-recreated">
+/* JFriendsChat Love action: blue heart in both states; pale blue when selected. */
+#postsFeed .post-actions button[aria-label="Like post"],
+#postsFeed .post-actions button[title="Like"],
+#postsFeed .post-actions button.social-action {
+  color:#2584e8 !important;
+}
+#postsFeed .post-actions button[aria-label="Like post"].liked,
+#postsFeed .post-actions button[title="Like"].liked,
+#postsFeed .post-actions button.social-action.liked {
+  background:#e6f2ff !important;
+  color:#0878e8 !important;
+  border-color:#b8d9ff !important;
+}
+#postsFeed .post-actions button[aria-label="Like post"] span,
+#postsFeed .post-actions button[title="Like"] span,
+#postsFeed .post-actions button[aria-label="Like post"].liked span,
+#postsFeed .post-actions button[title="Like"].liked span {
+  color:#0878e8 !important;
+}
+
+/* Facebook-inspired full-width feed and multi-media posts */
+#postsPanel{padding-left:0!important;padding-right:0!important}
+#postsFeed.moments360-flow{display:block!important;width:100%!important}
+#postsFeed.moments360-flow .post{width:100%!important;max-width:none!important;margin:0 0 12px!important;padding:12px 14px!important;border:0!important;border-radius:0!important;box-shadow:none!important;border-bottom:8px solid #f0f2f5!important;background:#fff!important}
+#postsFeed .post:before{display:none!important}
+#postsFeed .post-body{padding:2px 2px!important;margin:8px 0 12px!important;background:transparent!important;border-radius:0!important;color:#161b22!important;font-size:18px!important;line-height:1.4!important}
+#postsFeed .post-media{width:100%!important;max-height:650px!important;aspect-ratio:auto!important;object-fit:cover!important;border-radius:0!important;margin:0!important;background:#f0f2f5!important}
+.jfc-post-media-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;width:calc(100% + 28px);margin:10px -14px 0;max-height:620px;overflow:hidden;background:#fff}
+.jfc-post-media-grid .post-media{height:100%;min-height:150px;max-height:620px;object-fit:cover}
+.jfc-post-media-grid.count-1{grid-template-columns:1fr}.jfc-post-media-grid.count-1 .post-media{max-height:620px;object-fit:contain;background:#111}
+.jfc-post-media-grid.count-3 .post-media:first-child{grid-row:span 2}
+.jfc-post-media-grid.count-5 .post-media:nth-child(n+5){display:none}
+.jfc-post-stats{display:flex;justify-content:space-between;align-items:center;padding:10px 2px 7px;color:#65676b;font-size:14px;border-bottom:1px solid #e4e6eb}
+#postsFeed .post-actions{display:flex!important;flex-wrap:nowrap!important;gap:4px!important;margin:0!important;padding:5px 0!important;border:0!important}
+#postsFeed .post-actions .social-action{flex:1!important;justify-content:center!important;min-height:42px!important;border:0!important;border-radius:8px!important;background:transparent!important;color:#65676b!important;font-size:16px!important;padding:8px 3px!important}
+#postsFeed .post-actions .social-action.liked{background:#e7f3ff!important;color:#0866ff!important}
+#postsFeed .post-actions .social-action .action-count{font-size:14px!important;color:inherit!important}
+#postsFeed .post-head{padding:0 0 7px!important}
+.jfc-selected-media-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:10px 0}.jfc-selected-media-grid img,.jfc-selected-media-grid video{width:100%;height:170px;object-fit:cover;border-radius:12px;background:#eef2f7}
+@media(max-width:600px){#postsFeed.moments360-flow .post{padding:10px 12px!important}.jfc-post-media-grid{width:calc(100% + 24px);margin-left:-12px;margin-right:-12px;max-height:560px}.jfc-post-media-grid .post-media{min-height:125px;max-height:560px}.#postsFeed .post-body{font-size:17px!important}}
+</style>
+
+<style>
+.jfc-last-comment-preview{display:block;width:100%;text-align:left;border:0;background:transparent;color:#343a40;padding:8px 14px 10px;font-size:14px;line-height:1.35;cursor:pointer}
+.jfc-last-comment-preview strong{font-weight:700;color:#202124}
+.jfc-last-comment-preview span{color:#1877f2;font-weight:600;margin-left:5px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -488,26 +710,47 @@ footer{color:#65676b!important}
 <section id="friendsPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>My Friends</h3><div id="friendsList"></div></section>
 <section id="requestsPanel" class="card hidden"><button class="secondary" onclick="openFriendsMenu()">← Friends</button><h3>Friend Requests</h3><h4>Incoming</h4><div id="incomingRequests"></div><h4>Sent</h4><div id="outgoingRequests"></div></section>
 <section id="searchPanel" class="card hidden"><h3>👥 New Friends</h3><h4>1. All Users</h4><p class="muted">All registered members appear here. Use Add Friend to connect, or Accept Request when someone has requested to be your friend.</p><input id="friendSearch" placeholder="Search by username..." oninput="searchFriends()"><div id="searchResults"></div></section>
+<section id="memberProfilePanel" class="card hidden member-profile">
+ <button class="secondary" style="margin:14px 14px 0" onclick="closeMemberProfile()">← Back</button>
+ <div class="member-cover"></div>
+ <div class="member-identity"><div id="memberProfileAvatar" class="member-avatar">J</div><div class="member-title"><h2 id="memberProfileName">Member</h2><p id="memberProfileUsername">JFriendsChat member</p></div></div>
+ <div class="member-actions" id="memberProfileActions"></div>
+ <div class="member-stats"><div class="member-stat"><strong id="memberFriendsCount">0</strong><span>FRIENDS</span></div><div class="member-stat"><strong id="memberPostsCount">0</strong><span>POSTS</span></div><div class="member-stat"><strong id="memberJoined">—</strong><span>MEMBER SINCE</span></div></div>
+ <div class="member-tabs"><button class="active" data-member-tab="about" onclick="showMemberTab('about',this)">Overview</button><button data-member-tab="posts" onclick="showMemberTab('posts',this)">Moments</button><button data-member-tab="friends" onclick="showMemberTab('friends',this)">Friends</button></div>
+ <div class="member-content"><div id="memberAboutContent"></div><div id="memberPostsContent" class="hidden"></div><div id="memberFriendsContent" class="hidden"></div></div>
+</section>
+
 
 <section id="postsPanel" class="hidden moments360">
- <div class="moments360-hero">
-  <div class="moments360-orbit orbit-one"></div><div class="moments360-orbit orbit-two"></div>
-  <div class="moments360-kicker">JFRIENDSCHAT PRESENTS · MOMENTS 360</div>
-  <h2>Your world.<br><span>Your moment.</span></h2>
-  <p>A living space for the photos, videos, ideas and memories worth sharing.</p>
-  <div class="moments360-badges"><span>✦ Create</span><span>◉ Experience</span><span>♡ Connect</span></div>
+ <div class="jfc-create-entry">
+  <button type="button" class="jfc-open-create" onclick="toggleJfcPostEditor()"><span>＋</span> Create post</button>
  </div>
- <div class="moments360-composer">
-  <div class="moments360-compose-head"><div class="moments360-create-icon">✧</div><div><strong>Make a moment</strong><small>Every post deserves its own spotlight.</small></div></div>
-  <textarea id="postText" placeholder="What is happening in your world today? ✨"></textarea>
-  <div class="moments360-tools">
-   <label class="moments360-tool" for="postMedia"><span>▧</span><b>Photo or video</b><input id="postMedia" type="file" accept="image/*,video/*"></label>
-   <span class="moments360-tool moments360-tip"><span>✎</span><b>Your words matter</b></span>
-   <span class="moments360-tool moments360-tip"><span>✦</span><b>Make it memorable</b></span>
+ <div id="jfcPostEditor" class="moments360-composer moments360-creator hidden">
+  <div class="jfc-editor-title"><strong>Create post</strong><button type="button" class="secondary" onclick="toggleJfcPostEditor(false)">Close</button></div>
+  <div id="adFields" class="moments360-ad-fields hidden">
+   <label for="adHeadline">Promotion headline</label>
+   <input id="adHeadline" maxlength="100" placeholder="Example: New product now available">
+   <small>Promotional posts display a clear PROMOTION label.</small>
   </div>
-  <div class="moments360-publish-row"><select id="postVisibility" aria-label="Post audience"><option value="public">🌍 Everyone</option><option value="private">🔒 Only me</option></select><button class="moments360-publish" onclick="createPost()">Publish your moment <span>↗</span></button></div>
+  <textarea id="postText" placeholder="What would you like to share?"></textarea>
+  <button type="button" class="jfc-plus-picker" onclick="toggleJfcMediaOptions()" aria-label="Add to post">＋</button>
+  <div id="jfcMediaOptions" class="moments360-tools hidden">
+   <label class="moments360-tool" for="postMedia"><span>▧</span><b>Photos / videos (select many)</b><input id="postMedia" type="file" accept="image/*,video/*" multiple onchange="previewPostMedia(this)"></label>
+   <label class="moments360-tool" for="postPhotoCamera"><span>📷</span><b>Take photo</b><input id="postPhotoCamera" type="file" accept="image/*" capture="environment" onchange="useCameraPhoto(this)"></label>
+   <button type="button" class="moments360-tool" onclick="openVideoCreator()"><span>🎬</span><b>Create video</b></button>
+   <button type="button" class="moments360-tool" onclick="makeTextPoster()"><span>✦</span><b>Create photo</b></button>
+   <button type="button" class="moments360-tool" onclick="toggleJfcPromotion()"><span>📣</span><b>Promotion</b></button>
+  </div>
+  <div id="postMediaPreview" class="moments360-media-preview hidden"></div>
+  <div id="videoCreator" class="moments360-video-creator hidden">
+   <div class="moments360-video-head"><strong>🎥 JFC Video Studio</strong><button type="button" class="secondary" onclick="closeVideoCreator()">Close</button></div>
+   <p>Record a short video with your camera, then publish it.</p>
+   <video id="videoRecordPreview" playsinline autoplay muted></video>
+   <div class="moments360-record-actions"><button type="button" class="secondary" onclick="startVideoRecording()">● Start recording</button><button type="button" class="moments360-publish" onclick="stopVideoRecording()" id="stopVideoButton" disabled>■ Stop & use video</button></div>
+   <small id="videoRecordStatus">Camera access is requested only when you start recording. Use HTTPS and allow camera/microphone access.</small>
+  </div>
+  <div class="moments360-publish-row"><select id="postType" aria-label="Post type" onchange="toggleAdFields()"><option value="moment">Standard post</option><option value="ad">Promotion / advert</option></select><select id="postVisibility" aria-label="Post audience"><option value="public">🌍 Everyone</option><option value="private">🔒 Only me</option></select><button class="moments360-publish" onclick="createPost()">Publish post <span>↗</span></button></div>
  </div>
- <div class="moments360-feedbar"><div><span class="moments360-section-kicker">THE COMMUNITY</span><h3>Discover moments <span>✦</span></h3></div><button class="moments360-refresh" onclick="loadPosts()">↻ Refresh</button></div>
  <div class="moments360-view-switch" aria-label="Post viewing style">
   <button type="button" class="active" data-post-view="flow" onclick="setPostView('flow',this)">◉ Flow</button>
   <button type="button" data-post-view="mosaic" onclick="setPostView('mosaic',this)">▦ Mosaic</button>
@@ -713,11 +956,12 @@ function initials(n){return (n||"F").trim().charAt(0).toUpperCase()}
 
 function avatar(p){
  let photo=p?.avatar_url||p?.photo_url||p?.profile_picture||p?.picture_url||p?.avatar;
- if(photo)return `<div class="avatar"><img src="${esc(photo)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.textContent='${esc(initials(nameOf(p)))}'"></div>`;
- return `<div class="avatar">${esc(initials(nameOf(p)))}</div>`;
+ const click=p?.id?` member-clickable role="button" tabindex="0" title="View ${esc(nameOf(p))}'s profile" onclick="event.stopPropagation();openMemberProfile('${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openMemberProfile('${p.id}')}"`:'';
+ if(photo)return `<div class="avatar"${click}><img src="${esc(photo)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.textContent='${esc(initials(nameOf(p)))}'"></div>`;
+ return `<div class="avatar"${click}>${esc(initials(nameOf(p)))}</div>`;
 }
 function timeOf(v){if(!v)return "";let d=new Date(v);if(isNaN(d))return "";return d.toDateString()===new Date().toDateString()?d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):d.toLocaleDateString([],{month:"short",day:"numeric"});}
-function hidePanels(){document.body.classList.remove("chat-open");["chatPanel","friendsMenuPanel","friendsPanel","requestsPanel","searchPanel","postsPanel","accountPanel","businessPanel","connectPanel","groupsPanel","schoolPanel","companyPanel","adsPanel","marketAdminPanel"].forEach(id=>el(id).classList.add("hidden"));}
+function hidePanels(){document.body.classList.remove("chat-open");["chatPanel","friendsMenuPanel","friendsPanel","requestsPanel","searchPanel","memberProfilePanel","postsPanel","accountPanel","businessPanel","connectPanel","groupsPanel","schoolPanel","companyPanel","adsPanel","marketAdminPanel"].forEach(id=>el(id).classList.add("hidden"));}
 function setNav(which){["chatNav","friendsNav","postsNav","businessNav","connectNav","groupsNav","companyNav","adsNav","schoolNav","marketAdminNav"].forEach(id=>{const node=el(id);if(node)node.classList.toggle("active",id===which);});}
 // School Management frontend: uses the RPC functions created by the successful SQL setup.
 let activeSchoolId=null,schoolMembershipRows=[];
@@ -1000,7 +1244,7 @@ async function loadChatFriends(){
  let ids=[...new Set((data||[]).map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id))].filter(id=>id&&id!==currentUser.id);
  if(!ids.length){chatFriends=[];return;}let p=await db.from("profiles").select("*").in("id",ids);if(p.error){setStatus(p.error.message);return;}chatFriends=p.data||[];
 }
-async function loadFriendsList(){await loadChatFriends();el("friendsList").innerHTML=chatFriends.length?chatFriends.map(p=>`<div class="row">${avatar(p)}<div class="flexinfo"><strong>${esc(nameOf(p))}</strong><div class="muted">${knownOnlineUsers.has(p.id)?"● Online":"○ Offline"}</div></div><button class="primary" onclick="openConversation('${p.id}')">Chat</button></div>`).join(""):"<p>No friends yet. Find friends to get started.</p>";}
+async function loadFriendsList(){await loadChatFriends();el("friendsList").innerHTML=chatFriends.length?chatFriends.map(p=>`<div class="row">${avatar(p)}<div class="flexinfo"><strong class="member-clickable" title="Open chat with ${esc(nameOf(p))}" onclick="openConversation('${p.id}')">${esc(nameOf(p))}</strong><div class="muted">${knownOnlineUsers.has(p.id)?"● Online":"○ Offline"}</div></div><button class="primary" onclick="openConversation('${p.id}')">Chat</button></div>`).join(""):"<p>No friends yet. Find friends to get started.</p>";}
 async function searchFriends(){
  if(!currentUser)return;
  const q=(el("friendSearch").value||"").trim(),box=el("searchResults");
@@ -1057,7 +1301,7 @@ async function renderChatList(){
  if(!currentUser)return;let box=el("chatList"),q=(el("chatSearch").value||"").toLowerCase();if(!chatFriends.length){box.innerHTML='<p>No friends yet.</p><button class="primary" onclick="openFindFriends()">Find Friends</button>';return;}
  box.innerHTML="<p>Loading chats...</p>";let rows=await Promise.all(chatFriends.map(async f=>({f,m:await lastMessage(f.id)})));rows.sort((a,b)=>new Date(b.m?.created_at||0)-new Date(a.m?.created_at||0));rows=rows.filter(r=>nameOf(r.f).toLowerCase().includes(q));
  renderOnlineFriends();
- box.innerHTML=rows.length?rows.map(({f,m})=>`<div class="chat-list-row" onclick="openConversation('${f.id}')">${avatar(f)}<div class="chat-list-main"><div class="chat-list-top"><div class="chat-list-name">${esc(nameOf(f))}</div><span class="chat-list-time">${esc(timeOf(m?.created_at))}</span></div><div class="chat-list-bottom"><div class="chat-list-preview">${esc(m?preview(m):(knownOnlineUsers.has(f.id)?"● Online":"Tap to chat"))}</div>${knownOnlineUsers.has(f.id)?'<span class="chat-list-status">Online</span>':''}</div></div></div>`).join(""):"<p>No matching chats.</p>";
+ box.innerHTML=rows.length?rows.map(({f,m})=>`<div class="chat-list-row" onclick="openConversation('${f.id}')">${avatar(f)}<div class="chat-list-main"><div class="chat-list-top"><div class="chat-list-name member-clickable" title="Open chat with ${esc(nameOf(f))}" onclick="event.stopPropagation();openConversation('${f.id}')">${esc(nameOf(f))}</div><span class="chat-list-time">${esc(timeOf(m?.created_at))}</span></div><div class="chat-list-bottom"><div class="chat-list-preview">${esc(m?preview(m):(knownOnlineUsers.has(f.id)?"● Online":"Tap to chat"))}</div>${knownOnlineUsers.has(f.id)?'<span class="chat-list-status">Online</span>':''}</div></div></div>`).join(""):"<p>No matching chats.</p>";
 }
 async function refreshChatList(){await loadChatFriends();await renderChatList();}
 async function openConversation(id){await loadChatFriends();activeFriend=chatFriends.find(p=>p.id===id);if(!activeFriend)return alert("This user is not an accepted friend.");hidePanels();setNav("chatNav");el("chatPanel").classList.remove("hidden");document.body.classList.add("chat-open");el("chatListView").classList.add("hidden");el("conversationView").classList.remove("hidden");el("conversationName").textContent=nameOf(activeFriend);el("conversationAvatar").innerHTML=avatar(activeFriend);updateConversationStatus();await loadMessages();}
@@ -1075,16 +1319,66 @@ async function loadMessages(){
  for(const m of data||[])await renderMessage(m,{autoScroll:false});
  requestAnimationFrame(()=>{box.scrollTop=box.scrollHeight;});
 }
+function closeMessageMenus(){
+ document.querySelectorAll(".message-action-menu").forEach(menu=>menu.remove());
+}
+function showMessageMenu(item,m){
+ closeMessageMenus();
+ // Only the sender can delete their own message.
+ if(m.sender_id!==currentUser.id)return;
+ const menu=document.createElement("div");
+ menu.className="message-action-menu";
+ menu.innerHTML='<button type="button">🗑️ Delete message</button>';
+ menu.querySelector("button").addEventListener("click",async event=>{
+   event.stopPropagation();
+   menu.remove();
+   if(!confirm("Delete this message? This cannot be undone."))return;
+   const button=item.querySelector(".message-action-menu button");
+   item.classList.add("deleted-pending");
+   const {data,error}=await db.from("messages").delete()
+     .eq("id",m.id).eq("sender_id",currentUser.id).select("id").single();
+   if(error||!data){
+     item.classList.remove("deleted-pending");
+     alert("Message could not be deleted: "+(error?.message||"You may not have permission."));
+     return;
+   }
+   item.remove();
+   renderedMessages.delete(m.id);
+   await renderChatList();
+ });
+ item.appendChild(menu);
+}
 async function renderMessage(m,options={}){
  if(m.id&&renderedMessages.has(m.id))return;
  const box=el("messages");
  const wasNearBottom=(box.scrollHeight-box.scrollTop-box.clientHeight)<140;
  if(m.id)renderedMessages.add(m.id);
- let item=document.createElement("div");item.className="message"+(m.sender_id===currentUser.id?" mine":"");
+ let item=document.createElement("div");
+ item.className="message"+(m.sender_id===currentUser.id?" mine":"");
+ item.dataset.messageId=m.id||"";
  let c="";
  if(m.media_path){let url=await mediaURL(m.media_path);if(url)c+=/\.(mp4|mov|webm|m4v)$/i.test(m.media_path)?`<video controls playsinline src="${esc(url)}"></video>`:`<a href="${esc(url)}" target="_blank" rel="noopener"><img src="${esc(url)}" alt="Shared image" loading="lazy"></a>`;}
  if(messageText(m))c+=`<div>${esc(messageText(m))}</div>`;
- c+=`<small>${esc(timeOf(m.created_at))}</small>`;item.innerHTML=c;box.appendChild(item);
+ c+=`<small>${esc(timeOf(m.created_at))}</small>`;
+ item.innerHTML=c;
+ if(m.sender_id===currentUser.id){
+   // A normal tap or a long press opens the delete action.
+   let pressTimer=null,longPressed=false;
+   item.addEventListener("click",event=>{
+     if(event.target.closest("a,video,button"))return;
+     event.stopPropagation();
+     if(longPressed){longPressed=false;return;}
+     if(item.querySelector(".message-action-menu"))closeMessageMenus();
+     else showMessageMenu(item,m);
+   });
+   item.addEventListener("pointerdown",()=>{
+     longPressed=false;
+     pressTimer=setTimeout(()=>{longPressed=true;showMessageMenu(item,m);},500);
+   });
+   ["pointerup","pointerleave","pointercancel"].forEach(name=>item.addEventListener(name,()=>clearTimeout(pressTimer)));
+   item.addEventListener("contextmenu",event=>{event.preventDefault();showMessageMenu(item,m);});
+ }
+ box.appendChild(item);
  // Preserve reading position when the user is viewing older messages.
  if(options.forceBottom||(options.autoScroll!==false&&wasNearBottom))requestAnimationFrame(()=>{box.scrollTop=box.scrollHeight;});
 }
@@ -1110,14 +1404,132 @@ async function sendChatMedia(){
  if(activeFriend&&activeFriend.id===friendId){await renderMessage(r.data,{forceBottom:true});const box=el("messages");requestAnimationFrame(()=>{box.scrollTop=box.scrollHeight;});}
  await renderChatList();
 }
-function subscribeToMessages(){if(messageChannel)db.removeChannel(messageChannel);messageChannel=db.channel("jfc-messages-"+currentUser.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},async p=>{let m=p.new;if(m.sender_id!==currentUser.id&&m.receiver_id!==currentUser.id)return;if(activeFriend&&((m.sender_id===activeFriend.id&&m.receiver_id===currentUser.id)||(m.sender_id===currentUser.id&&m.receiver_id===activeFriend.id)))await renderMessage(m);await renderChatList();}).subscribe();}
+function subscribeToMessages(){
+ if(messageChannel)db.removeChannel(messageChannel);
+ messageChannel=db.channel("jfc-messages-"+currentUser.id)
+ .on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},async p=>{
+   let m=p.new;
+   if(m.sender_id!==currentUser.id&&m.receiver_id!==currentUser.id)return;
+   if(activeFriend&&((m.sender_id===activeFriend.id&&m.receiver_id===currentUser.id)||(m.sender_id===currentUser.id&&m.receiver_id===activeFriend.id)))await renderMessage(m);
+   await renderChatList();
+ })
+ .on("postgres_changes",{event:"DELETE",schema:"public",table:"messages"},async p=>{
+   const deletedId=p.old?.id;
+   if(deletedId){
+     const node=document.querySelector(`#messages .message[data-message-id="${CSS.escape(String(deletedId))}"]`);
+     if(node)node.remove();
+     renderedMessages.delete(deletedId);
+   }
+   await renderChatList();
+ }).subscribe();
+}
 async function startPresence(){presenceChannel=db.channel("jfc-presence",{config:{presence:{key:currentUser.id}}});presenceChannel.on("presence",{event:"sync"},()=>{knownOnlineUsers=new Set(Object.keys(presenceChannel.presenceState()));updateConversationStatus();if(!activeFriend)renderChatList();}).subscribe(async s=>{if(s==="SUBSCRIBED")await presenceChannel.track({online_at:new Date().toISOString()});});}
 async function loadPresence(){updateConversationStatus();}
-async function createPost(){
- let text=el("postText").value.trim(),file=el("postMedia").files[0],visibility=el("postVisibility").value;if(!text&&!file)return alert("Write something or choose a picture/video.");if(file&&file.size>100*1024*1024)return alert("Choose a file smaller than 100 MB.");
- setStatus("Publishing post...");let postId=crypto.randomUUID(),path=null;if(file){path=currentUser.id+"/"+postId+"/"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");let {error}=await db.storage.from(POST_BUCKET).upload(path,file,{upsert:false,contentType:file.type});if(error){setStatus("Upload failed: "+error.message);return;}}
- let {error}=await db.from("posts").insert({id:postId,user_id:currentUser.id,content:text,media_path:path,media_type:file?(file.type.startsWith("video/")?"video":"image"):null,visibility});if(error){setStatus("Post could not be saved: "+error.message);return;}el("postText").value="";el("postMedia").value="";setStatus("Post published.");await loadPosts();
+let createdVideoBlob=null,createdVideoFile=null,videoRecordStream=null,videoRecorder=null,videoRecordChunks=[];
+function toggleAdFields(){
+ const isAd=el("postType")?.value==="ad";
+ el("adFields")?.classList.toggle("hidden",!isAd);
 }
+function previewPostMedia(input){
+ const files=[...(input.files||[])],box=el("postMediaPreview");
+ if(!files.length){box.classList.add("hidden");box.innerHTML="";return;}
+ if(files.length>10){alert("You can add up to 10 photos/videos to one post.");input.value="";box.classList.add("hidden");return;}
+ for(const file of files){if(!file.type.startsWith("image/")&&!file.type.startsWith("video/")){alert("Choose image or video files only.");input.value="";return;}if(file.size>100*1024*1024){alert("Each file must be smaller than 100 MB.");input.value="";return;}}
+ createdVideoBlob=null;createdVideoFile=null;box.classList.remove("hidden");
+ box.innerHTML=`<div class="jfc-selected-media-grid">${files.map(file=>{const url=URL.createObjectURL(file);return file.type.startsWith("video/")?`<video controls playsinline src="${url}"></video>`:`<img src="${url}" alt="Selected photo">`;}).join("")}</div><small>${files.length} item(s) selected · You can select up to 10</small>`;
+}
+
+function useCameraPhoto(input){if(input.files?.[0]){el("postMedia").files=input.files;previewPostMedia(el("postMedia"));}}
+function makeTextPoster(){
+ const text=el("postText").value.trim();
+ if(!text){alert("Write your poster message in the text box first.");el("postText").focus();return;}
+ const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=1350;
+ const ctx=canvas.getContext("2d");
+ const gradient=ctx.createLinearGradient(0,0,1080,1350);
+ gradient.addColorStop(0,"#17183f");gradient.addColorStop(.55,"#5b45c7");gradient.addColorStop(1,"#dc5caa");
+ ctx.fillStyle=gradient;ctx.fillRect(0,0,1080,1350);
+ ctx.fillStyle="rgba(255,255,255,.12)";ctx.beginPath();ctx.arc(930,170,270,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="#fff";ctx.font="bold 44px Arial";ctx.fillText("JFRIENDSCHAT",80,130);
+ ctx.fillStyle="#f5eaff";ctx.font="bold 62px Arial";
+ const words=text.split(/\s+/);let line="",y=470,lines=[];
+ for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>900&&line){lines.push(line);line=word;}else line=test;}
+ if(line)lines.push(line);
+ const maxLines=9;lines.slice(0,maxLines).forEach((ln,i)=>ctx.fillText(ln,80,y+i*90));
+ ctx.fillStyle="#e8ddff";ctx.font="28px Arial";ctx.fillText("A moment worth sharing",80,1240);
+ canvas.toBlob(blob=>{
+   if(!blob){alert("Could not create the poster on this device.");return;}
+   createdVideoBlob=null;createdVideoFile=null;
+   const file=new File([blob],"jfc-text-poster.png",{type:"image/png"});
+   const transfer=new DataTransfer();transfer.items.add(file);el("postMedia").files=transfer.files;
+   const box=el("postMediaPreview"),url=URL.createObjectURL(file);
+   box.classList.remove("hidden");box.innerHTML=`<img src="${url}" alt="Created JFriendsChat text poster"><small>Created text poster · PNG</small>`;
+ }, "image/png");
+}
+function openVideoCreator(){el("videoCreator").classList.remove("hidden");el("videoRecordStatus").textContent="Press Start recording to open your camera.";}
+async function startVideoRecording(){
+ try{
+   if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)throw new Error("Video recording is not supported by this browser. You can still upload a video file.");
+   videoRecordStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:true});
+   const preview=el("videoRecordPreview");preview.srcObject=videoRecordStream;await preview.play();
+   videoRecordChunks=[];
+   const options=MediaRecorder.isTypeSupported("video/webm;codecs=vp9")?{mimeType:"video/webm;codecs=vp9"}:undefined;
+   videoRecorder=new MediaRecorder(videoRecordStream,options);
+   videoRecorder.ondataavailable=e=>{if(e.data&&e.data.size)videoRecordChunks.push(e.data);};
+   videoRecorder.onstop=()=>{
+     const mime=videoRecorder.mimeType||"video/webm";
+     createdVideoBlob=new Blob(videoRecordChunks,{type:mime});
+     const ext=mime.includes("mp4")?"mp4":"webm";
+     createdVideoFile=new File([createdVideoBlob],"jfc-created-video."+ext,{type:mime});
+     const box=el("postMediaPreview"),url=URL.createObjectURL(createdVideoBlob);
+     box.classList.remove("hidden");box.innerHTML=`<video controls playsinline src="${url}"></video><small>New video recording · ${(createdVideoBlob.size/1024/1024).toFixed(1)} MB</small>`;
+     el("postMedia").value="";
+     el("videoRecordStatus").textContent="Video ready. Close this studio and publish your post.";
+     videoRecordStream?.getTracks().forEach(t=>t.stop());videoRecordStream=null;
+     preview.srcObject=null;el("stopVideoButton").disabled=true;
+   };
+   videoRecorder.start(500);
+   el("stopVideoButton").disabled=false;
+   el("videoRecordStatus").textContent="Recording… Press Stop & use video when finished.";
+ }catch(error){el("videoRecordStatus").textContent=error.message;alert(error.message);}
+}
+function stopVideoRecording(){
+ if(videoRecorder&&videoRecorder.state!=="inactive")videoRecorder.stop();
+}
+function closeVideoCreator(){
+ if(videoRecorder&&videoRecorder.state!=="inactive")videoRecorder.stop();
+ else videoRecordStream?.getTracks().forEach(t=>t.stop());
+ videoRecordStream=null;el("videoCreator").classList.add("hidden");
+}
+function toggleJfcPostEditor(show){const editor=el("jfcPostEditor");if(!editor)return;const shouldShow=show===undefined?editor.classList.contains("hidden"):show;editor.classList.toggle("hidden",!shouldShow);if(shouldShow){setTimeout(()=>el("postText")?.focus(),80);editor.scrollIntoView({behavior:"smooth",block:"start"});}}
+function toggleJfcMediaOptions(){el("jfcMediaOptions")?.classList.toggle("hidden");}
+function toggleJfcPromotion(){const type=el("postType");if(!type)return;type.value="ad";toggleAdFields();el("adFields")?.classList.remove("hidden");el("adHeadline")?.focus();}
+async function createPost(){
+ const text=el("postText").value.trim(),files=[...(el("postMedia").files||[])];
+ if(createdVideoFile)files.push(createdVideoFile);
+ const visibility=el("postVisibility").value,postType=el("postType")?.value||"moment";
+ const adHeadline=postType==="ad"?(el("adHeadline").value.trim()):"";
+ if(!text&&!files.length&&!adHeadline)return alert("Add text, photos, videos or a promotion headline.");
+ if(postType==="ad"&&!adHeadline)return alert("Add a headline for your promotion.");
+ if(files.length>10)return alert("You can add up to 10 photos/videos per post.");
+ if(files.some(f=>f.size>100*1024*1024))return alert("Each file must be smaller than 100 MB.");
+ setStatus("Publishing your post and media…");
+ const postId=crypto.randomUUID(),uploaded=[];
+ for(let i=0;i<files.length;i++){
+   const file=files[i],safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+   const path=currentUser.id+"/"+postId+"/"+i+"_"+safeName;
+   const {error}=await db.storage.from(POST_BUCKET).upload(path,file,{upsert:false,contentType:file.type||"application/octet-stream"});
+   if(error){setStatus("Upload failed: "+error.message);return;}
+   uploaded.push({post_id:postId,user_id:currentUser.id,media_path:path,media_type:file.type.startsWith("video/")?"video":"image",sort_order:i});
+ }
+ const {error}=await db.from("posts").insert({id:postId,user_id:currentUser.id,content:text,media_path:null,media_type:null,visibility,post_type:postType,ad_headline:adHeadline||null});
+ if(error){setStatus("Post could not be saved: "+error.message);return;}
+ if(uploaded.length){const {error:mediaError}=await db.from("post_media").insert(uploaded);if(mediaError){setStatus("Post created, but media list could not be saved: "+mediaError.message+". Run the media setup SQL shown in chat.");return;}}
+ el("postText").value="";el("postMedia").value="";el("postPhotoCamera").value="";
+ if(el("adHeadline"))el("adHeadline").value="";if(el("postType"))el("postType").value="moment";
+ toggleAdFields();el("postMediaPreview").classList.add("hidden");el("postMediaPreview").innerHTML="";createdVideoBlob=null;createdVideoFile=null;
+ setStatus("Your post is live.");el("jfcMediaOptions")?.classList.add("hidden");toggleJfcPostEditor(false);await loadPosts();
+}
+
 function setPostView(mode,button){
  const feed=el("postsFeed");if(!feed)return;
  feed.classList.remove("moments360-flow","moments360-mosaic","moments360-focus");
@@ -1126,21 +1538,168 @@ function setPostView(mode,button){
  try{localStorage.setItem("jf_moments360_view",mode);}catch(e){}
 }
 async function loadPosts(){
- if(!currentUser)return;let box=el("postsFeed");box.innerHTML="<p>Loading posts...</p>";let {data:posts,error}=await db.from("posts").select("*").order("created_at",{ascending:false}).limit(100);if(error){box.innerHTML="<p>Could not load posts: "+esc(error.message)+"</p>";return;}posts=posts||[];if(!posts.length){box.innerHTML="<p>No posts yet. Be the first to publish something!</p>";return;}
- let ids=[...new Set(posts.map(p=>p.user_id))],profiles=[];if(ids.length){let r=await db.from("profiles").select("*").in("id",ids);profiles=r.data||[];}let {data:likes}=await db.from("post_likes").select("post_id,user_id").in("post_id",posts.map(p=>p.id));let {data:comments}=await db.from("post_comments").select("id,post_id,user_id,content,created_at").in("post_id",posts.map(p=>p.id)).order("created_at",{ascending:true});let commentUsers=[...new Set((comments||[]).map(c=>c.user_id))],commentProfiles=[];if(commentUsers.length){let r=await db.from("profiles").select("*").in("id",commentUsers);commentProfiles=r.data||[];}let getProfile=id=>profiles.find(p=>p.id===id)||commentProfiles.find(p=>p.id===id),html=[];
- for(let p of posts){let own=p.user_id===currentUser.id;if(p.visibility==="private"&&!own)continue;let author=getProfile(p.user_id),media="";if(p.media_path){let {data:sd,error:se}=await db.storage.from(POST_BUCKET).createSignedUrl(p.media_path,3600);if(!se&&sd?.signedUrl){let url=sd.signedUrl;media=p.media_type==="video"?`<video class="post-media" controls playsinline preload="metadata" src="${esc(url)}"></video>`:`<img class="post-media" src="${esc(url)}" alt="Post image">`;}}
- let pl=(likes||[]).filter(l=>l.post_id===p.id),pc=(comments||[]).filter(c=>c.post_id===p.id),liked=pl.some(l=>l.user_id===currentUser.id),commentHtml=pc.map(c=>`<div class="comment"><strong>${esc(nameOf(getProfile(c.user_id)))}</strong>${esc(c.content)}<div class="muted">${esc(timeOf(c.created_at))}</div></div>`).join("");
- html.push(`<article class="post"><div class="post-head">${avatar(author)}<div class="living-author-meta"><strong>${esc(nameOf(author))}</strong><div class="muted">${esc(timeOf(p.created_at))} · ${p.visibility==="public"?"🌍 Public":"🔒 Private"}</div></div>${own?`<button class="secondary" onclick="deletePost('${p.id}')">Delete</button>`:""}</div>${p.content?`<div class="post-body">${esc(p.content)}</div>`:""}${media}<div class="post-actions"><button class="${liked?"liked":""}" onclick="toggleLike('${p.id}',${liked})">❤️ ${liked?"Liked":"Like"} · ${pl.length}</button><button onclick="focusComment('${p.id}')">💬 Comment · ${pc.length}</button><button onclick="sharePost('${p.id}')">↗️ Share</button></div><div id="comments-${p.id}">${commentHtml}</div><div class="composer"><input id="commentInput-${p.id}" placeholder="Write a comment..."><button class="primary" onclick="addComment('${p.id}')">Send</button></div></article>`);
- }box.innerHTML=html.join("")||"<p>No posts visible to you.</p>";
+ if(!currentUser)return;
+ const box=el("postsFeed");if(!box)return;
+ box.innerHTML="";
+ // Keep the first feed request small so phones and slower connections load quickly.
+ const {data:posts,error}=await db.from("posts").select("*").order("created_at",{ascending:false}).limit(20);
+ if(error){box.innerHTML="<p>Could not load posts: "+esc(error.message)+"</p>";return;}
+ const visiblePosts=(posts||[]).filter(p=>p.visibility!=="private"||p.user_id===currentUser.id);
+ if(!visiblePosts.length){box.innerHTML="<p>No posts yet. Be the first to publish something!</p>";return;}
+ const postIds=visiblePosts.map(p=>p.id),userIds=[...new Set(visiblePosts.map(p=>p.user_id))];
+ // Run independent database reads together instead of waiting for each one.
+ const [profileRes,likesRes,mediaRes,commentsRes]=await Promise.all([
+  userIds.length?db.from("profiles").select("*").in("id",userIds):Promise.resolve({data:[]}),
+  db.from("post_likes").select("post_id,user_id").in("post_id",postIds).limit(500),
+  db.from("post_media").select("id,post_id,media_path,media_type,sort_order").in("post_id",postIds).order("sort_order",{ascending:true}).limit(100),
+  db.from("post_comments").select("id,post_id,user_id,content,comment_text,parent_comment_id,created_at").in("post_id",postIds).order("created_at",{ascending:false}).limit(200)
+ ]);
+ const profiles=profileRes.data||[],likes=likesRes.data||[],mediaRows=mediaRes.error?[]:(mediaRes.data||[]),commentRows=commentsRes.error?[]:(commentsRes.data||[]);
+ const commentUserIds=[...new Set(commentRows.map(c=>c.user_id).filter(Boolean))];
+ let commentProfiles=[];if(commentUserIds.length){const cp=await db.from("profiles").select("*").in("id",commentUserIds);commentProfiles=cp.data||[];}
+ const commentProfile=id=>commentProfiles.find(x=>x.id===id);
+ const lastCommentByPost=new Map();for(const c of commentRows){if(!c.parent_comment_id&&!lastCommentByPost.has(String(c.post_id)))lastCommentByPost.set(String(c.post_id),c);}
+ const getProfile=id=>profiles.find(p=>p.id===id);
+ // Generate media links concurrently. Images below the fold are lazy-loaded and videos do not preload.
+ const mediaUrlEntries=await Promise.all(mediaRows.map(async m=>{const {data,error}=await db.storage.from(POST_BUCKET).createSignedUrl(m.media_path,3600);return [m.id,!error&&data?.signedUrl?data.signedUrl:null];}));
+ const mediaUrlMap=new Map(mediaUrlEntries),html=[];
+ for(const p of visiblePosts){
+  const own=p.user_id===currentUser.id,author=getProfile(p.user_id);let media="";
+  const rows=mediaRows.filter(m=>String(m.post_id)===String(p.id)).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0));
+  if(rows.length){const tiles=[];for(const m of rows){const url=mediaUrlMap.get(m.id);if(!url)continue;const safe=esc(url);tiles.push(m.media_type==="video"?`<video class="post-media" controls playsinline preload="none" loading="lazy" src="${safe}"></video>`:`<img class="post-media" loading="lazy" decoding="async" src="${safe}" alt="Post photo">`);}media=tiles.length?`<div class="jfc-post-media-grid count-${Math.min(tiles.length,5)}">${tiles.join("")}</div>`:"";
+  }else if(p.media_path){const {data:sd}=await db.storage.from(POST_BUCKET).createSignedUrl(p.media_path,3600);if(sd?.signedUrl){const safe=esc(sd.signedUrl);media=p.media_type==="video"?`<video class="post-media" controls playsinline preload="none" src="${safe}"></video>`:`<img class="post-media" loading="lazy" decoding="async" src="${safe}" alt="Post image">`;}}
+  const pl=likes.filter(l=>l.post_id===p.id),liked=pl.some(l=>l.user_id===currentUser.id);
+  html.push(`<article class="post"><div class="post-head">${avatar(author)}<div class="living-author-meta"><strong class="member-clickable" onclick="openMemberProfile('${author?.id||p.user_id}')">${esc(nameOf(author))}</strong><div class="muted">${esc(timeOf(p.created_at))} · ${p.visibility==="public"?"🌍 Public":"🔒 Private"}</div></div>${own?`<button class="secondary" onclick="deletePost('${p.id}')">Delete</button>`:""}</div>${p.post_type==="ad"?`<div class="post-promo-label">📣 PROMOTION</div><div class="post-promo-headline">${esc(p.ad_headline||"Sponsored message")}</div>`:""}${p.content?`<div class="post-body">${esc(p.content)}</div>`:""}${media}<div class="jfc-post-stats"><span>👍 ${pl.length||0}</span><span>${commentRows.filter(c=>!c.parent_comment_id&&String(c.post_id)===String(p.id)).length} comments</span><span>Share</span></div><div class="post-actions"><button aria-label="Like post" title="Like" class="social-action ${liked?"liked":""}" onclick="toggleLike('${p.id}',${liked})"><span aria-hidden="true">${liked?"♥":"♡"}</span><span class="action-count">${pl.length||""}</span></button><button aria-label="Comment on post" title="Comment" class="social-action comment-action" onclick="toggleCommentBox('${p.id}')"><span aria-hidden="true">▢</span><span class="action-count">${commentRows.filter(c=>!c.parent_comment_id&&String(c.post_id)===String(p.id)).length||""}</span></button><button aria-label="Share post" title="Share" class="social-action share-action" onclick="sharePost('${p.id}')"><span aria-hidden="true">➦</span></button></div>${lastCommentByPost.has(String(p.id))?(()=>{const lc=lastCommentByPost.get(String(p.id)),lp=commentProfile(lc.user_id),lt=lc.content||lc.comment_text||"";return `<button type="button" class="jfc-last-comment-preview" onclick="toggleCommentBox('${p.id}')">${avatar(lp)}<span class="jfc-comment-bubble"><strong>${esc(nameOf(lp))}</strong><span class="jfc-comment-text">${esc(lt.length>180?lt.slice(0,180)+"…":lt)}</span></span></button>`;})():""}<div class="fb-comments-area"><div id="comments-${p.id}" class="fb-comments-list hidden"></div><div id="commentBox-${p.id}" class="post-comment-composer fb-main-composer hidden">${avatar(getProfile(currentUser.id))}<input id="commentInput-${p.id}" placeholder="Write a comment..."><button class="primary" onclick="addComment('${p.id}')">Send</button></div></div></article>`);
+ }
+ box.innerHTML=html.join("");
  let savedView="flow";try{savedView=localStorage.getItem("jf_moments360_view")||"flow";}catch(e){}
- const viewButton=document.querySelector(`#postsPanel [data-post-view="${savedView}"]`)||document.querySelector('#postsPanel [data-post-view="flow"]');
- setPostView(savedView,viewButton);
+ const viewButton=document.querySelector(`#postsPanel [data-post-view="${savedView}"]`)||document.querySelector('#postsPanel [data-post-view="flow"]');setPostView(savedView,viewButton);
 }
+let viewedMember=null,memberPreviousPanel="chatPanel";
+function closeMemberProfile(){el("memberProfilePanel").classList.add("hidden");const target=el(memberPreviousPanel);if(target)target.classList.remove("hidden");}
+function showMemberTab(tab,button){["about","posts","friends"].forEach(k=>el("member"+k[0].toUpperCase()+k.slice(1)+"Content").classList.toggle("hidden",k!==tab));document.querySelectorAll("[data-member-tab]").forEach(b=>b.classList.toggle("active",b===button));}
+async function openMemberProfile(userId){
+ if(!currentUser||!userId)return;
+ const visible=["chatPanel","friendsPanel","searchPanel","postsPanel","requestsPanel","friendsMenuPanel"];
+ memberPreviousPanel=visible.find(id=>!el(id).classList.contains("hidden"))||"chatPanel";
+ hidePanels();el("memberProfilePanel").classList.remove("hidden");setNav(null);
+ el("memberProfileName").textContent="Loading profile…";el("memberProfileUsername").textContent="";el("memberAboutContent").innerHTML='<div class="member-empty">Loading member details…</div>';el("memberPostsContent").innerHTML="";el("memberFriendsContent").innerHTML="";
+ const {data:profile,error}=await db.from("profiles").select("*").eq("id",userId).maybeSingle();
+ if(error||!profile){el("memberProfileName").textContent="Profile unavailable";el("memberAboutContent").innerHTML='<div class="member-empty">This profile could not be loaded. '+esc(error?.message||"")+'</div>';return;}
+ viewedMember=profile;const displayName=profile.full_name||profile.display_name||profile.username||"JFriendsChat member";
+ el("memberProfileName").textContent=displayName;el("memberProfileUsername").textContent=profile.username?"@"+profile.username:"JFriendsChat member";
+ const photo=profile.avatar_url||profile.photo_url||profile.profile_picture||profile.picture_url||profile.avatar;
+ el("memberProfileAvatar").innerHTML=photo?`<img src="${esc(photo)}" alt="${esc(displayName)}">`:esc(initials(displayName));
+ const {data:friendRows,error:friendError}=await db.from("friend_requests").select("sender_id,receiver_id").eq("status","accepted").or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
+ let friendIds=[...new Set((friendRows||[]).map(r=>r.sender_id===userId?r.receiver_id:r.sender_id))].filter(id=>id&&id!==userId);
+ const {data:postRows,error:postError}=await db.from("posts").select("*").eq("user_id",userId).order("created_at",{ascending:false}).limit(50);
+ const posts=(postRows||[]).filter(p=>p.visibility!=="private"||userId===currentUser.id);
+ el("memberFriendsCount").textContent=friendError?"—":friendIds.length;el("memberPostsCount").textContent=postError?"—":posts.length;
+ const joined=profile.created_at||profile.joined_at;el("memberJoined").textContent=joined?new Date(joined).toLocaleDateString([], {month:"short",year:"numeric"}):"JFC";
+ const bio=profile.bio||profile.about||profile.description||"This member has not added an introduction yet.";
+ const location=profile.location||profile.city||"Not shared";
+ el("memberAboutContent").innerHTML=`<div class="member-about"><h3>✦ About ${esc(displayName)}</h3><p>${esc(bio)}</p><div class="muted">📍 ${esc(location)}</div></div><div class="member-about"><h3>JFriendsChat identity</h3><p>Connected through JFriendsChat — a place to share moments and stay in touch.</p><div class="muted">Profile details shown here are the details this member has made available.</div></div>`;
+ const actions=el("memberProfileActions");if(userId===currentUser.id){actions.innerHTML='<button class="primary" onclick="toggleAccount()">⚙ My account</button>';}else{const isFriend=chatFriends.some(f=>f.id===userId);actions.innerHTML=`${isFriend?`<button class="primary" onclick="openConversation('${userId}')">💬 Message</button>`:`<button class="primary" onclick="sendFriendRequest('${userId}')">＋ Add Friend</button>`}<button class="secondary" onclick="shareMemberProfile('${userId}')">↗ Share profile</button>`;}
+ if(postError){el("memberPostsContent").innerHTML='<div class="member-empty">Could not load posts: '+esc(postError.message)+'</div>';}
+ else if(!posts.length){el("memberPostsContent").innerHTML='<div class="member-empty">No public moments shared yet.</div>';}
+ else{let html=[];for(const post of posts){let media="";if(post.media_path){const {data:sd}=await db.storage.from(POST_BUCKET).createSignedUrl(post.media_path,3600);if(sd?.signedUrl)media=post.media_type==="video"?`<video class="post-media" controls playsinline src="${esc(sd.signedUrl)}"></video>`:`<img class="post-media" src="${esc(sd.signedUrl)}" alt="Post image">`;}
+ html.push(`<article class="post"><div class="muted">✦ MOMENT · ${esc(timeOf(post.created_at))}</div>${post.content?`<div class="post-body">${esc(post.content)}</div>`:""}${media}</article>`);}el("memberPostsContent").innerHTML=html.join("");}
+ if(friendError){el("memberFriendsContent").innerHTML='<div class="member-empty">Friends could not be loaded: '+esc(friendError.message)+'</div>';}
+ else if(!friendIds.length){el("memberFriendsContent").innerHTML='<div class="member-empty">No accepted friends to show yet.</div>';}
+ else{const {data:friendProfiles,error:profilesError}=await db.from("profiles").select("*").in("id",friendIds);el("memberFriendsContent").innerHTML=profilesError?'<div class="member-empty">Could not load friends.</div>':`<div class="member-friend-grid">${(friendProfiles||[]).map(f=>`<div class="member-friend-card" onclick="openMemberProfile('${f.id}')">${avatar(f)}<strong>${esc(f.full_name||f.display_name||nameOf(f))}</strong><span class="muted">@${esc(f.username||"member")}</span></div>`).join("")}</div>`;}
+ showMemberTab("about",document.querySelector('[data-member-tab="about"]'));
+}
+function shareMemberProfile(id){const url=location.href.split("#")[0]+"#member-"+id;if(navigator.share){navigator.share({title:"JFriendsChat profile",text:"View this JFriendsChat member",url}).catch(()=>{});}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>alert("Profile link copied."));}else prompt("Copy profile link:",url);}
 async function toggleLike(postId,alreadyLiked){if(alreadyLiked){let {error}=await db.from("post_likes").delete().eq("post_id",postId).eq("user_id",currentUser.id);if(error)return alert(error.message);}else{let {error}=await db.from("post_likes").insert({post_id:postId,user_id:currentUser.id});if(error)return alert(error.message);}await loadPosts();}
-function focusComment(id){el("commentInput-"+id)?.focus();}
-async function addComment(postId){let input=el("commentInput-"+postId),content=input.value.trim();if(!content)return;let {error}=await db.from("post_comments").insert({post_id:postId,user_id:currentUser.id,content});if(error)return alert("Comment failed: "+error.message);input.value="";await loadPosts();}
+async function fetchPostComments(postId){
+ const area=el("comments-"+postId);if(!area)return [];
+ area.innerHTML='<div class="fb-no-comments">Loading comments…</div>';
+ const {data,error}=await db.from("post_comments").select("id,post_id,user_id,content,comment_text,parent_comment_id,created_at").eq("post_id",postId).order("created_at",{ascending:true}).limit(100);
+ if(error){area.innerHTML='<div class="fb-no-comments">Comments could not be loaded: '+esc(error.message)+'</div>';return null;}
+ const rows=data||[],ids=[...new Set(rows.map(c=>c.user_id))];let profs=[];
+ if(ids.length){const r=await db.from("profiles").select("*").in("id",ids);profs=r.data||[];}
+ const prof=id=>profs.find(x=>x.id===id),txt=c=>c.content||c.comment_text||"";
+ const repliesFor=id=>rows.filter(r=>String(r.parent_comment_id)===String(id));
+ const renderReply=r=>`<div class="fb-reply-row">${avatar(prof(r.user_id))}<div class="fb-comment-main"><div class="fb-comment-bubble"><strong>${esc(nameOf(prof(r.user_id)))}</strong><div>${esc(txt(r))}</div></div><div class="fb-comment-tools"><span>${esc(timeOf(r.created_at))}</span></div></div></div>`;
+ area.innerHTML=rows.filter(c=>!c.parent_comment_id).map(c=>{const replies=repliesFor(c.id);return `<div class="fb-comment-row">${avatar(prof(c.user_id))}<div class="fb-comment-main"><div class="fb-comment-bubble"><strong>${esc(nameOf(prof(c.user_id)))}</strong><div>${esc(txt(c))}</div></div><div class="fb-comment-tools"><span>${esc(timeOf(c.created_at))}</span><button type="button" onclick="toggleReplyBox('${c.id}')">Reply</button>${replies.length?`<button type="button" onclick="toggleReplyThread('${c.id}')">View ${replies.length} ${replies.length===1?'reply':'replies'}</button>`:''}</div><div id="replyThread-${c.id}" class="fb-replies hidden">${replies.map(renderReply).join('')}</div><div id="replyBox-${c.id}" class="fb-reply-composer hidden"><input id="replyInput-${c.id}" placeholder="Write a reply..."><button type="button" onclick="addCommentReply('${postId}','${c.id}')">Send</button></div></div></div>`;}).join('')||'<div class="fb-no-comments">Be the first to comment.</div>';
+ const heading=area.parentElement?.querySelector('.fb-comments-heading');if(heading)heading.textContent=rows.length+' comments';
+ return rows;
+}
+async function toggleCommentBox(id){
+ const area=el("comments-"+id),box=el("commentBox-"+id);if(!area||!box)return;
+ const opening=area.classList.contains("hidden");area.classList.toggle("hidden",!opening);box.classList.toggle("hidden",!opening);
+ if(opening){await fetchPostComments(id);el("commentInput-"+id)?.focus();}
+}
+function focusComment(id){toggleCommentBox(id);}
+async function addComment(postId){
+ const input=el("commentInput-"+postId);if(!currentUser)return alert("Please sign in to comment.");if(!input)return;
+ const content=input.value.trim();if(!content)return;const button=input.parentElement?.querySelector("button");
+ if(button){button.disabled=true;button.textContent="Sending…";}
+ const {error}=await db.from("post_comments").insert({post_id:postId,user_id:currentUser.id,content,comment_text:content,parent_comment_id:null});
+ if(button){button.disabled=false;button.textContent="Send";}if(error)return alert("Comment failed: "+error.message);
+ input.value="";await fetchPostComments(postId);
+}
+function toggleReplyThread(commentId){const thread=el("replyThread-"+commentId);if(thread)thread.classList.toggle("hidden");}
+function toggleReplyBox(commentId){const box=el("replyBox-"+commentId);if(!box)return;box.classList.toggle("hidden");if(!box.classList.contains("hidden"))el("replyInput-"+commentId)?.focus();}
+async function addCommentReply(postId,parentCommentId){
+ const input=el("replyInput-"+parentCommentId);if(!currentUser)return alert("Please sign in to reply.");const content=input?.value.trim();if(!content)return;
+ const button=input.parentElement?.querySelector("button");if(button){button.disabled=true;button.textContent="Sending…";}
+ const {error}=await db.from("post_comments").insert({post_id:postId,user_id:currentUser.id,content,comment_text:content,parent_comment_id:parentCommentId});
+ if(button){button.disabled=false;button.textContent="Send";}if(error)return alert("Reply failed: "+error.message);
+ await fetchPostComments(postId);
+ const thread=el("replyThread-"+parentCommentId);if(thread)thread.classList.remove("hidden");
+}
 async function deletePost(id){if(!confirm("Delete this post?"))return;let {error}=await db.from("posts").delete().eq("id",id);if(error)return alert(error.message);await loadPosts();}
-async function sharePost(id){let url=location.href.split("#")[0]+"#post-"+id;if(navigator.share){try{await navigator.share({title:"JFriendsChat post",text:"See this post on JFriendsChat",url});return;}catch(e){}}try{await navigator.clipboard.writeText(url);alert("Post link copied.");}catch(e){prompt("Copy this link:",url);}}
+
+let postBeingShared=null;
+async function sharePost(id){
+ if(!currentUser)return alert("Please sign in first.");
+ postBeingShared=id;
+ const modal=el("postShareModal"),select=el("postShareTarget"),status=el("postShareStatus");
+ modal.classList.remove("hidden");status.textContent="Loading your friends and groups…";
+ select.innerHTML='<option value="">Choose a destination…</option>';
+ let options=[];
+ for(const friend of (chatFriends||[])) options.push({value:"friend:"+friend.id,label:"👤 "+nameOf(friend)});
+ const {data:members,error:memberError}=await db.from("community_group_members").select("group_id").eq("user_id",currentUser.id);
+ if(!memberError && members?.length){
+   const groupIds=[...new Set(members.map(x=>x.group_id))];
+   const {data:groups,error:groupError}=await db.from("community_groups").select("id,name").in("id",groupIds).order("name");
+   if(!groupError)for(const group of (groups||[]))options.push({value:"group:"+group.id,label:"👥 "+group.name});
+ }
+ if(memberError)status.textContent="Friends can still be selected. Groups could not be loaded: "+memberError.message;
+ else status.textContent=options.length?"Choose where to send this post.":"No friends or groups found yet. Add a friend or join a group first.";
+ for(const opt of options){const node=document.createElement("option");node.value=opt.value;node.textContent=opt.label;select.appendChild(node);}
+}
+function closePostShare(){el("postShareModal").classList.add("hidden");postBeingShared=null;}
+async function sendPostShare(){
+ const target=el("postShareTarget").value,status=el("postShareStatus"),button=el("postShareSend");
+ if(!postBeingShared)return;
+ if(!target){status.textContent="Choose a friend or group first.";return;}
+ const post=posts.find(p=>String(p.id)===String(postBeingShared));
+ if(!post){status.textContent="This post is no longer in the feed. Refresh the posts and try again.";return;}
+ const postUrl=location.href.split("#")[0]+"#post-"+encodeURIComponent(post.id);
+ const note=el("postShareNote").value.trim(),postText=(post.content||"").trim();
+ const message=[note,"↗ Shared a JFriendsChat post",postText,postUrl].filter(Boolean).join("\n");
+ button.disabled=true;button.textContent="Sending…";status.textContent="Sending your post…";
+ try{
+   let result;
+   if(target.startsWith("friend:")){
+     const friendId=target.slice(7);
+     result=await db.from("messages").insert({sender_id:currentUser.id,receiver_id:friendId,message_text:message}).select("id").single();
+   }else if(target.startsWith("group:")){
+     const groupId=target.slice(6);
+     const membership=await db.from("community_group_members").select("group_id").eq("group_id",groupId).eq("user_id",currentUser.id).maybeSingle();
+     if(membership.error)throw new Error(membership.error.message);
+     if(!membership.data)throw new Error("You are not a member of this group.");
+     result=await db.from("community_group_messages").insert({group_id:groupId,user_id:currentUser.id,content:message}).select("id").single();
+   }else throw new Error("Please choose a valid friend or group.");
+   if(result.error)throw new Error(result.error.message);
+   status.textContent="Post shared successfully!";button.textContent="Sent ✓";
+   setTimeout(closePostShare,900);
+ }catch(error){status.textContent="Could not share: "+(error.message||String(error));}
+ finally{button.disabled=false;if(!el("postShareModal").classList.contains("hidden"))button.textContent="Send to chat";}
+}
+
 function showMarketTab(tab){
  const map={browse:'marketBrowseView',shop:'marketShopView',orders:'marketOrdersView',sellerOrders:'marketSellerOrdersView'};
  Object.entries(map).forEach(([k,id])=>el(id).classList.toggle('hidden',k!==tab));
@@ -1328,8 +1887,37 @@ function toggleCallMute(){if(!callLocalStream)return;const track=callLocalStream
 function toggleCallCamera(){if(!callLocalStream)return;const track=callLocalStream.getVideoTracks()[0];if(!track)return;track.enabled=!track.enabled;el("toggleCameraBtn").textContent=track.enabled?"📷 Camera off":"📷 Camera on";}
 function showChatOptions(){alert("JFriendsChat: use the call buttons for voice and video calls. Messages scroll inside the chat area while the friend header stays fixed.");}
 
+document.addEventListener("click",event=>{const modal=el("postShareModal");if(modal&&!modal.classList.contains("hidden")&&event.target===modal)closePostShare();});
+document.addEventListener("keydown",event=>{if(event.key==="Escape"&&el("postShareModal")&&!el("postShareModal").classList.contains("hidden"))closePostShare();});
 db.auth.getSession().then(async({data,error})=>{if(error){showAuthStatus(error.message);return;}if(data.session?.user)await startApp(data.session.user);});
 db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"){currentUser=null;currentProfile=null;}});
 </script>
+
+<div id="postShareModal" class="post-share-modal hidden" role="dialog" aria-modal="true" aria-labelledby="postShareTitle">
+ <div class="post-share-card">
+  <div class="post-share-head"><div><h3 id="postShareTitle">Share this post</h3><p>Send this post to a friend or a group chat.</p></div><button type="button" class="post-share-close" onclick="closePostShare()">✕</button></div>
+  <label for="postShareTarget">Choose a friend or group</label>
+  <select id="postShareTarget"><option value="">Loading your chats…</option></select>
+  <label for="postShareNote">Add a message (optional)</label>
+  <textarea id="postShareNote" rows="3" placeholder="Write a message…"></textarea>
+  <p id="postShareStatus" class="muted" aria-live="polite"></p>
+  <button id="postShareSend" type="button" class="primary post-share-send" onclick="sendPostShare()">Send to chat</button>
+ </div>
+</div>
+
+<style id="jfc-facebook-compact-actions-last-comment">
+#postsFeed .post-actions{display:flex!important;flex-wrap:nowrap!important;gap:5px!important;margin:4px 0 0!important;padding:5px 0!important;border-top:1px solid #e4e6eb!important}
+#postsFeed .post-actions .social-action{flex:1 1 0!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-height:38px!important;padding:6px 5px!important;border:0!important;border-radius:20px!important;background:#f0f2f5!important;color:#4b5563!important;font-size:18px!important;font-weight:500!important;box-shadow:none!important}
+#postsFeed .post-actions .social-action>span:first-child{font-size:19px!important;line-height:1!important}
+#postsFeed .post-actions .social-action .action-count{font-size:13px!important;font-weight:500!important;color:inherit!important}
+#postsFeed .post-actions .social-action.liked{background:#e7f3ff!important;color:#0866ff!important}
+#postsFeed .post-actions .social-action.comment-action{color:#65676b!important}
+#postsFeed .post-actions .social-action.share-action{color:#65676b!important}
+#postsFeed .jfc-last-comment-preview{display:flex!important;align-items:flex-start!important;gap:9px!important;width:100%!important;text-align:left!important;padding:9px 5px 11px!important;margin:2px 0 0!important;border:0!important;border-top:1px solid #eef0f2!important;border-radius:0!important;background:transparent!important;color:#343a40!important;font-size:14px!important;line-height:1.35!important;cursor:pointer}
+#postsFeed .jfc-last-comment-preview>.avatar{width:40px!important;height:40px!important;min-width:40px!important;flex:0 0 40px!important;border-radius:50%!important;overflow:hidden!important;margin-top:2px!important}
+#postsFeed .jfc-last-comment-preview .jfc-comment-bubble{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:2px!important;max-width:calc(100% - 50px)!important;margin:0!important;padding:8px 13px!important;border-radius:20px!important;background:#f0f2f5!important;color:#1c1e21!important;font-weight:400!important;white-space:normal!important}
+#postsFeed .jfc-last-comment-preview .jfc-comment-bubble strong{font-weight:700!important;color:#202124!important;margin:0!important}
+#postsFeed .jfc-last-comment-preview .jfc-comment-text{display:block!important;margin:0!important;color:#1c1e21!important;font-weight:400!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important}
+</style>
 </body>
 </html>
