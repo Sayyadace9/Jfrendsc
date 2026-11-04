@@ -634,6 +634,19 @@ button.moments360-tool{cursor:pointer}
 .friend-request-shortcut{display:flex;align-items:center;justify-content:space-between;gap:8px}
 @media(max-width:760px){.header-actions{gap:5px}.notification-bell{width:39px;height:39px}.notification-panel{margin-top:8px}}
 
+
+/* JFriendsChat stability and small-screen finishing fixes */
+@media(max-width:760px){
+  html,body{max-width:100%;overflow-x:hidden}
+  .container,#appPanel,#postsPanel,#chatPanel{min-width:0;max-width:100%}
+  .card,.post,.company-section,.ads-card{min-width:0;overflow-wrap:anywhere}
+  input,textarea,select,button{max-width:100%}
+  .conversation-tools,.message-composer,.post-actions{flex-wrap:wrap}
+  .message-composer input{min-width:0;flex:1 1 120px}
+  #messages,#groupMessages{scroll-behavior:smooth;overscroll-behavior:contain}
+}
+img,video{max-width:100%}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #1769e055;outline-offset:2px}
 </style>
 
 <style id="jfc-love-light-blue-final">
@@ -999,7 +1012,7 @@ body.auth-only #authPanel .auth-card{width:100%}
 </section>
 <div id="status"></div>
 <section id="notificationsPanel" class="card hidden notification-panel">
- <div class="notification-heading"><div><h3>🔔 Notifications</h3><p class="muted">Friend requests, posts, messages and shop updates.</p></div><button class="secondary" onclick="markAllNotificationsRead()">Mark all read</button></div>
+ <div class="notification-heading"><div><h3>🔔 Notifications</h3><p class="muted">Friend requests, post activity and other app updates. Chat notifications are not shown.</p></div><button class="secondary" onclick="markAllNotificationsRead()">Mark all read</button></div>
  <div id="notificationsList"><p class="muted">Loading notifications…</p></div>
 </section>
 <section id="chatPanel" class="card">
@@ -1032,7 +1045,11 @@ body.auth-only #authPanel .auth-card{width:100%}
 
 <section id="postsPanel" class="hidden moments360">
  <div class="jfc-create-entry">
-  <button type="button" class="jfc-open-create" onclick="toggleJfcPostEditor()"><span>＋</span> Create post</button>
+  <button type="button" class="jfc-open-create" onclick="selectJfcCreationMode('moment')"><span>＋</span> Create post</button>
+  <div class="jfc-quick-create" aria-label="Status and Reels">
+   <button type="button" id="jfcStatusMainCard" class="jfc-create-tile jfc-status-tile" onclick="openJfcTileContent('status')"><span class="jfc-tile-plus" onclick="event.stopPropagation();openJfcCreateStory('status')">＋</span><span class="jfc-tile-title">Status</span><small id="jfcStatusTileHint" hidden></small></button>
+   <button type="button" id="jfcReelMainCard" class="jfc-create-tile jfc-reel-tile" onclick="openJfcTileContent('reel')"><span class="jfc-tile-plus" onclick="event.stopPropagation();openJfcCreateStory('reel')">＋</span><span class="jfc-tile-title">Reels</span><small id="jfcReelTileHint" hidden></small></button>
+  </div>
  </div>
  <div id="jfcPostEditor" class="moments360-composer moments360-creator hidden">
   <div class="jfc-editor-title"><strong>Create post</strong><button type="button" class="secondary" onclick="toggleJfcPostEditor(false)">Close</button></div>
@@ -1042,6 +1059,7 @@ body.auth-only #authPanel .auth-card{width:100%}
    <small>Promotional posts display a clear PROMOTION label.</small>
   </div>
   <textarea id="postText" placeholder="What would you like to share?"></textarea>
+  <div id="jfcStatusTextColors" class="jfc-status-text-colors hidden"><label for="jfcStatusTextColor">Text status background</label><select id="jfcStatusTextColor"><option value="#1769e0">Blue</option><option value="#16a085">Green</option><option value="#8e44ad">Purple</option><option value="#e67e22">Orange</option><option value="#d6336c">Pink</option><option value="#263238">Dark</option><option value="#111111">Black</option></select><small>Choose a colour, write your message, then tap “Create photo” to make a colourful text status.</small></div>
   <button type="button" class="jfc-plus-picker" onclick="toggleJfcMediaOptions()" aria-label="Add to post">＋</button>
   <div id="jfcMediaOptions" class="moments360-tools hidden">
    <label class="moments360-tool" for="postMedia"><span>▧</span><b>Photos / videos (select many)</b><input id="postMedia" type="file" accept="image/*,video/*" multiple onchange="previewPostMedia(this)"></label>
@@ -1060,7 +1078,10 @@ body.auth-only #authPanel .auth-card{width:100%}
   </div>
   <input type="hidden" id="postType" value="moment"><div class="moments360-publish-row"><button class="moments360-publish" onclick="createPost()">Publish post <span>↗</span></button></div>
  </div>
- <div class="moments360-view-switch" aria-label="Post viewing style">
+  <div id="jfcStoryViewer" class="jfc-story-viewer hidden" role="dialog" aria-modal="true" aria-label="Status and Reel viewer">
+   <div class="jfc-story-viewer-card"><div class="jfc-story-progress" id="jfcStoryProgress"></div><div class="jfc-story-viewer-top"><div id="jfcStoryAuthor"></div><button type="button" onclick="closeJfcStoryViewer()" aria-label="Close">✕</button></div><div id="jfcStoryStage" class="jfc-story-stage"></div><div id="jfcReelActionRail" class="jfc-reel-action-rail hidden"></div><div id="jfcStoryCaption" class="jfc-story-caption"></div><div class="jfc-story-controls"><button type="button" onclick="stepJfcStory(-1)">‹</button><button type="button" onclick="stepJfcStory(1)">›</button></div></div>
+  </div>
+  <div class="moments360-view-switch" aria-label="Post viewing style">
   <button type="button" class="active" data-post-view="flow" onclick="setPostView('flow',this)">◉ Flow</button>
   <button type="button" data-post-view="mosaic" onclick="setPostView('mosaic',this)">▦ Mosaic</button>
   <button type="button" data-post-view="focus" onclick="setPostView('focus',this)">▣ Focus</button>
@@ -1197,7 +1218,7 @@ body.auth-only #authPanel .auth-card{width:100%}
    <h3>✨ Create an advertisement</h3>
    <p class="muted">Write a clear advert. Your campaign starts as Pending and must be approved by the JFriendsChat advertising administrator before public display.</p>
    <label for="adBusinessName">Business / advertiser name *</label><input id="adBusinessName" maxlength="120" placeholder="Your company or business name">
-   <label for="adHeadline">Advertisement headline *</label><input id="adHeadline" maxlength="90" placeholder="A short, attractive headline">
+   <label for="campaignHeadline">Advertisement headline *</label><input id="campaignHeadline" maxlength="90" placeholder="A short, attractive headline">
    <label for="adDescription">Description *</label><textarea id="adDescription" maxlength="600" placeholder="Describe what you offer and why people should choose you."></textarea>
    <label for="adImageUrl">Image URL (optional)</label><input id="adImageUrl" type="url" maxlength="1000" placeholder="https://example.com/your-ad-image.jpg">
    <label for="adDestination">Website / contact link *</label><input id="adDestination" type="url" maxlength="1000" placeholder="https://yourwebsite.com">
@@ -1274,7 +1295,7 @@ function initials(n){return (n||"F").trim().charAt(0).toUpperCase()}
 
 function avatar(p){
  let photo=p?.avatar_url||p?.photo_url||p?.profile_picture||p?.picture_url||p?.avatar;
- const click=p?.id?` member-clickable role="button" tabindex="0" title="View ${esc(nameOf(p))}'s profile" onclick="event.stopPropagation();openMemberProfile('${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openMemberProfile('${p.id}')}"`:'';
+ const click=p?.id?` member-clickable jfc-profile-avatar role="button" tabindex="0" data-profile-id="${esc(p.id)}" title="View ${esc(nameOf(p))}'s profile" onclick="event.stopPropagation();openMemberProfile('${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();openMemberProfile('${p.id}')}"`: '';
  if(photo)return `<div class="avatar"${click}><img src="${esc(photo)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.textContent='${esc(initials(nameOf(p)))}'"></div>`;
  return `<div class="avatar"${click}>${esc(initials(nameOf(p)))}</div>`;
 }
@@ -1447,7 +1468,7 @@ async function deleteCompanyProduct(id){
 }
 
 async function openAds(){hidePanels();setNav("adsNav");el("adsPanel").classList.remove("hidden");await loadMyAdCampaigns();await loadApprovedAdPreview();}
-async function submitAdCampaign(){if(!currentUser)return alert("Please sign in first.");const business_name=el("adBusinessName").value.trim(),headline=el("adHeadline").value.trim(),description=el("adDescription").value.trim(),image_url=el("adImageUrl").value.trim(),destination_url=el("adDestination").value.trim(),placement=el("adPlacement").value,budget=Number(el("adBudget").value||0);if(!business_name||!headline||!description||!destination_url)return alert("Please complete the business name, headline, description and website/contact link.");try{const dest=new URL(destination_url);if(!["http:","https:"].includes(dest.protocol))throw new Error("Use a valid https:// or http:// link.");if(image_url){const img=new URL(image_url);if(!["http:","https:"].includes(img.protocol))throw new Error("Image URL must start with http:// or https://.");}}catch(e){return alert("Please enter valid website and image links. "+e.message);}if(budget<0)return alert("Daily budget cannot be negative.");const payload={advertiser_id:currentUser.id,business_name,headline,description,image_url:image_url||null,destination_url,placement,daily_budget:budget,status:"pending"};const {error}=await db.from("ad_campaigns").insert(payload);if(error){el("adSubmitStatus").textContent="Could not submit: "+error.message+" — run the Advertisements SQL setup first.";return;}el("adSubmitStatus").textContent="Your advertisement has been submitted for review. It will not display publicly until approved.";["adBusinessName","adHeadline","adDescription","adImageUrl","adDestination","adBudget"].forEach(id=>el(id).value="");await loadMyAdCampaigns();}
+async function submitAdCampaign(){if(!currentUser)return alert("Please sign in first.");const business_name=el("adBusinessName").value.trim(),headline=el("campaignHeadline").value.trim(),description=el("adDescription").value.trim(),image_url=el("adImageUrl").value.trim(),destination_url=el("adDestination").value.trim(),placement=el("adPlacement").value,budget=Number(el("adBudget").value||0);if(!business_name||!headline||!description||!destination_url)return alert("Please complete the business name, headline, description and website/contact link.");try{const dest=new URL(destination_url);if(!["http:","https:"].includes(dest.protocol))throw new Error("Use a valid https:// or http:// link.");if(image_url){const img=new URL(image_url);if(!["http:","https:"].includes(img.protocol))throw new Error("Image URL must start with http:// or https://.");}}catch(e){return alert("Please enter valid website and image links. "+e.message);}if(budget<0)return alert("Daily budget cannot be negative.");const payload={advertiser_id:currentUser.id,business_name,headline,description,image_url:image_url||null,destination_url,placement,daily_budget:budget,status:"pending"};const {error}=await db.from("ad_campaigns").insert(payload);if(error){el("adSubmitStatus").textContent="Could not submit: "+error.message+" — run the Advertisements SQL setup first.";return;}el("adSubmitStatus").textContent="Your advertisement has been submitted for review. It will not display publicly until approved.";["adBusinessName","campaignHeadline","adDescription","adImageUrl","adDestination","adBudget"].forEach(id=>el(id).value="");await loadMyAdCampaigns();}
 async function loadMyAdCampaigns(){const box=el("myAdCampaigns");if(!box)return;const {data,error}=await db.from("ad_campaigns").select("id,business_name,headline,description,placement,daily_budget,status,created_at").eq("advertiser_id",currentUser.id).order("created_at",{ascending:false}).limit(50);if(error){box.innerHTML="<p class='muted'>Campaign list unavailable: "+esc(error.message)+". Run the Advertisements SQL setup.</p>";return;}const rows=data||[];box.innerHTML=rows.length?rows.map(a=>`<div class="ad-campaign-row"><h4>${esc(a.headline)}</h4><p>${esc(a.business_name)} · ${esc(a.placement)}</p><p>${esc(a.description)}</p><span class="ad-status ${esc(a.status)}">${esc(a.status.toUpperCase())}</span><p class="muted">Daily budget: ₦${Number(a.daily_budget||0).toLocaleString("en-NG")} · Submitted: ${new Date(a.created_at).toLocaleDateString()}</p>${["approved","pending"].includes(a.status)?`<div class="ads-actions"><button class="secondary" onclick="pauseAdCampaign('${a.id}')">Pause campaign</button></div>`:""}</div>`).join(""):"<p class='muted'>You have not submitted any advertisements yet.</p>";}
 async function pauseAdCampaign(id){const {error}=await db.from("ad_campaigns").update({status:"paused"}).eq("id",id).eq("advertiser_id",currentUser.id);if(error){alert("Could not pause campaign: "+error.message);return;}await loadMyAdCampaigns();await loadApprovedAdPreview();}
 async function loadApprovedAdPreview(){const box=el("approvedAdPreview");if(!box)return;const now=new Date().toISOString();const {data,error}=await db.from("ad_campaigns").select("business_name,headline,description,image_url,destination_url,placement").eq("status","approved").order("created_at",{ascending:false}).limit(12);if(error){box.innerHTML="<p class='muted'>Approved advert preview is not available yet: "+esc(error.message)+"</p>";return;}const rows=(data||[]);box.innerHTML=rows.length?rows.map(a=>`<article class="ad-preview-card">${a.image_url?`<img src="${esc(a.image_url)}" alt="" loading="lazy" onerror="this.style.display='none'">`:`<div class="ad-placeholder">📢</div>`}<div><span class="ad-status approved">SPONSORED</span><h4>${esc(a.headline)}</h4><p><b>${esc(a.business_name)}</b> · ${esc(a.placement)}</p><p>${esc(a.description)}</p><a href="${esc(a.destination_url)}" target="_blank" rel="noopener noreferrer">Learn more ↗</a></div></article>`).join(""):"<p class='muted'>There are no approved advertisements yet.</p>";}
@@ -1615,7 +1636,7 @@ async function startApp(user){
  document.body.classList.remove("auth-only");
  currentUser=user;el("authPanel").classList.add("hidden");el("appPanel").classList.remove("hidden");el("accountButton").classList.remove("hidden");el("appNavigation").classList.add("visible");
  db.rpc("jf_record_activity").then(()=>{}).catch(()=>{});
- await ensureProfile();await checkMarketAdmin();await loadChatFriends();openChatHome();await loadPresence();subscribeToMessages();await startPresence();await subscribeToCalls();await initNotifications();
+ await ensureProfile();await checkMarketAdmin();await loadChatFriends();await openPosts();await loadPresence();subscribeToMessages();await startPresence();await subscribeToCalls();await initNotifications();
  // No periodic data polling: data loads when a section is opened, while chat
  // messages and online presence use the existing Supabase Realtime channels.
  // This avoids repeated full-app database requests in idle sessions.
@@ -1702,7 +1723,7 @@ async function runGlobalSearch(q){
  }catch(err){if(token===globalSearchToken)showGlobalSearchResults('<div class="jf-search-heading">Search could not be completed</div><div class="jf-search-empty">'+esc(err.message||'Please try again.')+'</div>');}
 }
 document.addEventListener("click",e=>{if(!e.target.closest(".jf-global-search")&&!e.target.closest("#globalSearchResults"))closeGlobalSearch();});
-async function openPosts(){hidePanels();setNav("postsNav");el("postsPanel").classList.remove("hidden");await loadPosts();}
+async function openPosts(){closeGlobalSearch();const search=el("globalSearchInput");if(search)search.value="";hidePanels();setNav("postsNav");el("postsPanel").classList.remove("hidden");await loadPosts();}
 function backToChatList(){document.body.classList.remove("chat-open");activeFriend=null;el("conversationView").classList.add("hidden");el("chatListView").classList.remove("hidden");el("chatHeading").textContent="Your Chats";renderChatList();}
 async function openFriendsList(){hidePanels();setNav("friendsNav");el("friendsPanel").classList.remove("hidden");await loadFriendsList();}
 async function openRequests(){await openFriendsMenu();el("friendRequestsSection").scrollIntoView({behavior:"smooth",block:"start"});}
@@ -1895,45 +1916,68 @@ async function sendChatMedia(){
  await renderChatList();
 }
 
-// JFriendsChat notifications: requires the notifications SQL setup supplied with this update.
+// JFriendsChat notifications: social and app activity only; chat/message alerts are excluded.
 let notificationChannel=null,notificationRows=[];
+const ALLOWED_NOTIFICATION_TYPES = [
+ "friend_request","friendrequest","friend_request_received","friend_request_accepted",
+ "post","new_post","post_created","post_like","like","post_comment","comment",
+ "post_reply","reply","post_share","share","market","market_activity","product",
+ "product_update","shop","shop_activity","advertisement","advert","ad_activity",
+ "business","business_activity","school","school_activity","company","company_activity",
+ "group","group_activity","follow","profile","profile_update"
+];
+function isAllowedNotification(type, row={}){
+ const t=String(type||"").trim().toLowerCase().replace(/[\s-]+/g,"_");
+ if(!t) return false;
+ // Explicitly reject chat-related types, even if another keyword is also present.
+ if(/(^|_)(chat|message|dm|private_message|new_message)(_|$)/.test(t)) return false;
+ if(/chat|message|messaging|inbox/.test(t)) return false;
+ // Some older rows use a generic type; reject chat wording in their title/body too.
+ const wording=(String(row.title||"")+" "+String(row.body||"")).toLowerCase();
+ if(/\b(new message|chat message|sent you a message|private message)\b/.test(wording)) return false;
+ return ALLOWED_NOTIFICATION_TYPES.includes(t) ||
+   /^(friend_request|post_|like$|comment$|reply$|share$|market_|product_|shop_|advert|business_|school_|company_|group_|follow|profile_)/.test(t);
+}
 function notificationIcon(type){
- const t=String(type||"");
+ const t=String(type||"").toLowerCase();
  if(t.includes("friend"))return "👥";
- if(t.includes("message")||t.includes("shop_message"))return "💬";
- if(t.includes("post"))return "📝";
- if(t.includes("shop")||t.includes("product"))return "🛍️";
- if(t.includes("advert"))return "📢";
+ if(t.includes("like"))return "❤️";
+ if(t.includes("comment")||t.includes("reply")||t.includes("post")||t.includes("share"))return "📝";
+ if(t.includes("shop")||t.includes("product")||t.includes("market"))return "🛍️";
+ if(t.includes("advert")||t.startsWith("ad_"))return "📢";
+ if(t.includes("school"))return "🎓";
+ if(t.includes("business")||t.includes("company"))return "🏢";
+ if(t.includes("group"))return "👥";
+ if(t.includes("follow")||t.includes("profile"))return "👤";
  return "🔔";
 }
 function notificationDestination(n){
- const t=String(n.type||"");
+ const t=String(n.type||"").toLowerCase();
  if(t.includes("friend")){openRequests();return;}
- if(t.includes("message")){openChatHome();return;}
- if(t.includes("post")){openPosts();return;}
- if(t.includes("shop")||t.includes("product")){openBusiness();return;}
- if(t.includes("advert")){openAds();return;}
- openMore();
+ if(t.includes("post")||t.includes("like")||t.includes("comment")||t.includes("reply")||t.includes("share")){openPosts();return;}
+ if(t.includes("shop")||t.includes("product")||t.includes("market")){openBusiness();return;}
+ if(t.includes("advert")||t.startsWith("ad_")){openAds();return;}
+ if(t.includes("business")||t.includes("company")||t.includes("school")||t.includes("group")){openMore();return;}
+ if(t.includes("follow")||t.includes("profile")){openMore();return;}
 }
 async function loadNotifications(){
  if(!currentUser)return;
  const box=el("notificationsList");
- // Keep the bell visible even before the notifications table is configured.
  const button=el("notificationButton");
  if(button)button.classList.remove("hidden");
- const {data,error}=await db.from("notifications").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(50);
+ const {data,error}=await db.from("notifications").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(100);
  if(error){
    const badge=el("notificationBadge");
    if(badge){badge.textContent="0";badge.classList.add("hidden");}
-   if(box)box.innerHTML='<p class="muted">Notifications setup is not complete. Run the JFriendsChat Notifications SQL file in Supabase. '+esc(error.message)+'</p>';
+   if(box)box.innerHTML='<p class="muted">Notifications setup is not complete. Check the JFriendsChat notifications table and policies. '+esc(error.message)+'</p>';
    return;
  }
- notificationRows=data||[];
+ notificationRows=(data||[]).filter(n=>isAllowedNotification(n.type,n));
  const unread=notificationRows.filter(n=>!n.read_at).length;
  const badge=el("notificationBadge");
  if(badge){badge.textContent=unread>99?"99+":String(unread);badge.classList.toggle("hidden",unread===0);}
  if(button)button.classList.remove("hidden");
- if(box)box.innerHTML=notificationRows.length?notificationRows.map(n=>`<div class="notification-item ${n.read_at?"":"unread"}" onclick="openNotification('${n.id}')"><div class="notification-symbol">${notificationIcon(n.type)}</div><div class="notification-copy"><strong>${esc(n.title||"JFriendsChat update")}</strong><p>${esc(n.body||"You have a new update.")}</p><small>${esc(timeOf(n.created_at))}</small></div>${n.read_at?"":'<span class="notification-dot"></span>'}</div>`).join(""):'<p class="muted">You are all caught up. New activity will appear here.</p>';
+ if(box)box.innerHTML=notificationRows.length?notificationRows.map(n=>`<div class="notification-item ${n.read_at?"":"unread"}" role="button" tabindex="0" onclick="openNotification('${String(n.id).replace(/'/g,"\\'")}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openNotification('${String(n.id).replace(/'/g,"\\'")}')}"><div class="notification-symbol">${notificationIcon(n.type)}</div><div class="notification-copy"><strong>${esc(n.title||"JFriendsChat update")}</strong><p>${esc(n.body||"You have a new update.")}</p><small>${esc(timeOf(n.created_at))}</small></div>${n.read_at?"":'<span class="notification-dot"></span>'}</div>`).join(""):'<p class="muted">You are all caught up. Friend requests, post activity and other app updates will appear here. Chat notifications are excluded.</p>';
  await updateFriendRequestBadge();
 }
 async function updateFriendRequestBadge(){
@@ -1949,7 +1993,7 @@ async function initNotifications(){
  .on("postgres_changes",{event:"INSERT",schema:"public",table:"notifications",filter:"user_id=eq."+currentUser.id},async payload=>{
    await loadNotifications();
    const n=payload.new||{};
-   if(n.title&&"Notification" in window && Notification.permission==="granted"){
+   if(isAllowedNotification(n.type,n)&&n.title&&"Notification" in window&&Notification.permission==="granted"){
      try{new Notification(n.title,{body:n.body||"New JFriendsChat activity"});}catch(e){}
    }
  })
@@ -1967,7 +2011,10 @@ async function openNotification(id){
  if(n)notificationDestination(n);
 }
 async function markAllNotificationsRead(){
- const {error}=await db.from("notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).is("read_at",null);
+ // Mark only supported social/app notifications as read; leave unrelated rows untouched.
+ const ids=notificationRows.filter(n=>!n.read_at).map(n=>n.id);
+ if(!ids.length)return;
+ const {error}=await db.from("notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).in("id",ids);
  if(error)return alert("Could not mark notifications read: "+error.message);
  await loadNotifications();
 }
@@ -2007,15 +2054,32 @@ function previewPostMedia(input){
 }
 
 function useCameraPhoto(input){if(input.files?.[0]){el("postMedia").files=input.files;previewPostMedia(el("postMedia"));}}
+function createJfcTextStatusFile(text,color){
+ return new Promise((resolve,reject)=>{
+  const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=1350;
+  const ctx=canvas.getContext("2d");if(!ctx)return reject(new Error("Canvas is not available."));
+  const gradient=ctx.createLinearGradient(0,0,1080,1350);gradient.addColorStop(0,color);gradient.addColorStop(.62,color);gradient.addColorStop(1,"#111827");
+  ctx.fillStyle=gradient;ctx.fillRect(0,0,1080,1350);
+  ctx.fillStyle="rgba(255,255,255,.10)";ctx.beginPath();ctx.arc(930,170,270,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#fff";ctx.font="bold 44px Arial";ctx.fillText("JFRIENDSCHAT",80,130);
+  ctx.font="bold 62px Arial";const words=text.split(/\s+/);let line="",lines=[];
+  for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>900&&line){lines.push(line);line=word;}else line=test;}if(line)lines.push(line);
+  const shown=lines.slice(0,10),lineHeight=86,startY=Math.max(300,(1350-shown.length*lineHeight)/2);
+  ctx.fillStyle="#fff";shown.forEach((ln,i)=>ctx.fillText(ln,80,startY+i*lineHeight));
+  ctx.fillStyle="#e8ddff";ctx.font="28px Arial";ctx.fillText("A moment worth sharing",80,1240);
+  canvas.toBlob(blob=>blob?resolve(new File([blob],"jfc-coloured-status.png",{type:"image/png"})):reject(new Error("Image conversion failed.")),"image/png");
+ });
+}
 function makeTextPoster(){
  const text=el("postText").value.trim();
  if(!text){alert("Write your poster message in the text box first.");el("postText").focus();return;}
  const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=1350;
  const ctx=canvas.getContext("2d");
+ const base=el("jfcStatusTextColor")?.value||"#1769e0";
  const gradient=ctx.createLinearGradient(0,0,1080,1350);
- gradient.addColorStop(0,"#17183f");gradient.addColorStop(.55,"#5b45c7");gradient.addColorStop(1,"#dc5caa");
+ gradient.addColorStop(0,base);gradient.addColorStop(.58,base);gradient.addColorStop(1,"#111827");
  ctx.fillStyle=gradient;ctx.fillRect(0,0,1080,1350);
- ctx.fillStyle="rgba(255,255,255,.12)";ctx.beginPath();ctx.arc(930,170,270,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="rgba(255,255,255,.10)";ctx.beginPath();ctx.arc(930,170,270,0,Math.PI*2);ctx.fill();
  ctx.fillStyle="#fff";ctx.font="bold 44px Arial";ctx.fillText("JFRIENDSCHAT",80,130);
  ctx.fillStyle="#f5eaff";ctx.font="bold 62px Arial";
  const words=text.split(/\s+/);let line="",y=470,lines=[];
@@ -2067,6 +2131,21 @@ function closeVideoCreator(){
  else videoRecordStream?.getTracks().forEach(t=>t.stop());
  videoRecordStream=null;if(requestJfcBack("videoCreator"))return;el("videoCreator").classList.add("hidden");
 }
+function selectJfcCreationMode(mode){
+ const type=el("postType"),title=document.querySelector("#jfcPostEditor .jfc-editor-title strong"),publish=document.querySelector("#jfcPostEditor .moments360-publish-row .moments360-publish"),media=el("postMedia"),text=el("postText");
+ if(!type)return;
+ type.value=["reel","status","ad"].includes(mode)?mode:"moment";
+ if(title)title.textContent=mode==="reel"?"Create Reel":mode==="status"?"Create Status":mode==="ad"?"Create Promotion":"Create post";
+ if(publish)publish.innerHTML=(mode==="reel"?"Publish Reel":mode==="status"?"Share Status":mode==="ad"?"Publish promotion":"Publish post")+" <span>↗</span>";
+ if(media){media.accept=mode==="reel"?"video/*": "image/*,video/*";media.multiple=mode!=="reel";}
+ if(text)text.placeholder=mode==="reel"?"Add a caption to your Reel…":mode==="status"?"What's happening? Share a status…":"What would you like to share?";
+ toggleAdFields();
+ if(mode==="reel")el("jfcMediaOptions")?.classList.remove("hidden");
+ toggleJfcPostEditor(true);
+}
+async function jfcCheckReelDuration(file){
+ return new Promise((resolve,reject)=>{const video=document.createElement("video"),url=URL.createObjectURL(file);video.preload="metadata";video.onloadedmetadata=()=>{const duration=video.duration;URL.revokeObjectURL(url);if(!Number.isFinite(duration)){reject(new Error("Could not read this video's duration."));return;}resolve(duration);};video.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Could not read this video. Please choose another video."));};video.src=url;});
+}
 function toggleJfcPostEditor(show){const editor=el("jfcPostEditor");if(!editor)return;const shouldShow=show===undefined?editor.classList.contains("hidden"):show;const wasOpen=!editor.classList.contains("hidden");if(shouldShow&&!wasOpen)pushJfcBackLayer("postEditor");if(!shouldShow&&wasOpen&&requestJfcBack("postEditor"))return;editor.classList.toggle("hidden",!shouldShow);if(shouldShow){setTimeout(()=>el("postText")?.focus(),80);editor.scrollIntoView({behavior:"smooth",block:"start"});}}
 function toggleJfcMediaOptions(){el("jfcMediaOptions")?.classList.toggle("hidden");}
 function toggleJfcPromotion(){const type=el("postType");if(!type)return;type.value="ad";toggleAdFields();el("adFields")?.classList.remove("hidden");el("adHeadline")?.focus();}
@@ -2077,38 +2156,50 @@ function openPostAudiencePicker(){
 function closePostAudiencePicker(){const modal=el("postAudiencePicker");if(modal){modal.classList.add("hidden");modal.setAttribute("aria-hidden","true");}}
 async function createPost(confirmedVisibility){
  if(!confirmedVisibility){openPostAudiencePicker();return;}
- const text=el("postText").value.trim(),files=[...(el("postMedia").files||[])];
+ if(!currentUser?.id){setStatus("Please log in again before publishing.");return;}
+ const text=el("postText").value.trim();let files=[...(el("postMedia").files||[])];
  if(createdVideoFile)files.push(createdVideoFile);
- const visibility=confirmedVisibility,postType=el("postType")?.value||"moment";
+ const visibility=confirmedVisibility==="friends"?"friends":"public",postType=el("postType")?.value||"moment";
+ if(postType==="status"&&text&&!files.length){
+  try{files.push(await createJfcTextStatusFile(text,el("jfcStatusTextColor")?.value||"#1769e0"));}
+  catch(error){return alert("Could not create the coloured text status: "+(error?.message||String(error)));}
+ }
+ if(postType==="reel"){
+  if(files.length!==1||!files[0].type.startsWith("video/"))return alert("A Reel needs one video. Choose a video to continue.");
+  try{const seconds=await jfcCheckReelDuration(files[0]);if(seconds>90)return alert("Reels can be up to 90 seconds long. Please trim this video and try again.");}catch(err){return alert(err.message||"Could not check the Reel video.");}
+ }
  const adHeadline=postType==="ad"?(el("adHeadline").value.trim()):"";
  if(!text&&!files.length&&!adHeadline)return alert("Add text, photos, videos or a promotion headline.");
  if(postType==="ad"&&!adHeadline)return alert("Add a headline for your promotion.");
  if(files.length>10)return alert("You can add up to 10 photos/videos per post.");
  if(files.some(f=>f.size>100*1024*1024))return alert("Each file must be smaller than 100 MB.");
- closePostAudiencePicker();setStatus("Publishing post…");
- const postId=crypto.randomUUID();
- // Save the post record first so it appears in the feed without waiting for media uploads.
- const {error}=await db.from("posts").insert({id:postId,user_id:currentUser.id,content:text,media_path:null,media_type:null,visibility,post_type:postType,ad_headline:adHeadline||null});
- if(error){setStatus("Post could not be saved: "+error.message);return;}
- el("postText").value="";el("postMedia").value="";el("postPhotoCamera").value="";
- if(el("adHeadline"))el("adHeadline").value="";if(el("postType"))el("postType").value="moment";
- toggleAdFields();el("postMediaPreview").classList.add("hidden");el("postMediaPreview").innerHTML="";createdVideoBlob=null;createdVideoFile=null;
- setStatus(files.length?"Your post is published. Photos/videos are uploading in the background…":"Your post is live.");
- el("jfcMediaOptions")?.classList.add("hidden");toggleJfcPostEditor(false);
- await loadPosts();
- if(!files.length)return;
- // Upload attachments after the post is already visible. The feed is refreshed once attachments finish.
- const uploaded=[];
- for(let i=0;i<files.length;i++){
-   const file=files[i],safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-   const path=currentUser.id+"/"+postId+"/"+i+"_"+safeName;
-   const {error:uploadError}=await db.storage.from(POST_BUCKET).upload(path,file,{upsert:false,contentType:file.type||"application/octet-stream"});
-   if(uploadError){setStatus("Your post is live, but a media upload failed: "+uploadError.message);return;}
-   uploaded.push({post_id:postId,user_id:currentUser.id,media_path:path,media_type:file.type.startsWith("video/")?"video":"image",sort_order:i});
- }
- const {error:mediaError}=await db.from("post_media").insert(uploaded);
- if(mediaError){setStatus("Your post is live, but its media list could not be saved: "+mediaError.message);return;}
- const y=window.scrollY;await loadPosts();window.scrollTo({top:y,behavior:"instant"});setStatus("Your post and media are live.");
+ const audienceButton=document.querySelector("#postAudiencePicker .jfc-audience-actions .moments360-publish");
+ if(audienceButton){audienceButton.disabled=true;audienceButton.textContent="Publishing…";}
+ closePostAudiencePicker();setStatus("Publishing…");
+ try{
+  const postId=crypto.randomUUID();
+  const {error}=await db.from("posts").insert({id:postId,user_id:currentUser.id,content:text,media_path:null,media_type:null,visibility,post_type:postType,ad_headline:adHeadline||null});
+  if(error)throw error;
+  el("postText").value="";el("postMedia").value="";el("postPhotoCamera").value="";
+  if(el("adHeadline"))el("adHeadline").value="";if(el("postType"))el("postType").value="moment";
+  const editorTitle=document.querySelector("#jfcPostEditor .jfc-editor-title strong"),publishLabel=document.querySelector("#jfcPostEditor .moments360-publish-row .moments360-publish");if(editorTitle)editorTitle.textContent="Create post";if(publishLabel)publishLabel.innerHTML="Publish post <span>↗</span>";if(el("postMedia")){el("postMedia").accept="image/*,video/*";el("postMedia").multiple=true;}el("postText").placeholder="What would you like to share?";toggleAdFields();el("postMediaPreview").classList.add("hidden");el("postMediaPreview").innerHTML="";createdVideoBlob=null;createdVideoFile=null;
+  el("jfcMediaOptions")?.classList.add("hidden");toggleJfcPostEditor(false);
+  setStatus(files.length?"Published. Uploading photos/videos…":"Published successfully.");await loadPosts();
+  if(files.length){
+   const uploaded=[];
+   for(let i=0;i<files.length;i++){
+    const file=files[i],safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+    const path=currentUser.id+"/"+postId+"/"+i+"_"+safeName;
+    const {error:uploadError}=await db.storage.from(POST_BUCKET).upload(path,file,{upsert:false,contentType:file.type||"application/octet-stream"});
+    if(uploadError)throw new Error("Post was published, but a media upload failed: "+uploadError.message);
+    uploaded.push({post_id:postId,user_id:currentUser.id,media_path:path,media_type:file.type.startsWith("video/")?"video":"image",sort_order:i});
+   }
+   const {error:mediaError}=await db.from("post_media").insert(uploaded);
+   if(mediaError)throw new Error("Post was published, but its media list could not be saved: "+mediaError.message);
+   await loadPosts();setStatus("Your post and media are published.");
+  }
+ }catch(error){setStatus("Could not publish: "+(error?.message||String(error)));}
+ finally{if(audienceButton){audienceButton.disabled=false;audienceButton.innerHTML="Publish <span>↗</span>";}}
 }
 
 function setPostView(mode,button){
@@ -2118,6 +2209,80 @@ function setPostView(mode,button){
  document.querySelectorAll("#postsPanel [data-post-view]").forEach(b=>b.classList.toggle("active",b===button));
  try{localStorage.setItem("jf_moments360_view",mode);}catch(e){}
 }
+let jfcStoryItems=[],jfcStoryIndex=0;
+function closeJfcStoryViewer(){const v=el("jfcStoryViewer");if(!v)return;v.classList.add("hidden");const video=v.querySelector("video");if(video)video.pause();el("jfcStoryStage").innerHTML="";}
+function stepJfcStory(direction){if(!jfcStoryItems.length)return;jfcStoryIndex=(jfcStoryIndex+direction+jfcStoryItems.length)%jfcStoryItems.length;renderJfcStoryViewer();}
+function openJfcStoryViewer(index){if(!jfcStoryItems.length)return;jfcStoryIndex=index;el("jfcStoryViewer").classList.remove("hidden");renderJfcStoryViewer();}
+function renderJfcStoryViewer(){
+ const item=jfcStoryItems[jfcStoryIndex];if(!item)return;
+ el("jfcStoryAuthor").innerHTML=`<strong>${esc(nameOf(item.profile))}</strong><small>${item.kind==="status"?"Status":"Reel"} · ${esc(timeOf(item.post.created_at))}</small>`;
+ el("jfcStoryStage").innerHTML=item.url?(item.mediaType==="video"?`<video src="${esc(item.url)}" controls autoplay playsinline></video>`:`<img src="${esc(item.url)}" alt="Shared ${item.kind}">`):`<div class="jfc-story-text-only">${esc(item.post.content||"")}</div>`;
+ el("jfcStoryCaption").textContent=item.post.content||"";
+ const rail=el("jfcReelActionRail");
+ if(rail){rail.classList.toggle("hidden",item.kind!=="reel");rail.innerHTML=item.kind==="reel"?`<button type="button" class="${item.liked?"is-liked":""}" onclick="toggleJfcReelLike()"><b>♥</b><span>Like</span><small>${item.likeCount||0}</small></button><button type="button" onclick="openJfcReelComments()"><b>▢</b><span>Comment</span><small>${item.commentCount||0}</small></button><button type="button" onclick="sharePost('${String(item.post.id).replace(/'/g,"\\'")}')"><b>➦</b><span>Share</span></button>`:"";}
+ el("jfcStoryProgress").innerHTML=jfcStoryItems.map((x,i)=>`<span class="${i===jfcStoryIndex?"active":""}"></span>`).join("");
+}
+async function toggleJfcReelLike(){
+ const item=jfcStoryItems[jfcStoryIndex];if(!item||item.kind!=="reel")return;if(!currentUser)return alert("Please sign in to like Reels.");
+ const was=item.liked;item.liked=!was;item.likeCount=Math.max(0,(item.likeCount||0)+(was?-1:1));renderJfcStoryViewer();
+ const result=was?await db.from("post_likes").delete().eq("post_id",item.post.id).eq("user_id",currentUser.id):await db.from("post_likes").insert({post_id:item.post.id,user_id:currentUser.id});
+ if(result.error){item.liked=was;item.likeCount=Math.max(0,(item.likeCount||0)+(was?1:-1));renderJfcStoryViewer();alert("Like could not be saved: "+result.error.message);}
+}
+async function openJfcReelComments(){
+ const item=jfcStoryItems[jfcStoryIndex];if(!item||item.kind!=="reel")return;
+ let panel=el("jfcReelCommentsPanel");if(!panel){panel=document.createElement("div");panel.id="jfcReelCommentsPanel";panel.className="jfc-reel-comments-panel";document.body.appendChild(panel);}
+ panel.innerHTML=`<div class="jfc-reel-comments-head"><strong>Comments</strong><button type="button" onclick="el('jfcReelCommentsPanel').classList.remove('open')">✕</button></div><div id="jfcReelCommentsList" class="jfc-reel-comments-list">Loading comments…</div><form class="jfc-reel-comment-form" onsubmit="submitJfcReelComment(event)"><input id="jfcReelCommentInput" maxlength="1000" placeholder="Write a comment…"><button type="submit">Send</button></form>`;
+ panel.dataset.postId=item.post.id;panel.classList.add("open");
+ const {data,error}=await db.from("post_comments").select("id,user_id,content,comment_text,created_at").eq("post_id",item.post.id).order("created_at",{ascending:true}).limit(200);
+ const rows=data||[],ids=[...new Set(rows.map(x=>x.user_id).filter(Boolean))];let profiles=[];if(ids.length){const r=await db.from("profiles").select("*").in("id",ids);profiles=r.data||[];}
+ const list=el("jfcReelCommentsList");if(!list)return;list.innerHTML=error?"Could not load comments.":rows.map(c=>`<div class="jfc-reel-comment"><strong>${esc(nameOf(profiles.find(x=>x.id===c.user_id)||{username:"Member"}))}</strong><p>${esc(c.content||c.comment_text||"")}</p></div>`).join("")||"<p class='muted'>Be the first to comment.</p>";
+}
+async function submitJfcReelComment(event){
+ event.preventDefault();const panel=el("jfcReelCommentsPanel"),item=jfcStoryItems[jfcStoryIndex],input=el("jfcReelCommentInput");if(!currentUser)return alert("Please sign in to comment.");if(!item||!input?.value.trim())return;
+ const content=input.value.trim(),{error}=await db.from("post_comments").insert({post_id:item.post.id,user_id:currentUser.id,content,comment_text:content,parent_comment_id:null});if(error)return alert("Comment failed: "+error.message);
+ input.value="";item.commentCount=(item.commentCount||0)+1;renderJfcStoryViewer();await openJfcReelComments();
+}
+
+function openJfcCreateStory(kind){
+ if(!currentUser?.id)return alert("Please log in first.");
+ const isReel=kind==="reel";
+ el("postType").value=isReel?"reel":"status";
+ el("postText").value="";
+ el("postText").placeholder=isReel?"Write a caption for your Reel (optional)...":"Write a status (optional)...";
+ el("postMedia").value="";el("postMedia").accept=isReel?"video/*":"image/*,video/*";el("postMedia").multiple=!isReel;
+ const title=document.querySelector("#jfcPostEditor .jfc-editor-title strong"),button=document.querySelector("#jfcPostEditor .moments360-publish-row .moments360-publish");
+ if(title)title.textContent=isReel?"Create Reel":"Create Status";
+ if(button)button.innerHTML=isReel?"Publish Reel <span>↗</span>":"Publish Status <span>↗</span>";
+ el("jfcMediaOptions")?.classList.remove("hidden");
+ el("jfcStatusTextColors")?.classList.toggle("hidden",isReel);
+ toggleJfcPostEditor(true);
+}
+function openJfcTileContent(kind){
+ const matches=jfcStoryItems.filter(x=>x.kind===kind);
+ if(!matches.length){openJfcCreateStory(kind);return;}
+ const latest=matches[0],index=jfcStoryItems.indexOf(latest);openJfcStoryViewer(index);
+}
+function renderJfcStoryCircles(items,kind,targetId){
+ // Published items stay inside the original square card. Statuses scroll sideways;
+ // Reels scroll vertically. The plus button remains fixed above the previews.
+ const isReel=kind==="reel",card=el(isReel?"jfcReelMainCard":"jfcStatusMainCard"),hint=el(isReel?"jfcReelTileHint":"jfcStatusTileHint");
+ if(!card)return;
+ const rows=items.filter(x=>x.kind===kind);
+ card.querySelector(".jfc-tile-story-scroll")?.remove();
+ card.classList.toggle("has-published-content",rows.length>0);
+ card.dataset.storyCount=String(rows.length);
+ if(!rows.length){
+  if(hint)hint.textContent="";
+  return;
+ }
+ const tiles=rows.map(item=>{
+  const index=jfcStoryItems.indexOf(item);
+  const visual=item.url?(item.mediaType==="video"?`<video muted playsinline preload="metadata" src="${esc(item.url)}"></video>`:`<img loading="lazy" src="${esc(item.url)}" alt="">`):`<span>${esc((item.post.content||"Status").slice(0,90))}</span>`;
+  return `<div class="jfc-tile-story-item" role="button" tabindex="0" aria-label="Open ${kind}" onclick="event.stopPropagation();openJfcStoryViewer(${index})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();openJfcStoryViewer(${index})}">${visual}<small>${esc(nameOf(item.profile))}</small></div>`;
+ }).join("");
+ card.insertAdjacentHTML("afterbegin",`<div class="jfc-tile-story-scroll ${isReel?"jfc-reels-vertical":"jfc-status-horizontal"}" aria-label="Published ${kind}s">${tiles}</div>`);
+ if(hint)hint.textContent="";
+}
 async function loadPosts(){
  if(!currentUser)return;
  const box=el("postsFeed");if(!box)return;
@@ -2125,10 +2290,13 @@ async function loadPosts(){
  // Keep the first feed request small so phones and slower connections load quickly.
  const {data:posts,error}=await db.from("posts").select("*").order("created_at",{ascending:false}).limit(20);
  if(error){box.innerHTML="<p>Could not load posts: "+esc(error.message)+"</p>";return;}
+ const statusExpiry=Date.now()-24*60*60*1000;
+ const activePosts=(posts||[]).filter(p=>p.post_type!=="status"||new Date(p.created_at).getTime()>=statusExpiry);
  const {data:acceptedFriendRows}=await db.from("friend_requests").select("sender_id,receiver_id").eq("status","accepted").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
  const acceptedFriendIds=new Set((acceptedFriendRows||[]).map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id));
- const visiblePosts=(posts||[]).filter(p=>p.user_id===currentUser.id||p.visibility==="public"||(p.visibility==="friends"&&acceptedFriendIds.has(p.user_id)));
- if(!visiblePosts.length){box.innerHTML="<p>No posts yet. Be the first to publish something!</p>";return;}
+ const visiblePosts=activePosts.filter(p=>p.user_id===currentUser.id||p.visibility==="public"||(p.visibility==="friends"&&acceptedFriendIds.has(p.user_id)));
+ const storyPosts=visiblePosts.filter(p=>p.post_type==="status"||p.post_type==="reel");
+ const regularPosts=visiblePosts.filter(p=>p.post_type!=="status"&&p.post_type!=="reel");
  const postIds=visiblePosts.map(p=>p.id),userIds=[...new Set(visiblePosts.map(p=>p.user_id))];
  // Run independent database reads together instead of waiting for each one.
  const [profileRes,likesRes,mediaRes,commentsRes]=await Promise.all([
@@ -2140,21 +2308,31 @@ async function loadPosts(){
  const profiles=profileRes.data||[],likes=likesRes.data||[],mediaRows=mediaRes.error?[]:(mediaRes.data||[]),commentRows=commentsRes.error?[]:(commentsRes.data||[]);
  const commentUserIds=[...new Set(commentRows.map(c=>c.user_id).filter(Boolean))];
  let commentProfiles=[];if(commentUserIds.length){const cp=await db.from("profiles").select("*").in("id",commentUserIds);commentProfiles=cp.data||[];}
- const commentProfile=id=>commentProfiles.find(x=>x.id===id);
+ const commentProfile=id=>commentProfiles.find(x=>x.id===id)||(id?{id}:null);
  const lastCommentByPost=new Map();for(const c of commentRows){if(!c.parent_comment_id&&!lastCommentByPost.has(String(c.post_id)))lastCommentByPost.set(String(c.post_id),c);}
- const getProfile=id=>profiles.find(p=>p.id===id);
+ const getProfile=id=>profiles.find(p=>p.id===id)||(id?{id}:null);
  // Generate media links concurrently. Images below the fold are lazy-loaded and videos do not preload.
  const mediaUrlEntries=await Promise.all(mediaRows.map(async m=>{const {data,error}=await db.storage.from(POST_BUCKET).createSignedUrl(m.media_path,3600);return [m.id,!error&&data?.signedUrl?data.signedUrl:null];}));
  const mediaUrlMap=new Map(mediaUrlEntries),html=[];
- for(const p of visiblePosts){
+ jfcStoryItems=[];
+ for(const p of storyPosts){
+  const rows=mediaRows.filter(m=>String(m.post_id)===String(p.id)).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0));
+  let mediaRow=rows[0]||null,mediaUrl=mediaRow?mediaUrlMap.get(mediaRow.id):null,mediaType=mediaRow?.media_type||p.media_type||"";
+  if(!mediaUrl&&p.media_path){const signed=await db.storage.from(POST_BUCKET).createSignedUrl(p.media_path,3600);mediaUrl=signed.data?.signedUrl||null;mediaType=p.media_type||mediaType;}
+  const storyLikes=likes.filter(l=>String(l.post_id)===String(p.id));const storyCommentCount=commentRows.filter(c=>String(c.post_id)===String(p.id)&&!c.parent_comment_id).length;
+  jfcStoryItems.push({post:p,profile:getProfile(p.user_id)||{username:"JFriendsChat member"},kind:p.post_type,url:mediaUrl,mediaType,likeCount:storyLikes.length,liked:storyLikes.some(l=>l.user_id===currentUser.id),commentCount:storyCommentCount});
+ }
+ renderJfcStoryCircles(jfcStoryItems,"status","jfcStatusCircles");
+ renderJfcStoryCircles(jfcStoryItems,"reel","jfcReelCircles");
+ for(const p of regularPosts){
   const own=p.user_id===currentUser.id,author=getProfile(p.user_id);let media="";
   const rows=mediaRows.filter(m=>String(m.post_id)===String(p.id)).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0));
   if(rows.length){const tiles=[];for(const m of rows){const url=mediaUrlMap.get(m.id);if(!url)continue;const safe=esc(url);tiles.push(m.media_type==="video"?`<video class="post-media" controls playsinline preload="none" loading="lazy" src="${safe}"></video>`:`<img class="post-media" loading="lazy" decoding="async" src="${safe}" alt="Post photo">`);}media=tiles.length?`<div class="jfc-post-media-grid count-${Math.min(tiles.length,5)}">${tiles.join("")}</div>`:"";
   }else if(p.media_path){const {data:sd}=await db.storage.from(POST_BUCKET).createSignedUrl(p.media_path,3600);if(sd?.signedUrl){const safe=esc(sd.signedUrl);media=p.media_type==="video"?`<video class="post-media" controls playsinline preload="none" src="${safe}"></video>`:`<img class="post-media" loading="lazy" decoding="async" src="${safe}" alt="Post image">`;}}
   const pl=likes.filter(l=>l.post_id===p.id),liked=pl.some(l=>l.user_id===currentUser.id);
-  html.push(`<article class="post" id="post-${esc(p.id)}"><div class="post-head">${avatar(author)}<div class="living-author-meta"><strong class="member-clickable" onclick="openMemberProfile('${author?.id||p.user_id}')">${esc(nameOf(author))}</strong><div class="muted">${esc(timeOf(p.created_at))} · ${p.visibility==="public"?"🌍 Public":"🔒 Private"}</div></div>${own?`<button class="secondary" onclick="deletePost('${p.id}')">Delete</button>`:""}</div>${p.post_type==="ad"?`<div class="post-promo-label">📣 PROMOTION</div><div class="post-promo-headline">${esc(p.ad_headline||"Sponsored message")}</div>`:""}${p.content?`<div class="post-body">${esc(p.content)}</div>`:""}${media}<div class="jfc-post-stats"><span>👍 ${pl.length||0}</span><span>${commentRows.filter(c=>!c.parent_comment_id&&String(c.post_id)===String(p.id)).length} comments</span><span>Share</span></div><div class="post-actions"><button aria-label="Like post" title="Like" class="social-action like-action ${liked?"liked":""}" onclick="toggleLike('${p.id}',${liked})"><svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 10.2 10.4 3.8c.5-1 1.4-1.3 2.2-.9.8.4 1.1 1.3.9 2.2l-.8 3.1h5.1c1.5 0 2.5 1.3 2.2 2.7l-1.5 7.1c-.2 1-1.1 1.7-2.1 1.7H7.2V10.2ZM3 10h2.4v9.7H3z"/></svg><span class="action-count">${pl.length||""}</span></button><button aria-label="Comment on post" title="Comment" class="social-action comment-action" onclick="toggleCommentBox('${p.id}')"><svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.5a8 8 0 0 1-8.2 7.7 9 9 0 0 1-3.7-.8L4 20l1.1-3.8a7.4 7.4 0 0 1-1.2-4.1A8 8 0 0 1 12.1 4a8 8 0 0 1 8.4 7.5Z"/></svg><span class="action-count">${commentRows.filter(c=>!c.parent_comment_id&&String(c.post_id)===String(p.id)).length||""}</span></button><button aria-label="Share post" title="Share" class="social-action share-action" onclick="sharePost('${p.id}')"><svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4 21 11l-7 7v-4.2C8.5 13.8 5.1 16 3 20c.4-6.8 3.9-10.5 11-11V4Z"/></svg></button></div>${lastCommentByPost.has(String(p.id))?(()=>{const lc=lastCommentByPost.get(String(p.id)),lp=commentProfile(lc.user_id),lt=lc.content||lc.comment_text||"";return `<button type="button" class="jfc-last-comment-preview" onclick="toggleCommentBox('${p.id}')">${avatar(lp)}<span class="jfc-comment-bubble"><strong>${esc(nameOf(lp))}</strong><span class="jfc-comment-text">${esc(lt.length>180?lt.slice(0,180)+"…":lt)}</span></span></button>`;})():""}<div class="fb-comments-area"><div id="comments-${p.id}" class="fb-comments-list hidden"></div><div id="commentBox-${p.id}" class="post-comment-composer fb-main-composer hidden">${avatar(getProfile(currentUser.id))}<input id="commentInput-${p.id}" placeholder="Write a comment..."><button class="primary" onclick="addComment('${p.id}')">Send</button></div></div></article>`);
+  html.push(`<article class="post" id="post-${esc(p.id)}"><div class="post-head">${avatar(author)}<div class="living-author-meta"><strong class="member-clickable" onclick="openMemberProfile('${author?.id||p.user_id}')">${esc(nameOf(author))}</strong><div class="muted">${esc(timeOf(p.created_at))} · ${p.visibility==="public"?"🌍 Public":"🔒 Private"}</div></div>${own?`<button class="secondary" onclick="deletePost('${p.id}')">Delete</button>`:""}</div>${p.post_type==="reel"?`<div class="jfc-content-kind jfc-reel-kind">▶ REEL</div>`:p.post_type==="status"?`<div class="jfc-content-kind jfc-status-kind">● STATUS · disappears after 24 hours</div>`:""}${p.post_type==="ad"?`<div class="post-promo-label">📣 PROMOTION</div><div class="post-promo-headline">${esc(p.ad_headline||"Sponsored message")}</div>`:""}${p.content?`<div class="post-body">${esc(p.content)}</div>`:""}${media}<div class="jfc-post-stats"><span>👍 ${pl.length||0}</span><span>${commentRows.filter(c=>!c.parent_comment_id&&String(c.post_id)===String(p.id)).length} comments</span><span>Share</span></div><div class="post-actions"><button aria-label="Like post" title="Like" class="social-action like-action ${liked?"liked":""}" onclick="toggleLike('${p.id}',${liked})"><svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 10.2 10.4 3.8c.5-1 1.4-1.3 2.2-.9.8.4 1.1 1.3.9 2.2l-.8 3.1h5.1c1.5 0 2.5 1.3 2.2 2.7l-1.5 7.1c-.2 1-1.1 1.7-2.1 1.7H7.2V10.2ZM3 10h2.4v9.7H3z"/></svg><span class="action-count">${pl.length||""}</span></button><button aria-label="Comment on post" title="Comment" class="social-action comment-action" onclick="toggleCommentBox('${p.id}')"><svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.5a8 8 0 0 1-8.2 7.7 9 9 0 0 1-3.7-.8L4 20l1.1-3.8a7.4 7.4 0 0 1-1.2-4.1A8 8 0 0 1 12.1 4a8 8 0 0 1 8.4 7.5Z"/></svg><span class="action-count">${commentRows.filter(c=>!c.parent_comment_id&&String(c.post_id)===String(p.id)).length||""}</span></button><button aria-label="Share post" title="Share" class="social-action share-action" onclick="sharePost('${p.id}')"><svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4 21 11l-7 7v-4.2C8.5 13.8 5.1 16 3 20c.4-6.8 3.9-10.5 11-11V4Z"/></svg></button></div>${lastCommentByPost.has(String(p.id))?(()=>{const lc=lastCommentByPost.get(String(p.id)),lp=commentProfile(lc.user_id),lt=lc.content||lc.comment_text||"";return `<button type="button" class="jfc-last-comment-preview" onclick="toggleCommentBox('${p.id}')">${avatar(lp)}<span class="jfc-comment-bubble"><strong>${esc(nameOf(lp))}</strong><span class="jfc-comment-text">${esc(lt.length>180?lt.slice(0,180)+"…":lt)}</span></span></button>`;})():""}<div class="fb-comments-area"><div id="comments-${p.id}" class="fb-comments-list hidden"></div><div id="commentBox-${p.id}" class="post-comment-composer fb-main-composer hidden">${avatar(getProfile(currentUser.id))}<input id="commentInput-${p.id}" placeholder="Write a comment..."><button class="primary" onclick="addComment('${p.id}')">Send</button></div></div></article>`);
  }
- box.innerHTML=html.join("");
+ box.innerHTML=html.join("")||"<p>No regular posts yet. Your Status and Reels are shown in the circles above.</p>";
  let savedView="flow";try{savedView=localStorage.getItem("jf_moments360_view")||"flow";}catch(e){}
  const viewButton=document.querySelector(`#postsPanel [data-post-view="${savedView}"]`)||document.querySelector('#postsPanel [data-post-view="flow"]');setPostView(savedView,viewButton);
 }
@@ -2164,7 +2342,7 @@ function closeMemberProfileNow(){el("memberProfilePanel").classList.add("hidden"
 function showMemberTab(tab,button){["about","posts","friends"].forEach(k=>el("member"+k[0].toUpperCase()+k.slice(1)+"Content").classList.toggle("hidden",k!==tab));document.querySelectorAll("[data-member-tab]").forEach(b=>b.classList.toggle("active",b===button));}
 async function openMemberProfile(userId){
  if(!currentUser||!userId)return;
- const visible=["chatPanel","friendsPanel","searchPanel","postsPanel","requestsPanel","friendsMenuPanel"];
+ const visible=["chatPanel","friendsPanel","searchPanel","postsPanel","requestsPanel","friendsMenuPanel","notificationsPanel","accountPanel","businessPanel","connectPanel","groupsPanel","schoolPanel","companyPanel","adsPanel","marketAdminPanel","morePanel"];
  memberPreviousPanel=visible.find(id=>!el(id).classList.contains("hidden"))||"chatPanel";
  pushJfcBackLayer("memberProfile");
  hidePanels();el("memberProfilePanel").classList.remove("hidden");setNav(null);
@@ -2211,23 +2389,47 @@ async function toggleLike(postId,alreadyLiked){
 async function fetchPostComments(postId){
  const area=el("comments-"+postId);if(!area)return [];
  area.innerHTML='<div class="fb-no-comments">Loading comments…</div>';
- const {data,error}=await db.from("post_comments").select("id,post_id,user_id,content,comment_text,parent_comment_id,created_at").eq("post_id",postId).order("created_at",{ascending:true}).limit(100);
+ const {data,error}=await db.from("post_comments").select("id,post_id,user_id,content,comment_text,parent_comment_id,created_at").eq("post_id",postId).order("created_at",{ascending:true}).limit(300);
  if(error){area.innerHTML='<div class="fb-no-comments">Comments could not be loaded: '+esc(error.message)+'</div>';return null;}
  const rows=data||[],ids=[...new Set(rows.map(c=>c.user_id))];let profs=[];
  if(ids.length){const r=await db.from("profiles").select("*").in("id",ids);profs=r.data||[];}
- const prof=id=>profs.find(x=>x.id===id),txt=c=>c.content||c.comment_text||"";
- const repliesFor=id=>rows.filter(r=>String(r.parent_comment_id)===String(id));
- const renderReply=r=>`<div class="fb-reply-row">${avatar(prof(r.user_id))}<div class="fb-comment-main"><div class="fb-comment-bubble"><strong>${esc(nameOf(prof(r.user_id)))}</strong><div>${esc(txt(r))}</div></div><div class="fb-comment-tools"><span>${esc(timeOf(r.created_at))}</span></div></div></div>`;
- area.innerHTML=rows.filter(c=>!c.parent_comment_id).map(c=>{const replies=repliesFor(c.id);return `<div class="fb-comment-row">${avatar(prof(c.user_id))}<div class="fb-comment-main"><div class="fb-comment-bubble"><strong>${esc(nameOf(prof(c.user_id)))}</strong><div>${esc(txt(c))}</div></div><div class="fb-comment-tools"><span>${esc(timeOf(c.created_at))}</span><button type="button" onclick="toggleReplyBox('${c.id}')">Reply</button>${replies.length?`<button type="button" onclick="toggleReplyThread('${c.id}')">View ${replies.length} ${replies.length===1?'reply':'replies'}</button>`:''}</div><div id="replyThread-${c.id}" class="fb-replies hidden">${replies.map(renderReply).join('')}</div><div id="replyBox-${c.id}" class="fb-reply-composer hidden"><input id="replyInput-${c.id}" placeholder="Write a reply..."><button type="button" onclick="addCommentReply('${postId}','${c.id}')">Send</button></div></div></div>`;}).join('')||'<div class="fb-no-comments">Be the first to comment.</div>';
+ const prof=id=>profs.find(x=>x.id===id)||(id?{id}:null),txt=c=>c.content||c.comment_text||"";
+ const childrenOf=id=>rows.filter(r=>String(r.parent_comment_id)===String(id));
+ // Recursive rendering supports replies to replies, including replying to your own comments.
+ const renderNode=(c,depth=0)=>{
+   const children=childrenOf(c.id),indent=Math.min(depth,5)*13;
+   return `<div class="fb-comment-row fb-thread-node" style="margin-left:${indent}px" data-comment-id="${esc(c.id)}">${avatar(prof(c.user_id))}<div class="fb-comment-main"><div class="fb-comment-bubble"><strong>${esc(nameOf(prof(c.user_id)))}</strong><div>${esc(txt(c))}</div></div><div class="fb-comment-tools"><span>${esc(timeOf(c.created_at))}</span><button type="button" onclick="toggleReplyBox('${c.id}')">Reply</button>${children.length?`<button type="button" onclick="toggleReplyThread('${c.id}')">View ${children.length} ${children.length===1?'reply':'replies'}</button>`:''}</div><div id="replyThread-${c.id}" class="fb-replies ${children.length?'hidden':'hidden'}">${children.map(ch=>renderNode(ch,depth+1)).join('')}</div><div id="replyBox-${c.id}" class="fb-reply-composer hidden"><input id="replyInput-${c.id}" placeholder="Reply to ${esc(nameOf(prof(c.user_id)))}..."><button type="button" onclick="addCommentReply('${postId}','${c.id}')">Send</button></div></div></div>`;
+ };
+ const roots=rows.filter(c=>!c.parent_comment_id||!rows.some(parent=>String(parent.id)===String(c.parent_comment_id)));
+ area.innerHTML=roots.map(c=>renderNode(c,0)).join('')||'<div class="fb-no-comments">Be the first to comment.</div>';
  const heading=area.parentElement?.querySelector('.fb-comments-heading');if(heading)heading.textContent=rows.length+' comments';
  return rows;
 }
 async function toggleCommentBox(id){
- const area=el("comments-"+id),box=el("commentBox-"+id);if(!area||!box)return;
- const opening=area.classList.contains("hidden");if(opening)pushJfcBackLayer("comment:"+id);else if(requestJfcBack("comment:"+id))return;area.classList.toggle("hidden",!opening);box.classList.toggle("hidden",!opening);
- if(opening){await fetchPostComments(id);el("commentInput-"+id)?.focus();}
+ const area=el("comments-"+id),box=el("commentBox-"+id),post=el("post-"+id);if(!area||!box||!post)return;
+ const opening=area.classList.contains("hidden");
+ if(opening){
+   pushJfcBackLayer("comment:"+id);
+   document.body.classList.add("comment-open");
+   document.querySelectorAll("#postsFeed .post.comment-active").forEach(x=>x.classList.remove("comment-active"));
+   post.classList.add("comment-active");
+   if(!post.querySelector(".jfc-comment-back")){
+     const back=document.createElement("button");back.type="button";back.className="jfc-comment-back";back.textContent="← Back";back.setAttribute("aria-label","Back to posts");back.onclick=()=>{if(!requestJfcBack("comment:"+id))closeJfcLayerNow("comment:"+id);};
+     post.prepend(back);
+   }
+   area.classList.remove("hidden");box.classList.remove("hidden");
+   await fetchPostComments(id);
+   el("commentInput-"+id)?.focus();
+ }else{
+   if(requestJfcBack("comment:"+id))return;
+   closeJfcLayerNow("comment:"+id);
+ }
 }
-function focusComment(id){toggleCommentBox(id);}
+function closeCommentScreen(id){
+ const area=el("comments-"+id),box=el("commentBox-"+id),post=el("post-"+id);
+ area?.classList.add("hidden");box?.classList.add("hidden");post?.classList.remove("comment-active");post?.querySelector(".jfc-comment-back")?.remove();
+ document.body.classList.remove("comment-open");
+}
 async function addComment(postId){
  const input=el("commentInput-"+postId);if(!currentUser)return alert("Please sign in to comment.");if(!input)return;
  const content=input.value.trim();if(!content)return;const button=input.parentElement?.querySelector("button");
@@ -2426,6 +2628,8 @@ async function sendGroupMessage(){let content=el("groupMessageInput").value.trim
 
 // Voice/video calling uses Supabase Realtime Broadcast for signaling and WebRTC for media.
 // The recipient must be signed in with this page open; closed-app ringing requires push notifications/native app support.
+// STUN servers below help discover direct routes; production reliability on restrictive networks
+// requires a TURN service with private credentials supplied by a trusted backend (never hard-code secrets here).
 async function subscribeToCalls(){
  if(!currentUser)return;
  if(callChannel)await db.removeChannel(callChannel);
@@ -2456,7 +2660,13 @@ async function startCall(mode){
   callPc=makeCallPeer();callLocalStream.getTracks().forEach(t=>callPc.addTrack(t,callLocalStream));
   const offer=await callPc.createOffer();await callPc.setLocalDescription(offer);
   await sendCallSignal(callFriend.id,"offer",{mode,description:offer});
- }catch(e){setCallStatus("Call could not start: "+e.message);el("activeCallActions").classList.remove("hidden");}
+ }catch(e){
+  console.error("Call startup failed:",e);
+  setCallStatus("Call could not start: "+(e?.message||"Please check microphone/camera permission and try again."));
+  if(callPc){try{callPc.close();}catch(_){}callPc=null;}
+  if(callLocalStream){callLocalStream.getTracks().forEach(t=>t.stop());callLocalStream=null;}
+  el("activeCallActions").classList.remove("hidden");
+ }
 }
 function makeCallPeer(){
  const pc=new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]});
@@ -2465,13 +2675,29 @@ function makeCallPeer(){
  pc.onconnectionstatechange=()=>{if(pc.connectionState==="connected")setCallStatus("Connected");else if(pc.connectionState==="failed")setCallStatus("Could not connect. Your network may require a TURN relay.");else if(pc.connectionState==="disconnected")setCallStatus("Connection interrupted…");};return pc;
 }
 async function handleCallSignal(p){
- if(p.kind==="ice"&&!callFriend&&p.candidate){callPendingCandidates.push({from:p.from,candidate:p.candidate});return;}
+ // ICE candidates can arrive before the offer is accepted, while the peer
+ // connection is being created, or before the remote description is set.
+ // Queue them in all those cases and apply them after setRemoteDescription.
+ if(p.kind==="ice"&&p.candidate){
+  if(callFriend&&p.from!==callFriend.id)return;
+  if(!callFriend||!callPc||!callPc.remoteDescription){
+   callPendingCandidates.push({from:p.from,candidate:p.candidate});
+   return;
+  }
+  try{await callPc.addIceCandidate(new RTCIceCandidate(p.candidate));}catch(e){console.warn("Could not add remote ICE candidate:",e);}
+  return;
+ }
  if(p.kind==="offer"){
   if(callFriend||!activeFriend&&el("callOverlay")&&!el("callOverlay").classList.contains("hidden")){await sendCallSignal(p.from,"busy");return;}
   callFriend={id:p.from,username:p.fromName,full_name:p.fromName};callMode=p.mode||"audio";startIncomingRingtone();callPendingCandidates=callPendingCandidates.filter(x=>{if(x&&x.from===p.from)return true;return false;}).map(x=>x.candidate);incomingCallPayload=p;showCallOverlay();resetCallUI();el("callKindLabel").textContent=callMode==="video"?"📹 Incoming video call":"📞 Incoming voice call";el("callPeerName").textContent=p.fromName||"Your friend";el("callAvatar").textContent=callMode==="video"?"📹":"☎";setCallStatus("Incoming call…");el("incomingCallActions").classList.remove("hidden");return;
  }
  if(!callFriend||p.from!==callFriend.id)return;
- if(p.kind==="answer"&&callPc){await callPc.setRemoteDescription(new RTCSessionDescription(p.description));for(const c of callPendingCandidates.splice(0)){try{await callPc.addIceCandidate(new RTCIceCandidate(c));}catch(e){}}setCallStatus("Connecting…");}
+ if(p.kind==="answer"&&callPc){
+  await callPc.setRemoteDescription(new RTCSessionDescription(p.description));
+  const queued=callPendingCandidates.splice(0);
+  for(const item of queued){const c=item?.candidate||item;try{await callPc.addIceCandidate(new RTCIceCandidate(c));}catch(e){console.warn("Could not apply queued ICE candidate:",e);}}
+  setCallStatus("Connecting…");
+ }
  else if(p.kind==="ice"&&p.candidate&&callPc){if(callPc.remoteDescription)try{await callPc.addIceCandidate(new RTCIceCandidate(p.candidate));}catch(e){}else callPendingCandidates.push(p.candidate);}
  else if(p.kind==="decline"){setCallStatus("Your friend declined the call.");setTimeout(()=>endCall(true),1800);}
  else if(p.kind==="hangup"){setCallStatus("Call ended.");setTimeout(()=>endCall(true),900);}
@@ -2485,9 +2711,15 @@ async function acceptIncomingCall(){
   if(callMode==="video"){el("callVideoStage").classList.remove("hidden");el("localVideo").srcObject=callLocalStream;el("toggleCameraBtn").classList.remove("hidden");}
   callPc=makeCallPeer();callLocalStream.getTracks().forEach(t=>callPc.addTrack(t,callLocalStream));
   await callPc.setRemoteDescription(new RTCSessionDescription(incomingCallPayload.description));
-  for(const c of callPendingCandidates.splice(0)){try{await callPc.addIceCandidate(new RTCIceCandidate(c));}catch(e){}}
+  const queued=callPendingCandidates.splice(0);
+  for(const item of queued){const c=item?.candidate||item;try{await callPc.addIceCandidate(new RTCIceCandidate(c));}catch(e){console.warn("Could not apply queued ICE candidate:",e);}}
   const answer=await callPc.createAnswer();await callPc.setLocalDescription(answer);await sendCallSignal(callFriend.id,"answer",{description:answer});incomingCallPayload=null;
- }catch(e){setCallStatus("Could not answer: "+e.message);}
+ }catch(e){
+  console.error("Could not answer call:",e);
+  setCallStatus("Could not answer: "+(e?.message||"Check microphone/camera permission and try again."));
+  if(callPc){try{callPc.close();}catch(_){}callPc=null;}
+  if(callLocalStream){callLocalStream.getTracks().forEach(t=>t.stop());callLocalStream=null;}
+ }
 }
 async function declineIncomingCall(){stopIncomingRingtone();if(callFriend)await sendCallSignal(callFriend.id,"decline");await endCall(true);}
 async function endCall(silent=false){
@@ -2545,7 +2777,7 @@ const jfcBackLayers=[];
 function pushJfcBackLayer(key){if(jfcBackLayers[jfcBackLayers.length-1]===key)return; jfcBackLayers.push(key);try{history.pushState({...(history.state||{}),jfcBackLayer:key},"",location.href);}catch(e){}}
 function requestJfcBack(key){if(jfcBackLayers[jfcBackLayers.length-1]===key){history.back();return true;}return false;}
 function closeJfcLayerNow(key){
- if(key.startsWith("comment:")){const id=key.slice(8);el("comments-"+id)?.classList.add("hidden");el("commentBox-"+id)?.classList.add("hidden");return;}
+ if(key.startsWith("comment:")){const id=key.slice(8);closeCommentScreen(id);return;}
  if(key==="memberProfile"){closeMemberProfileNow();return;}
  if(key==="postEditor"){el("jfcPostEditor")?.classList.add("hidden");return;}
  if(key==="postShare"){closePostShareNow();return;}
@@ -2639,10 +2871,9 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!el("chatCr
 <div id="postAudiencePicker" class="jfc-audience-overlay hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="jfcAudienceTitle">
  <div class="jfc-audience-card">
   <h3 id="jfcAudienceTitle">Who can see your post?</h3>
-  <p>Choose who can view this post before publishing.</p>
-  <label class="jfc-audience-option"><input type="radio" name="jfcPostAudience" value="public" checked><span><strong>🌍 Public</strong><small>Anyone on JFriendsChat can see this post.</small></span></label>
-  <label class="jfc-audience-option"><input type="radio" name="jfcPostAudience" value="friends"><span><strong>👥 My friends</strong><small>Only your accepted friends can see this post.</small></span></label>
-  <div class="jfc-audience-actions"><button type="button" class="secondary" onclick="closePostAudiencePicker()">Cancel</button><button type="button" class="moments360-publish" onclick="createPost(document.querySelector(\'input[name=\"jfcPostAudience\"]:checked\').value)">Publish</button></div>
+  <label class="jfc-audience-option"><input type="radio" name="jfcPostAudience" value="public" checked><span><strong>🌍 Public</strong></span></label>
+  <label class="jfc-audience-option"><input type="radio" name="jfcPostAudience" value="friends"><span><strong>👥 Friends</strong></span></label>
+  <div class="jfc-audience-actions"><button type="button" class="secondary" onclick="closePostAudiencePicker()">Cancel</button><button type="button" class="moments360-publish" onclick="createPost(document.querySelector('input[name=&quot;jfcPostAudience&quot;]:checked')?.value || 'public')">Publish</button></div>
  </div>
 </div>
 <style>
@@ -2664,6 +2895,36 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!el("chatCr
 .signup-method-options input{width:17px;height:17px;margin:0;accent-color:#087b68}
 #phoneCountryCode{width:100%;min-height:45px;padding:10px;border:1px solid #dce4ee;border-radius:10px;background:#fff;font-size:15px}
 #phoneFullPreview{display:block;margin:6px 0 10px}
+
+/* JFriendsChat requested typography, icon-only navigation and focused comments screen */
+.jf-header .brand-copy h2, .brand-copy h2{font-size:29px!important;font-weight:900!important;letter-spacing:-.6px!important}
+#postsFeed .post-body{font-size:12px!important;line-height:1.45!important}
+#postsFeed .fb-comment-bubble div{font-size:13px!important;line-height:1.35!important}
+.app-navigation button{min-height:54px!important;padding:5px 3px!important;gap:0!important}
+.app-navigation button .nav-icon{font-size:30px!important}
+.app-navigation button .nav-label{display:none!important}
+@media(max-width:650px){.jf-header .brand-copy h2,.brand-copy h2{font-size:23px!important}.app-navigation,.app-navigation.visible{height:54px!important;min-height:54px!important}.app-navigation button{height:48px!important;min-height:48px!important;padding:3px!important}.app-navigation button .nav-icon{font-size:28px!important}}
+body.comment-open{overflow:hidden!important;height:100dvh!important}
+body.comment-open .jf-header,body.comment-open #appNavigation,body.comment-open #globalSearchResults{display:none!important}
+body.comment-open .container{padding:0!important;margin:0!important;max-width:none!important;height:100dvh!important;overflow:hidden!important}
+body.comment-open #postsPanel{display:block!important;position:fixed!important;inset:0!important;z-index:9990!important;margin:0!important;padding:0!important;background:#fff!important;overflow:hidden!important}
+body.comment-open #postsFeed{height:100dvh!important;overflow:hidden!important}
+body.comment-open #postsFeed .post:not(.comment-active){display:none!important}
+body.comment-open #postsFeed .post.comment-active{display:flex!important;flex-direction:column!important;position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;margin:0!important;padding:0 14px!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}
+body.comment-open #postsFeed .post.comment-active>.post-head,
+body.comment-open #postsFeed .post.comment-active>.post-body,
+body.comment-open #postsFeed .post.comment-active>.post-media,
+body.comment-open #postsFeed .post.comment-active>.post-actions,
+body.comment-open #postsFeed .post.comment-active>.jfc-post-stats,
+body.comment-open #postsFeed .post.comment-active>.jfc-last-comment-preview{display:none!important}
+.jfc-comment-back{display:none}
+body.comment-open .jfc-comment-back{display:block!important;flex:0 0 auto!important;align-self:flex-start!important;margin:10px 0 8px!important;padding:10px 16px!important;border:0!important;border-radius:22px!important;background:#edf4ff!important;color:#1559b7!important;font-size:15px!important;font-weight:800!important}
+body.comment-open .post.comment-active .fb-comments-area{display:flex!important;flex:1 1 auto!important;min-height:0!important;flex-direction:column!important;overflow:hidden!important;padding:0!important;border:0!important}
+body.comment-open .post.comment-active .fb-comments-list{display:block!important;flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding:8px 0 16px!important;-webkit-overflow-scrolling:touch!important}
+body.comment-open .post.comment-active .fb-main-composer{display:flex!important;flex:0 0 auto!important;position:sticky!important;bottom:0!important;padding:10px 0 max(12px,env(safe-area-inset-bottom))!important;margin:0!important;background:#fff!important;border-top:1px solid #e9edf3!important}
+body.comment-open .fb-comment-row{align-items:flex-start!important}
+body.comment-open .fb-replies{margin-left:8px!important;padding-left:9px!important;border-left:2px solid #e1e7f0!important}
+body.comment-open .fb-thread-node{margin-top:9px!important}
 </style>
 <script>
 // JFriendsChat registration: email OR phone, automatic username from the two name fields.
@@ -2778,5 +3039,254 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 </script>
 
+
+<style id="jfc-post-first-medium-text-compact-actions">
+/* Open the Posts feed as the landing section after login. */
+/* Medium, comfortable post text size (overrides older conflicting rules). */
+#postsFeed .post-body{font-size:16px!important;line-height:1.55!important;}
+/* Smaller Like / Comment / Share pill buttons and icons. */
+#postsFeed .post-actions .social-action{min-height:42px!important;padding:6px 7px!important;gap:7px!important;font-size:15px!important;border-radius:999px!important;}
+#postsFeed .post-actions .social-action .action-icon{width:19px!important;height:19px!important;flex:0 0 19px!important;}
+#postsFeed .post-actions .social-action .action-count{font-size:14px!important;line-height:1!important;}
+@media(max-width:420px){
+  #postsFeed .post-body{font-size:16px!important;line-height:1.5!important;}
+  #postsFeed .post-actions .social-action{min-height:40px!important;padding:5px 4px!important;gap:5px!important;font-size:14px!important;}
+  #postsFeed .post-actions .social-action .action-icon{width:18px!important;height:18px!important;flex-basis:18px!important;}
+  #postsFeed .post-actions .social-action .action-count{font-size:13px!important;}
+}
+</style>
+
+
+<style id="jfc-compact-space-after-comment-preview">
+/* Tighten the space after the comment preview so the next profile/post follows closely. */
+#postsFeed .jfc-last-comment-preview{padding-top:6px!important;padding-bottom:0!important;margin-top:0!important;margin-bottom:0!important;}
+#postsFeed .post{padding-bottom:6px!important;margin-bottom:6px!important;}
+#postsFeed .post .jfc-last-comment-preview:last-child{margin-bottom:0!important;}
+</style>
+
+
+
+<style id="jfc-tight-comment-gap-and-profile-tap">
+/* Reduce the blank space below the comment preview before the next post. */
+#postsFeed.moments360-flow .post{margin-bottom:3px!important;border-bottom-width:3px!important;padding-bottom:5px!important;}
+#postsFeed .jfc-last-comment-preview{padding:5px 3px 0!important;margin:0!important;min-height:0!important;}
+#postsFeed .fb-comments-area{margin:0!important;padding-top:0!important;padding-bottom:0!important;}
+#postsFeed .post-actions{margin-bottom:0!important;}
+/* Every avatar rendered from a profile is a clear, accessible profile link. */
+.jfc-profile-avatar{cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(20,105,220,.16)!important;}
+.jfc-profile-avatar:focus-visible{outline:3px solid #2584e8!important;outline-offset:3px!important;}
+.jfc-profile-avatar img{pointer-events:none!important;}
+@media(max-width:600px){#postsFeed.moments360-flow .post{margin-bottom:2px!important;padding-bottom:4px!important;}#postsFeed .jfc-last-comment-preview{padding-bottom:0!important;}}
+
+/* JFriendsChat Reel and Status quick-create cards */
+.jfc-quick-create{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.jfc-create-tile{position:relative;aspect-ratio:1/1;min-height:0;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:6px;padding:18px;border:0;border-radius:20px;color:#fff;text-align:left;box-shadow:0 8px 22px #183d7020}
+.jfc-reel-tile{background:linear-gradient(125deg,#ed16bd 0%,#8c20e9 48%,#ff8b49 100%)}
+.jfc-status-tile{background:linear-gradient(125deg,#0878f9 0%,#1764df 52%,#24c4e9 100%)}
+.jfc-tile-icon{position:absolute;right:16px;top:17px;width:48px;height:48px;border:2px dashed #ffffffc9;border-radius:15px;display:grid;place-items:center;font-size:28px;font-weight:900;background:#ffffff20}
+.jfc-tile-title{font-size:23px;font-weight:900;line-height:1.05;padding-right:50px}
+.jfc-create-tile small{font-size:12px;color:#fff;opacity:.96;line-height:1.35;max-width:90%}
+.jfc-tile-badge{position:absolute;right:10px;bottom:10px;padding:5px 9px;border-radius:20px;background:#ffffff2b;font-size:10px;letter-spacing:.04em}
+.jfc-content-kind{display:inline-flex;align-items:center;margin:5px 0 7px;padding:6px 10px;border-radius:20px;font-size:10px;font-weight:900;letter-spacing:.06em}
+.jfc-reel-kind{background:#f3e8ff;color:#7c2ac4}.jfc-status-kind{background:#e5f2ff;color:#1266c7}
+@media(max-width:420px){.jfc-quick-create{gap:8px}.jfc-create-tile{min-height:0;padding:13px;border-radius:16px}.jfc-tile-title{font-size:19px}.jfc-tile-icon{width:40px;height:40px;right:11px;top:12px}.jfc-create-tile small{font-size:11px}}
+</style>
+
+<style id="jfc-status-reels-square-experience">
+.jfc-tile-plus{position:absolute;z-index:5;left:12px;top:12px;width:43px;height:43px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#1769e0;font-size:31px;line-height:1;box-shadow:0 3px 12px #061a3d55;border:2px solid #ffffffd9}
+.jfc-reel-tile .jfc-tile-plus{color:#9a35d2}
+.jfc-create-tile.has-published-content{isolation:isolate;justify-content:flex-end}
+.jfc-tile-published-preview{position:absolute;z-index:0;inset:0;display:block;background:#17233b}
+.jfc-tile-published-media{width:100%;height:100%;object-fit:cover;display:block}
+.jfc-tile-published-preview:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,#000c)}
+.jfc-tile-published-text{width:100%;height:100%;display:grid;place-items:center;padding:48px 12px 22px;text-align:center;overflow:hidden;overflow-wrap:anywhere;color:#fff;font-weight:800;font-size:16px;background:linear-gradient(145deg,#1769e0,#23b9d6)}
+.jfc-reel-tile .jfc-tile-published-text{background:linear-gradient(145deg,#7c20d5,#ef3d9e)}
+.jfc-create-tile.has-published-content .jfc-tile-title,.jfc-create-tile.has-published-content small{position:relative;z-index:2;text-shadow:0 2px 5px #000b}.jfc-create-tile.has-published-content .jfc-tile-badge,.jfc-create-tile.has-published-content .jfc-tile-icon{z-index:2;text-shadow:0 2px 5px #000b}
+.jfc-create-tile.has-published-content small{max-width:100%;font-weight:700}
+.jfc-story-viewer{position:fixed;inset:0;z-index:11000;background:#050914f5;display:flex;align-items:center;justify-content:center;padding:12px}
+.jfc-story-viewer.hidden{display:none}.jfc-story-viewer-card{position:relative;width:min(100%,470px);height:min(92dvh,850px);background:#111827;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;color:#fff}.jfc-story-progress{display:flex;gap:4px;padding:12px 12px 5px;z-index:2}.jfc-story-progress span{height:3px;flex:1;border-radius:5px;background:#ffffff45}.jfc-story-progress span.active{background:#fff}.jfc-story-viewer-top{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;z-index:2}.jfc-story-viewer-top strong,.jfc-story-viewer-top small{display:block}.jfc-story-viewer-top small{font-size:11px;color:#cbd5e1;margin-top:3px}.jfc-story-viewer-top button{background:#ffffff20;color:#fff;border-radius:50%;width:36px;height:36px;padding:0}.jfc-story-stage{flex:1;min-height:0;display:grid;place-items:center;background:#050914;overflow:hidden}.jfc-story-stage img,.jfc-story-stage video{width:100%;height:100%;max-height:100%;object-fit:contain}.jfc-story-text-only{padding:25px;text-align:center;font-size:25px;line-height:1.5;overflow-wrap:anywhere}.jfc-story-caption{padding:12px 17px;min-height:20px;text-align:center;white-space:pre-wrap;overflow-wrap:anywhere}.jfc-story-controls{position:absolute;inset:50% 0 auto;display:flex;justify-content:space-between;pointer-events:none;padding:0 7px}.jfc-story-controls button{pointer-events:auto;width:36px;height:45px;padding:0;background:#0006;color:white;font-size:30px;border-radius:12px}
+
+/* Published items scroll inside the two original square cards. */
+.jfc-tile-story-scroll{position:absolute;z-index:1;inset:62px 8px 48px;display:flex;gap:7px;min-height:0;min-width:0;padding:3px;border-radius:11px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#ffffffa8 #ffffff24}
+.jfc-status-horizontal{flex-direction:row;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory}
+.jfc-reels-vertical{flex-direction:column;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory}
+.jfc-tile-story-item{position:relative;flex:0 0 76%;min-width:0;min-height:0;border-radius:11px;overflow:hidden;background:#101827;scroll-snap-align:start;box-shadow:0 2px 9px #0005;cursor:pointer}
+.jfc-reels-vertical .jfc-tile-story-item{flex:0 0 88%;width:100%;}
+.jfc-tile-story-item img,.jfc-tile-story-item video{display:block;width:100%;height:100%;object-fit:cover}
+.jfc-tile-story-item>span{display:grid;place-items:center;width:100%;height:100%;padding:9px;text-align:center;overflow-wrap:anywhere;color:white;font-size:12px;font-weight:800;background:linear-gradient(145deg,#1769e0,#24a6b8)}
+.jfc-reels-vertical .jfc-tile-story-item>span{background:linear-gradient(145deg,#7624c8,#e83e91)}
+.jfc-tile-story-item:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,#0009);pointer-events:none}
+.jfc-tile-story-item small{position:absolute;z-index:2;left:7px;right:7px;bottom:6px;color:white;font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 4px #000}
+.jfc-create-tile.has-published-content .jfc-tile-title,.jfc-create-tile.has-published-content small{pointer-events:none}
+.jfc-create-tile.has-published-content .jfc-tile-plus{z-index:8}
+.jfc-tile-story-scroll::-webkit-scrollbar{width:5px;height:5px}
+.jfc-tile-story-scroll::-webkit-scrollbar-thumb{background:#ffffffa8;border-radius:8px}
+
+@media(max-width:600px){.jfc-tile-plus{width:38px;height:38px;font-size:27px;left:9px;top:9px}.jfc-create-tile{border-radius:13px;padding:10px}.jfc-tile-title{font-size:17px}.jfc-create-tile small{font-size:10px}.jfc-story-viewer{padding:0}.jfc-story-viewer-card{width:100%;height:100dvh;max-height:none;border-radius:0}}
+
+/* Clean neutral Status and Reels cards: no decorative colour fills. */
+.jfc-create-tile.jfc-reel-tile,.jfc-create-tile.jfc-status-tile{background:#f1f3f5!important;color:#263238!important;border:1px solid #d9dee5!important;box-shadow:none!important}
+.jfc-create-tile .jfc-tile-icon{display:none!important}
+.jfc-create-tile small{color:#687586!important;opacity:1!important;text-shadow:none!important}
+.jfc-create-tile .jfc-tile-badge{display:none!important}
+.jfc-create-tile .jfc-tile-plus{background:#fff!important;color:#1769e0!important;border:1px solid #d7dee8!important;box-shadow:0 2px 7px #00000012!important}
+.jfc-create-tile.has-published-content .jfc-tile-title,.jfc-create-tile.has-published-content small{color:#263238!important;text-shadow:none!important}
+.jfc-tile-story-item>span,.jfc-reels-vertical .jfc-tile-story-item>span{background:#e9edf2!important;color:#263238!important}
+.jfc-status-text-colors{display:grid;gap:6px;margin:0 0 10px;padding:12px;border:1px solid #dce5f0;border-radius:13px;background:#f7f9fc}
+.jfc-status-text-colors label{font-weight:750;font-size:13px;color:#34445a}
+.jfc-status-text-colors select{width:100%;padding:11px;border:1px solid #d4deeb;border-radius:10px;background:#fff;color:#26364d;font:inherit}
+.jfc-status-text-colors small{color:#718096;font-size:12px;line-height:1.4}
+</style>
+
+
+
+<style id="jfc-status-reels-label-and-reel-actions">
+/* Keep the single-word section labels at the top of their original cards. */
+.jfc-create-tile{justify-content:flex-start!important;align-items:center!important;padding-top:15px!important}
+.jfc-create-tile .jfc-tile-title,.jfc-create-tile.has-published-content .jfc-tile-title{position:absolute!important;top:15px!important;left:58px!important;right:8px!important;width:auto!important;text-align:center!important;font-size:18px!important;font-weight:850!important;color:#263238!important;text-shadow:none!important;z-index:4!important;pointer-events:none}
+.jfc-tile-story-scroll{inset:52px 8px 8px!important}
+.jfc-create-tile.has-published-content .jfc-tile-title{color:#263238!important;text-shadow:none!important}
+.jfc-reel-action-rail{position:absolute;z-index:8;right:10px;top:50%;transform:translateY(-35%);display:flex;flex-direction:column;align-items:center;gap:19px;pointer-events:auto}
+.jfc-reel-action-rail.hidden{display:none!important}
+.jfc-reel-action-rail button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:48px;padding:5px 3px;border:0;background:#10182788;color:#fff;border-radius:13px;text-shadow:0 1px 4px #000;backdrop-filter:blur(5px)}
+.jfc-reel-action-rail button b{font-size:29px;line-height:1.1}.jfc-reel-action-rail button span{font-size:11px;font-weight:800}.jfc-reel-action-rail button small{font-size:10px;color:#fff}.jfc-reel-action-rail button.is-liked b{color:#ff4774}
+.jfc-reel-comments-panel{position:fixed;z-index:12000;left:50%;bottom:0;transform:translate(-50%,110%);width:min(100%,520px);height:min(65dvh,560px);background:#fff;color:#202733;border-radius:20px 20px 0 0;box-shadow:0 -8px 35px #0005;display:flex;flex-direction:column;transition:transform .22s ease;padding:14px;box-sizing:border-box}
+.jfc-reel-comments-panel.open{transform:translate(-50%,0)}.jfc-reel-comments-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid #e8edf3}.jfc-reel-comments-head button{background:#eef2f7;color:#253247;border-radius:50%;width:34px;height:34px;padding:0}.jfc-reel-comments-list{flex:1;overflow:auto;padding:10px 2px}.jfc-reel-comment{padding:8px 2px;border-bottom:1px solid #f0f2f5}.jfc-reel-comment strong{font-size:13px}.jfc-reel-comment p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}.jfc-reel-comment-form{display:flex;gap:8px;padding-top:10px}.jfc-reel-comment-form input{flex:1;min-width:0;border:1px solid #dbe2eb;border-radius:22px;padding:11px 14px}.jfc-reel-comment-form button{border:0;border-radius:22px;background:#1769e0;color:#fff;padding:0 17px;font-weight:800}
+@media(max-width:600px){.jfc-create-tile .jfc-tile-title,.jfc-create-tile.has-published-content .jfc-tile-title{font-size:16px!important;top:13px!important}.jfc-reel-action-rail{right:6px;gap:14px}.jfc-reel-action-rail button{min-width:43px}.jfc-reel-action-rail button b{font-size:26px}}
+</style>
+
+
+<style id="jfc-whatsapp-status-reels-cards-v3">
+/* WhatsApp Updates-inspired portrait cards: Status first, Reels second. */
+.jfc-quick-create{
+ display:flex!important;flex-direction:row!important;align-items:stretch!important;gap:12px!important;
+ overflow-x:auto!important;overflow-y:hidden!important;padding:4px 2px 12px!important;
+ scroll-snap-type:x mandatory!important;-webkit-overflow-scrolling:touch!important;
+}
+.jfc-quick-create .jfc-create-tile{
+ position:relative!important;display:block!important;flex:0 0 146px!important;width:146px!important;
+ height:255px!important;min-height:255px!important;aspect-ratio:auto!important;
+ padding:0!important;overflow:hidden!important;scroll-snap-align:start!important;
+ background:#f4f4f4!important;border:1px solid #d8dce2!important;
+ box-shadow:0 1px 3px #00000012!important;color:#263238!important;
+}
+/* Status uses the softly rounded WhatsApp story-cylinder shape. */
+#jfcStatusMainCard{border-radius:27px!important}
+/* Reels keeps a clear portrait rectangle with rounded corners. */
+#jfcReelMainCard{border-radius:19px!important}
+.jfc-quick-create .jfc-tile-title,
+.jfc-quick-create .jfc-create-tile.has-published-content .jfc-tile-title{
+ position:absolute!important;z-index:6!important;top:12px!important;left:44px!important;right:8px!important;
+ width:auto!important;padding:0!important;text-align:center!important;font-size:16px!important;
+ line-height:1.2!important;font-weight:800!important;color:#202833!important;
+ text-shadow:none!important;pointer-events:none!important;
+}
+.jfc-quick-create .jfc-tile-plus{
+ position:absolute!important;z-index:9!important;left:9px!important;top:8px!important;
+ width:34px!important;height:34px!important;font-size:25px!important;
+ background:#fff!important;color:#159b62!important;border:2px solid #fff!important;
+ box-shadow:0 1px 5px #0002!important;
+}
+.jfc-quick-create .jfc-tile-story-scroll{
+ position:absolute!important;z-index:2!important;inset:0!important;
+ display:flex!important;flex-direction:row!important;gap:0!important;
+ overflow-x:auto!important;overflow-y:hidden!important;padding:0!important;
+ border-radius:inherit!important;background:#e9edf2!important;
+}
+.jfc-quick-create .jfc-tile-story-item{
+ position:relative!important;flex:0 0 100%!important;width:100%!important;height:100%!important;
+ min-height:100%!important;border-radius:inherit!important;overflow:hidden!important;
+ scroll-snap-align:start!important;background:#263449!important;
+}
+.jfc-quick-create .jfc-tile-story-item img,
+.jfc-quick-create .jfc-tile-story-item video{width:100%!important;height:100%!important;object-fit:cover!important}
+.jfc-quick-create .jfc-tile-story-item:before{
+ content:"";position:absolute;z-index:3;top:12px;left:50%;transform:translateX(-50%);
+ width:66px;height:66px;border:3px solid #20c875;border-radius:50%;
+ box-shadow:0 0 0 3px #fff9;pointer-events:none;
+}
+.jfc-quick-create .jfc-tile-story-item:after{
+ content:"";position:absolute;z-index:2;inset:48% 0 0;
+ background:linear-gradient(transparent,#000a)!important;pointer-events:none;
+}
+.jfc-quick-create .jfc-tile-story-item small{
+ z-index:4!important;left:9px!important;right:9px!important;bottom:13px!important;
+ font-size:14px!important;line-height:1.2!important;text-align:left!important;
+ white-space:normal!important;color:#fff!important;text-shadow:0 1px 4px #000!important;
+}
+/* Empty create cards retain a simple light surface and a centered add cue. */
+#jfcStatusMainCard:not(.has-published-content),
+#jfcReelMainCard:not(.has-published-content){background:linear-gradient(180deg,#f8f8f8,#e9edf2)!important}
+#jfcStatusMainCard:not(.has-published-content):after,
+#jfcReelMainCard:not(.has-published-content):after{
+ content:"";position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);
+ width:76px;height:76px;border:3px solid #20c875;border-radius:50%;
+ background:linear-gradient(145deg,#d6e2ef,#aabbd0);box-shadow:0 0 0 4px #fff;
+}
+#jfcStatusMainCard:not(.has-published-content) .jfc-tile-plus,
+#jfcReelMainCard:not(.has-published-content) .jfc-tile-plus{
+ left:calc(50% + 24px)!important;top:calc(45% + 22px)!important;
+ width:32px!important;height:32px!important;background:#18a66a!important;
+ color:#fff!important;border:2px solid #fff!important;
+}
+#jfcStatusMainCard:not(.has-published-content) .jfc-tile-title,
+#jfcReelMainCard:not(.has-published-content) .jfc-tile-title{
+ top:auto!important;left:8px!important;right:8px!important;bottom:17px!important;
+ font-size:16px!important;text-align:center!important;
+}
+@media(max-width:600px){
+ .jfc-quick-create{gap:10px!important}
+ .jfc-quick-create .jfc-create-tile{flex-basis:142px!important;width:142px!important;height:248px!important;min-height:248px!important}
+ .jfc-quick-create .jfc-tile-title{font-size:15px!important;top:11px!important}
+}
+</style>
 </body>
+
+<style id="jfc-status-cylinder-reels-medium-rectangle-v2">
+/* Medium-size creation cards: a horizontal capsule for Status and a portrait rectangle for Reels. */
+.jfc-quick-create{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;align-items:start!important;gap:12px!important}
+#jfcStatusMainCard{height:132px!important;min-height:132px!important;aspect-ratio:auto!important;border-radius:999px!important;overflow:hidden!important}
+#jfcReelMainCard{height:174px!important;min-height:174px!important;aspect-ratio:auto!important;border-radius:18px!important;overflow:hidden!important}
+#jfcStatusMainCard .jfc-tile-story-scroll{inset:52px 10px 9px!important;border-radius:999px!important}
+#jfcReelMainCard .jfc-tile-story-scroll{inset:52px 8px 8px!important;border-radius:12px!important}
+#jfcStatusMainCard .jfc-tile-title,#jfcReelMainCard .jfc-tile-title{top:14px!important;font-size:17px!important}
+#jfcStatusMainCard .jfc-tile-plus,#jfcReelMainCard .jfc-tile-plus{width:36px!important;height:36px!important;font-size:26px!important;left:10px!important;top:9px!important}
+/* Keep all three Reel actions visible on the right side of the full-screen viewer. */
+.jfc-reel-action-rail{position:absolute!important;z-index:30!important;right:9px!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:12px!important;max-height:82%!important;overflow:visible!important}
+.jfc-reel-action-rail.hidden{display:none!important}
+.jfc-reel-action-rail button{display:flex!important;visibility:visible!important;opacity:1!important;min-width:54px!important;min-height:58px!important;padding:6px 4px!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;background:#101827c9!important;color:#fff!important;border:1px solid #ffffff55!important;border-radius:13px!important}
+.jfc-reel-action-rail button:nth-child(3){display:flex!important;visibility:visible!important;opacity:1!important}
+.jfc-reel-action-rail button b{font-size:27px!important;line-height:1.05!important}
+.jfc-reel-action-rail button span{display:block!important;font-size:11px!important;font-weight:800!important}
+.jfc-reel-action-rail button small{display:block!important;font-size:10px!important;color:#fff!important}
+/* Sharing is opened from inside the viewer, so its dialog must sit above the viewer. */
+#postShareModal{z-index:13000!important}
+@media(max-width:600px){.jfc-quick-create{gap:9px!important}#jfcStatusMainCard{height:120px!important;min-height:120px!important}#jfcReelMainCard{height:158px!important;min-height:158px!important}.jfc-reel-action-rail{right:7px!important;gap:9px!important}.jfc-reel-action-rail button{min-width:49px!important;min-height:54px!important}.jfc-reel-action-rail button b{font-size:24px!important}}
+</style>
+
 </html>
+<style id="jfc-status-reels-simple-labels">
+.jfc-create-tile{background:#f1f3f5!important;color:#263238!important;border:1px solid #d9dee5!important;box-shadow:none!important;justify-content:center!important;text-align:center!important}
+.jfc-create-tile .jfc-tile-title{display:block;width:100%;padding:0!important;font-size:21px;font-weight:850;color:#263238!important;text-shadow:none!important}
+.jfc-create-tile small{display:none!important}
+.jfc-create-tile .jfc-tile-plus{z-index:8}
+.jfc-create-tile.has-published-content .jfc-tile-title{position:relative;z-index:3;color:#fff!important;text-shadow:0 2px 5px #000b!important}
+</style>
+
+<style id="jfc-final-status-reels-and-posts-fix">
+/* Status and Reels should both use the same medium portrait-card dimensions. */
+.jfc-quick-create{display:flex!important;flex-direction:row!important;align-items:stretch!important;gap:12px!important;overflow-x:auto!important;overflow-y:hidden!important;}
+#jfcStatusMainCard,#jfcReelMainCard{flex:0 0 158px!important;width:158px!important;height:174px!important;min-height:174px!important;aspect-ratio:auto!important;border-radius:18px!important;overflow:hidden!important;}
+#jfcStatusMainCard .jfc-tile-story-scroll,#jfcReelMainCard .jfc-tile-story-scroll{inset:0!important;border-radius:inherit!important;}
+#jfcStatusMainCard .jfc-tile-title,#jfcReelMainCard .jfc-tile-title{top:12px!important;font-size:16px!important;}
+#jfcStatusMainCard .jfc-tile-plus,#jfcReelMainCard .jfc-tile-plus{left:9px!important;top:8px!important;width:34px!important;height:34px!important;}
+@media(max-width:600px){#jfcStatusMainCard,#jfcReelMainCard{flex-basis:142px!important;width:142px!important;height:158px!important;min-height:158px!important;border-radius:17px!important;}}
+/* Remove decorative coloured circular rings from story previews and empty cards. */
+.jfc-quick-create .jfc-tile-story-item:before{content:none!important;display:none!important;border:0!important;box-shadow:none!important;}
+#jfcStatusMainCard:not(.has-published-content):after,#jfcReelMainCard:not(.has-published-content):after{content:none!important;display:none!important;border:0!important;box-shadow:none!important;}
+#jfcStatusMainCard:not(.has-published-content) .jfc-tile-plus,#jfcReelMainCard:not(.has-published-content) .jfc-tile-plus{left:9px!important;top:8px!important;width:34px!important;height:34px!important;background:#18a66a!important;color:#fff!important;border:2px solid #fff!important;}
+#jfcStatusMainCard:not(.has-published-content) .jfc-tile-title,#jfcReelMainCard:not(.has-published-content) .jfc-tile-title{top:auto!important;left:8px!important;right:8px!important;bottom:14px!important;text-align:center!important;}
+/* Keep the Posts feed as the first visible content; hide the global search field on the Posts screen. */
+body:has(#postsPanel:not(.hidden)) .jf-global-search{display:none!important;}
+</style>
+
